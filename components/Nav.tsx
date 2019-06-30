@@ -5,10 +5,8 @@ import {
 } from 'react-icons/md';
 import React, { ReactElement } from 'react';
 
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import { Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
+import styled from 'styled-components';
 
 type Links = ReadonlyArray<{
     path: string;
@@ -34,45 +32,53 @@ const links: Links = [
     },
 ];
 
-const useStyles = makeStyles({
-    root: {
-        display: 'flex',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        position: 'fixed',
-        bottom: 0,
-        width: '100%',
-        background: '#ef698b',
-    },
-    icon: {
-        fontSize: '1em',
-    },
-});
+const BottomNav = styled.nav`
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    background: #ef698b;
+`;
+
+const LinkIcon = styled.span`
+    font-size: 1em;
+    cursor: pointer;
+    width: 33%;
+
+    a {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 14px;
+    }
+
+    :hover {
+        background: green;
+    }
+`;
+
+/* TODO : 
+    behavior on hover/click
+    configure a global css file 
+    doc styled-component https://www.styled-components.com/docs/basics#passed-props
+    check best practice about variables and props with this lib
+
+*/
 
 const Nav = () => {
-    const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
     return (
-        <BottomNavigation
-            value={value}
-            onChange={(event, newValue) => {
-                setValue(newValue);
-            }}
-            className={classes.root}
-        >
+        <BottomNav>
             {links.map(link => (
-                <BottomNavigationAction
-                    showLabel={false}
-                    component={Link}
-                    key={link.path}
-                    to={link.path}
-                    className={classes.icon}
-                    // label={link.label}
-                    icon={link.icon}
-                />
+                <LinkIcon key={link.path}>
+                    <Link to={link.path}>{link.icon}</Link>
+                </LinkIcon>
             ))}
-        </BottomNavigation>
+        </BottomNav>
     );
 };
 
