@@ -8,15 +8,18 @@
         "@types/react": "^16.8.22",
         "@types/react-dom": "^16.8.4",
         "@types/react-router-dom": "^4.3.4",
-        "parcel-bundler": "^1.12.3"
+        "parcel-bundler": "^1.12.3",
+        "react-icons": "^3.7.0"
     },
     "scripts": {
         "dev": "parcel index.html",
         "build": "parcel build index.html"
     },
     "dependencies": {
-        "react": "^16.8.6",
-        "react-dom": "^16.8.6",
+        "@material-ui/core": "^4.1.2",
+        "@material-ui/icons": "^4.2.1",
+        "react": "^16.8.0",
+        "react-dom": "^16.8.0",
         "react-router-dom": "^5.0.1",
         "typescript": "^3.5.2"
     }
