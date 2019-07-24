@@ -1,6 +1,11 @@
 {
     "compilerOptions": {
         "jsx": "react",
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "downlevelIteration": true,
+        "baseUrl": "./src",
+        "paths": {
+            "@components/*": ["components/*"]
+        }
     }
 }

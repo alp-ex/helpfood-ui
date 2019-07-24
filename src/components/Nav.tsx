@@ -2,17 +2,16 @@ import {
     MdLocalGroceryStore,
     MdRestaurantMenu,
     MdViewAgenda,
-} from 'react-icons/md';
-import React, { ReactElement } from 'react';
+} from 'react-icons/md'
+import React, { ReactElement } from 'react'
 
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import { Link } from 'react-router-dom'
 
 type Links = ReadonlyArray<{
-    path: string;
-    label: string;
-    icon: ReactElement;
-}>;
+    path: string
+    label: string
+    icon: ReactElement
+}>
 
 const links: Links = [
     {
@@ -30,56 +29,75 @@ const links: Links = [
         label: 'Shop list',
         icon: <MdLocalGroceryStore />,
     },
-];
+]
 
-const BottomNav = styled.nav`
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    position: fixed;
-    bottom: 0;
-    width: 100vw;
-    background: #ef698b;
-`;
+const BottomNav = ({ children, height }) => (
+    <nav
+        style={{
+            display: 'flex',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            position: 'fixed',
+            bottom: 0,
+            width: '100vw',
+            background: '#ef698b',
+            height: height,
+        }}
+    >
+        {children}
+    </nav>
+)
 
-const LinkIcon = styled.span`
-    font-size: 1em;
-    cursor: pointer;
-    width: 33%;
+const LinkIcon = ({ children, nbrOfSiblings }) => (
+    <span
+        style={{
+            maxHeight: '100%',
+            fontSize: '1em',
+            cursor: 'pointer',
+            width: `calc(100%/${nbrOfSiblings})`,
+        }}
+    >
+        {children}
+    </span>
+)
 
-    a {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 14px;
-    }
+export interface Props {
+    height: string
+}
 
-    :hover {
-        background: green;
-    }
-`;
-
-/* TODO : 
-    behavior on hover/click
-    configure a global css file 
-    doc styled-component https://www.styled-components.com/docs/basics#passed-props
-    check best practice about variables and props with this lib
-
-*/
-
-const Nav = () => {
-    const [value, setValue] = React.useState(0);
+const Nav = (props: Props) => {
+    const [value, setValue] = React.useState()
 
     return (
-        <BottomNav>
+        <BottomNav {...props}>
             {links.map(link => (
-                <LinkIcon key={link.path}>
-                    <Link to={link.path}>{link.icon}</Link>
+                <LinkIcon nbrOfSiblings={links.length} key={link.path}>
+                    <Link
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            padding: '14px',
+                            background:
+                                link === value ? '#c7496991' : '#ef698b',
+                        }}
+                        to={link.path}
+                        onMouseOver={evt =>
+                            link !== value &&
+                            (evt.currentTarget.style.background = '#c7496929')
+                        }
+                        onMouseOut={evt =>
+                            link !== value &&
+                            (evt.currentTarget.style.background = '#ef698b')
+                        }
+                        onClick={() => setValue(link)}
+                    >
+                        {link.icon}
+                    </Link>
                 </LinkIcon>
             ))}
         </BottomNav>
-    );
-};
+    )
+}
 
-export default Nav;
+export default Nav

@@ -5,3 +5,7 @@ dist
 # reports
 .cache
 yarn-error.log
+bundle.stats.json
+
+# dev
+.prettierrc.yaml
