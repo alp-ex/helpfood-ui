@@ -1,7 +1,7 @@
 import App from './App';
 import { render } from 'react-dom';
 import React from 'react';
-import './reset.css'
+import './style/reset.css'
 
 const container = document.querySelector('#helpfood')
 // investigate on this

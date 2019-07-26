@@ -1,11 +1,20 @@
 import React from 'react'
 
 export interface Props {
-    // FIXME : we might want a more specific type
+    // FIXME : we might want a more specific type (sunday | monday | etc)
     currentDay: string
+    height: string
 }
-const MenuCard = () => (
-    <div>
+
+export interface MenuCardProps {
+    height: string
+}
+
+
+const MenuCard = ({ height }: MenuCardProps) => (
+    <div style={{
+        height: height
+    }}>
         <select name="zazou" id="zazou">
             <option value="tarte au poireau" />
             <option value="tartiflette" />
@@ -17,29 +26,14 @@ const MenuCard = () => (
         </section>
     </div>
 )
-const MenuOfTheDay = ({ currentDay }: Props) => {
+
+const MenuOfTheDay = ({ currentDay, height }: Props) => {
     return (
-        <article
-            style={
-                {
-                    // height: '100%'
-                }
-            }
-        >
-            <div
-                style={{
-                    height: '50%',
-                }}
-            >
-                <MenuCard />
-            </div>
-            <div
-                style={{
-                    height: '50%',
-                }}
-            >
-                <MenuCard />
-            </div>
+        <article style={{
+            height: height
+        }}>
+            <MenuCard height="50%"/>
+            <MenuCard height="50%"/>
         </article>
     )
 }

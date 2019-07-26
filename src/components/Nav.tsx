@@ -3,7 +3,7 @@ import {
     MdRestaurantMenu,
     MdViewAgenda,
 } from 'react-icons/md'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, HTMLProps } from 'react'
 
 import { Link } from 'react-router-dom'
 
@@ -31,7 +31,12 @@ const links: Links = [
     },
 ]
 
-const BottomNav = ({ children, height }) => (
+interface BottomNavProps extends HTMLProps<HTMLElement> {
+    height?: string
+    backgroundColor?: string
+}
+
+const BottomNav = ({ children, height, backgroundColor }: BottomNavProps) => (
     <nav
         style={{
             display: 'flex',
@@ -40,13 +45,17 @@ const BottomNav = ({ children, height }) => (
             position: 'fixed',
             bottom: 0,
             width: '100vw',
-            background: '#ef698b',
+            background: backgroundColor || '#ef698b',
             height: height,
         }}
     >
         {children}
     </nav>
 )
+
+interface LinkIcon extends HTMLProps<HTMLSpanElement> {
+    nbrOfSiblings: number
+}
 
 const LinkIcon = ({ children, nbrOfSiblings }) => (
     <span
@@ -62,14 +71,16 @@ const LinkIcon = ({ children, nbrOfSiblings }) => (
 )
 
 export interface Props {
+    backgroundColor?: string
+    backgroundColorSelected?: string
     height: string
 }
 
-const Nav = (props: Props) => {
+const Nav = ({ backgroundColorSelected, backgroundColor, height }: Props) => {
     const [value, setValue] = React.useState()
 
     return (
-        <BottomNav {...props}>
+        <BottomNav height={height}>
             {links.map(link => (
                 <LinkIcon nbrOfSiblings={links.length} key={link.path}>
                     <Link
@@ -79,16 +90,20 @@ const Nav = (props: Props) => {
                             alignItems: 'center',
                             padding: '14px',
                             background:
-                                link === value ? '#c7496991' : '#ef698b',
+                                link === value
+                                    ? backgroundColorSelected || '#c7496991'
+                                    : backgroundColor || '#ef698b',
                         }}
                         to={link.path}
                         onMouseOver={evt =>
                             link !== value &&
-                            (evt.currentTarget.style.background = '#c7496929')
+                            (evt.currentTarget.style.background =
+                                backgroundColorSelected || '#c7496929')
                         }
                         onMouseOut={evt =>
                             link !== value &&
-                            (evt.currentTarget.style.background = '#ef698b')
+                            (evt.currentTarget.style.background =
+                                backgroundColor || '#ef698b')
                         }
                         onClick={() => setValue(link)}
                     >

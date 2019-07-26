@@ -6,29 +6,17 @@ const Planning = () => {
     const currentWeekDay = new Intl.DateTimeFormat('default', {
         weekday: 'long',
     }).format(Date.now())
-    console.log(currentWeekDay)
     const [currentDay, setCurrentDay] = useState(currentWeekDay)
     const handleClickOnDay = (day: string) => setCurrentDay(day)
 
     return (
         <div>
-            <div
-                style={{
-                    height: '6vh',
-                }}
-            >
                 <PlanningNav
+                    height='6vh'
                     currentDay={currentDay}
                     onDayClick={handleClickOnDay}
                 />
-            </div>
-            <div
-                style={{
-                    height: '88vh',
-                }}
-            >
-                <MenuOfTheDay currentDay={currentDay} />
-            </div>
+                <MenuOfTheDay height='88vh' currentDay={currentDay} />
         </div>
     )
 }
