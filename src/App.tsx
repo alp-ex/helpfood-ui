@@ -1,13 +1,13 @@
-import { BrowserRouter } from 'react-router-dom'
-import Nav from './components/Nav'
-import React from 'react'
-import Router from './Router'
+import { BrowserRouter } from "react-router-dom";
+import Nav from "./components/Nav";
+import React from "react";
+import Router from "./Router";
 
 const App = () => (
-    <BrowserRouter>
-            <Nav height='6vh' />
-        <Router />
-    </BrowserRouter>
-)
+  <BrowserRouter>
+    <Nav />
+    <Router />
+  </BrowserRouter>
+);
 
-export default App
+export default App;

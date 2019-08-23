@@ -1,74 +1,84 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 export interface Props {
-    dayInWeek?: number
-    dayStartAt?: number
-    currentDay: string
-    onDayClick: (day: string) => void
-    listBackgroundColor?: string
-    currentDayColor?: string
-    dayColor?: string
-    height: string
+  daysInAWeek?: number;
+  weekStartAt?: number;
+  currentDay: string;
+  onDayChoose: (day: string) => void;
 }
 
-const daysInWeek = [
-    'Monday',
-    'Thursday',
-    'Wednesday',
-    'Tuesday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-]
+// this should be a prop (for a translation purpose)
+const daysOfTheWeek = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday"
+];
 
 const PlanningNav = ({
-    dayInWeek = 7,
-    dayStartAt = 1,
-    currentDay,
-    onDayClick,
-    listBackgroundColor,
-    currentDayColor,
-    dayColor,
-    height
+  daysInAWeek = 7,
+  weekStartAt = 1,
+  currentDay,
+  onDayChoose
 }: Props) => {
-    const sortedDayOfWeek = [
-        ...daysInWeek.slice(dayStartAt - 1),
-        ...daysInWeek.slice(0, dayStartAt - 1),
-    ].slice(0, dayInWeek)
-
-    return (
-        <ul
-            style={{
-                height: height,
-                maxHeight: '100%',
-                display: 'flex',
-                justifyContent: 'space-around',
-                background: listBackgroundColor || '#ef698b',
-                fontWeight: 700,
-                fontFamily: 'none',
-            }}
-        >
-            {sortedDayOfWeek.map(day => (
-                <li
-                    onClick={() => onDayClick(day)}
-                    key={day}
-                    style={{
-                        width: `calc(100%/${sortedDayOfWeek.length})`,
-                        color:
-                            day === currentDay
-                                ? currentDayColor || '#7fff00'
-                                : dayColor || '#e8daf59c',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        padding: '14px 0',
-                    }}
-                >
-                    {day}
-                </li>
-            ))}
-        </ul>
+  const sortedDayOfWeek = [
+    ...daysOfTheWeek.slice(weekStartAt - 1),
+    ...daysOfTheWeek.slice(0, weekStartAt - 1)
+  ].slice(0, daysInAWeek);
+  const [currentDayIndex, setCurrentDayIndex] = useState(
+    daysOfTheWeek.findIndex(
+      day => day.toLowerCase() === currentDay.toLowerCase()
     )
-}
+  );
+  const handleClickNext = () =>
+    currentDayIndex < daysOfTheWeek.length - 1 &&
+    setCurrentDayIndex(currentDayIndex + 1);
+  const handleClickPrevious = () =>
+    currentDayIndex > 0 && setCurrentDayIndex(currentDayIndex - 1);
 
-export default PlanningNav
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-around",
+        alignItems: "center",
+        padding: "3%",
+        fontSize: "1em",
+        color: "#f0754e"
+      }}
+    >
+      {/* alter brightness when disabled */}
+      <span
+        style={{
+          minWidth: "50px",
+          minHeight: "50px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+        onClick={handleClickPrevious}
+      >
+        <MdChevronLeft />
+      </span>
+      <span>{daysOfTheWeek[currentDayIndex]}</span>
+      <span
+        style={{
+          minWidth: "50px",
+          minHeight: "50px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+        onClick={handleClickNext}
+      >
+        <MdChevronRight />
+      </span>
+    </div>
+  );
+};
+
+export default PlanningNav;
