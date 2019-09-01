@@ -18,16 +18,21 @@ interface Dish {
 export interface Props {
   // we might want a more specific type (sunday | monday | etc) but what about translation then ?
   currentDay: string;
+  hue: number;
 }
 
 export interface MenuCardProps {
   typeOfMeal?: TypeOfMeal;
   dish: Dish;
+  hue: number;
+  picked: boolean;
 }
 
 // regarding the type of the meal the theme will be different
 const MenuCard = ({
   typeOfMeal,
+  hue,
+  picked,
   dish: {
     name,
     description,
@@ -46,9 +51,10 @@ const MenuCard = ({
         style={{
           width: "75%",
           padding: "2%",
-          background: "white",
-          color: "#ff8c68",
-          border: "1px solid #ff8c683d",
+          background: `hsl(0, 0%, 100%)`,
+          // we might want an intermediate saturation like : not/picked/db confirmation
+          color: `hsl(${hue}, 100%, ${picked ? 50 : 90}%)`,
+          border: `1px solid hsl(${hue}, 100%, ${picked ? 50 : 90}%)`,
           fontFamily: "monospace",
           fontSize: "1em",
           borderRadius: "5px",
@@ -114,11 +120,21 @@ const MenuCard = ({
   </div>
 );
 
-const MenuOfTheDay = ({ currentDay }: Props) => {
+const MenuOfTheDay = ({ currentDay, hue }: Props) => {
   return (
     <div style={{}}>
-      <MenuCard dish={dishes[1]} typeOfMeal={"launch"} />
-      <MenuCard dish={dishes[3]} typeOfMeal={"dinner"} />
+      <MenuCard
+        picked={true}
+        hue={hue}
+        dish={dishes[1]}
+        typeOfMeal={"launch"}
+      />
+      <MenuCard
+        picked={false}
+        hue={hue}
+        dish={dishes[3]}
+        typeOfMeal={"dinner"}
+      />
     </div>
   );
 };
