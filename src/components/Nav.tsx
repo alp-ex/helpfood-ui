@@ -1,8 +1,3 @@
-// import {
-//   MdLocalGroceryStore,
-//   MdRestaurantMenu,
-//   MdViewAgenda
-// } from "react-icons/md";
 import React, { ReactElement, HTMLProps } from "react";
 
 import { Link } from "react-router-dom";
@@ -13,22 +8,18 @@ type Links = ReadonlyArray<{
   icon?: ReactElement;
 }>;
 
-// should I include a sorting logic here ? #overkill
 const links: Links = [
   {
     path: "/recipes",
     label: "Recipes"
-    // icon: <MdRestaurantMenu />
   },
   {
-    path: "/",
-    label: "Planning"
-    // icon: <MdViewAgenda />
+    path: "/schedule",
+    label: "Schedule"
   },
   {
     path: "/shoplist",
     label: "Shop list"
-    // icon: <MdLocalGroceryStore />
   }
 ];
 
@@ -39,7 +30,6 @@ interface LinkTab extends HTMLProps<HTMLSpanElement> {
 const LinkTab = ({ children, nbrOfSiblings }) => (
   <span
     style={{
-      //   maxHeight: "100%",
       cursor: "pointer",
       width: `calc(100%/${nbrOfSiblings})`,
       padding: "3%"
@@ -49,10 +39,12 @@ const LinkTab = ({ children, nbrOfSiblings }) => (
   </span>
 );
 
-export interface Props {}
+export interface Props {
+  hue: number;
+}
 
-const Nav = () => {
-  const [value, setValue] = React.useState();
+const Nav = ({ hue }: Props) => {
+  const [value, setValue] = React.useState(window.location.pathname);
 
   return (
     <nav
@@ -62,9 +54,9 @@ const Nav = () => {
         alignItems: "center",
         width: "100%",
         fontSize: "1em",
-        color: "#f0754e",
+        color: `hsl(${hue}, 100%, 50%)`,
         position: "fixed",
-        background: "#ffffff",
+        background: `hsl(0, 100%, 100%)`,
         bottom: 0
       }}
     >
@@ -75,22 +67,10 @@ const Nav = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              //   padding: "14px",
-              //   height: "100%",
-              ...(link === value && { filter: "brightness(42%)" })
+              color: `hsl(${hue}, 100%, ${value === link.path ? 50 : 90}%)`
             }}
             to={link.path}
-            // onMouseOver={evt =>
-            //   link !== value &&
-            //   (evt.currentTarget.style.background =
-            //     backgroundColorSelected || "#c7496929")
-            // }
-            // onMouseOut={evt =>
-            //   link !== value &&
-            //   (evt.currentTarget.style.background =
-            //     backgroundColor || "#ef698b")
-            // }
-            onClick={() => setValue(link)}
+            onClick={() => setValue(link.path)}
           >
             {link.label}
           </Link>
