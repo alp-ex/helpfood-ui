@@ -48,9 +48,9 @@ const PlanningNav = ({
     <div
       style={{
         display: "flex",
-        justifyContent: "space-around",
+        justifyContent: "space-between",
         alignItems: "center",
-        padding: "3%",
+        padding: "0.5% 13%",
         fontSize: "1.5em",
         color: `hsl(0, 0%, 100%)`,
         background: `hsl(${hue}, 100%, ${luminosity}%)`
@@ -63,7 +63,8 @@ const PlanningNav = ({
           minHeight: "50px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center"
+          justifyContent: "center",
+          cursor: "pointer"
         }}
         onClick={handleClickPrevious}
       >
@@ -76,7 +77,8 @@ const PlanningNav = ({
           minHeight: "50px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center"
+          justifyContent: "center",
+          cursor: "pointer"
         }}
         onClick={handleClickNext}
       >
