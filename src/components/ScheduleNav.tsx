@@ -5,9 +5,11 @@ export interface Props {
   daysInAWeek?: number;
   weekStartAt?: number;
   currentDay: string;
-  hue: number;
-  luminosity: number;
-  onDayChoose: (day: string) => void;
+  hsl: {
+    hue: number;
+    luminosity: number;
+  }
+  onChange: (day: string) => void;
 }
 
 // we might want to interface a prop (for a translation purpose)
@@ -25,8 +27,10 @@ const PlanningNav = ({
   daysInAWeek = 7,
   weekStartAt = 1,
   currentDay,
-  hue,
-  luminosity,
+  hsl: {
+    hue,
+    luminosity
+  },
   onDayChoose
 }: Props) => {
   const sortedDayOfWeek = [
