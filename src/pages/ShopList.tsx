@@ -1,5 +1,5 @@
-import React from 'react';
+import React from 'react'
 
-const ShopList = () => <div>ShopList</div>;
+const ShopList = () => <div>ShopList</div>
 
-export default ShopList;
+export default ShopList

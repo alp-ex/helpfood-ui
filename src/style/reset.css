@@ -1,20 +1,20 @@
 body {
-  margin: 0;
-  box-sizing: border-box;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 button {
-  outline: none;
+    outline: none;
 }
 
 a {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 a,
 a:active,
 a:focus {
-  color: inherit;
+    color: inherit;
 }
 
 /* p {
@@ -22,7 +22,7 @@ a:focus {
 } */
 
 ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }

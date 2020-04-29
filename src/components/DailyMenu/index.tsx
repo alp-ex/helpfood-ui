@@ -1,9 +1,7 @@
-import React from 'react';
+import React from 'react'
 
 const DailyMenu = () => {
-    return <section>
-        {children}
-    </section>
+    return <section>{children}</section>
 }
 
 export default DailyMenu
