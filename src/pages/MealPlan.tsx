@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import ScheduleNav from '@components/ScheduleNav'
 import MenuOfTheDay from '@components/MenuOfTheDay'
 import MenuSelectModal from '@components/MenuSelectModal'
-import { getUserHue } from '../services/getUserInformations'
 import DailyMenu from '@components/DailyMenu'
 import TwoLinesInformation from '@components/TwoLinesInformation'
 
@@ -78,7 +77,7 @@ const MealPlan = () => {
         <>
             <ScheduleNav
                 hsl={{
-                    hue: getUserHue() || 0,
+                    hue: 0,
                     luminosity: 50,
                 }}
                 currentDay={currentDay}
