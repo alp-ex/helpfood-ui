@@ -4,6 +4,7 @@ interface SectionProps {
     style?: {
         gridArea?: string
         border?: string
+        margin?: number | string
         marginLeft?: number | string
         marginTop?: number | string
     }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
 
 export interface Props {
@@ -23,11 +23,12 @@ const daysOfTheWeek = [
     'Sunday',
 ]
 
-const PlanningNav = ({
+const WeekDaysNav = ({
     daysInAWeek = 7,
     weekStartAt = 1,
     currentDay,
     hsl: { hue, luminosity },
+    onChange,
 }: Props) => {
     const sortedDayOfWeek = [
         ...daysOfTheWeek.slice(weekStartAt - 1),
@@ -39,11 +40,21 @@ const PlanningNav = ({
             (day) => day.toLowerCase() === currentDay.toLowerCase()
         )
     )
-    const handleClickNext = () =>
-        currentDayIndex < daysOfTheWeek.length - 1 &&
-        setCurrentDayIndex(currentDayIndex + 1)
-    const handleClickPrevious = () =>
-        currentDayIndex > 0 && setCurrentDayIndex(currentDayIndex - 1)
+    const handleClickNext = () => {
+        if (currentDayIndex < daysOfTheWeek.length - 1) {
+            setCurrentDayIndex(currentDayIndex + 1)
+        }
+    }
+    const handleClickPrevious = () => {
+        if (currentDayIndex > 0) {
+            setCurrentDayIndex(currentDayIndex - 1)
+        }
+    }
+
+    useEffect(() => {
+        onChange(daysOfTheWeek[currentDayIndex].toLowerCase()),
+            [currentDayIndex]
+    })
 
     return (
         <div
@@ -58,7 +69,6 @@ const PlanningNav = ({
                 fontFamily: `'Josefin Slab', serif`,
             }}
         >
-            {/* alter brightness when disabled */}
             <span
                 style={{
                     minWidth: '50px',
@@ -128,4 +138,4 @@ const PlanningNav = ({
     )
 }
 
-export default PlanningNav
+export default WeekDaysNav

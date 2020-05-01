@@ -12,6 +12,7 @@ const DailyMenu = ({ children }: Props) => {
                 height: '100%',
                 padding: '1em 1em 10em 1em',
                 display: 'grid',
+                gridTemplateColumns: '1fr fit-content(20%)',
                 gridTemplate: `"mainCourses mainCourses drinks" 50vh
                                 "mainCourses mainCourses drinks"
                                 "starters desserts drinks"
