@@ -6,7 +6,6 @@ import { getUserHue } from 'services/getUserInformations'
 
 const App = () => (
     <BrowserRouter>
-        <Nav hue={getUserHue()} />
         <Router />
     </BrowserRouter>
 )

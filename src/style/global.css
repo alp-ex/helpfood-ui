@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Abel&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Josefin+Slab&display=swap');
 
 body {
     font-family: 'Abel', sans-serif;
     margin-bottom: 11%;
+    background: rgba(255, 225, 0, 0.31);
 }
 
 button:active {
