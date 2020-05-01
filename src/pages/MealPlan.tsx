@@ -4,6 +4,8 @@ import MenuOfTheDay from '@components/MenuOfTheDay'
 import MenuSelectModal from '@components/MenuSelectModal'
 import { getUserHue } from '../services/getUserInformations'
 import { meals, recipes } from '../fixtures'
+import DailyMenu from '@components/DailyMenu'
+import TwoLinesInformation from '@components/TwoLinesInformation'
 
 interface Recipe {
     name: string
@@ -30,27 +32,46 @@ const MealPlan = () => {
     const currentWeekDay = new Intl.DateTimeFormat('en-US', {
         weekday: 'long',
     }).format(Date.now())
-    // const [selectedMeals, setSelectedMeals] = useState([meals[0], meals[1]]);
-    // const [currentTypeOfMeal, setCurrentTypeOfMeal] = useState(null);
-    const [currentDay, setCurrentDay] = useState(currentWeekDay)
-    // const [modalDisplayed, setModalDisplayed] = useState(false);
-    const handleCurrentDayChange = (day: string) => setCurrentDay(day)
-    // const handleSelectMenuButtonClick = (typeOfMeal: string) => {
-    //   setCurrentTypeOfMeal(typeOfMeal);
-    //   setModalDisplayed(true);
-    // };
-    // const handleCloseModal = () => setModalDisplayed(false);
-    // const handleChooseRecipeClick = (recipe: Recipe) => {
-    //   const modifiedSelectedMeals = selectedMeals.map((meal: Meal) =>
-    //     meal.typeOfMeal === currentTypeOfMeal ? { ...meal, recipe: recipe } : meal
-    //   );
-    //   setSelectedMeals(modifiedSelectedMeals);
-    // };
 
-    const { antipasti, mainCourses } = {
-        antipasti: [{ name: 'Jamon de Parma', ingredients: ['jamon', 'oil'] }],
+    const [currentDay, setCurrentDay] = useState(currentWeekDay)
+    const handleCurrentDayChange = (day: string) => setCurrentDay(day)
+
+    const { starters, mainCourses, desserts, drinks } = {
+        starters: [{ name: 'Jamon de Parma', ingredients: ['jamon', 'oil'] }],
         mainCourses: [
-            { name: 'carrotPie', ingredients: ['carrot', 'eggs', 'cream'] },
+            {
+                name: 'Basque Chicken',
+                ingredients: ['chiken', 'basque', 'mozza'],
+            },
+            {
+                name: 'Celtic Couscous',
+                ingredients: ['couscous', 'pork', 'bourbon'],
+            },
+            {
+                name: 'French Blanquette',
+                ingredients: ['cream', 'meat', 'mushroom'],
+            },
+            { name: 'Osso Bucco', ingredients: ['meat', 'tomato', 'persil'] },
+            {
+                name: 'Indian Curry',
+                ingredients: ['curry', 'chicken', 'cream'],
+            },
+            { name: 'Carrot pie', ingredients: ['carrot', 'eggs', 'cream'] },
+            { name: 'Veggie Salad', ingredients: ['laitues', 'eggs', 'oil'] },
+            { name: 'Carrot pie', ingredients: ['carrot', 'eggs', 'cream'] },
+        ],
+        desserts: [
+            { name: 'Tiramisu', ingredients: ['mascarpone', 'biscuits'] },
+        ],
+        drinks: [
+            {
+                name: 'Carrot milkshake',
+                ingredients: ['carrot', 'kiwi', 'milk'],
+            },
+            {
+                name: 'Virgin Mojito',
+                ingredients: ['mint', 'sugar', 'ice'],
+            },
         ],
     }
 
@@ -59,78 +80,83 @@ const MealPlan = () => {
             <ScheduleNav
                 hsl={{
                     hue: getUserHue() || 0,
-                    // this value should be based on the filling percentage of the schedule
                     luminosity: 50,
                 }}
                 currentDay={currentDay}
                 onChange={handleCurrentDayChange}
             />
 
+            {/* use uuid to generate unique key */}
             <DailyMenu>
-                <DailyMenu.Section>
-                    <DailyMenu.Section.Title />
-                    <DailyMenu.Antipasti />
+                <DailyMenu.Section
+                    style={{
+                        gridArea: 'starters / starters / starters / starters',
+                        border: '2px dotted #ff1101',
+                        marginTop: '1em',
+                    }}
+                >
+                    <DailyMenu.Section.Title label={'starters'} />
+                    <DailyMenu.Section.Dishes>
+                        {starters.map(({ name, ingredients }) => (
+                            <TwoLinesInformation
+                                key={name}
+                                first={name}
+                                second={ingredients.join(', ')}
+                            />
+                        ))}
+                    </DailyMenu.Section.Dishes>
                 </DailyMenu.Section>
 
-                <DailyMenu.Section>
-                    <DailyMenu.Section.Title />
-                    <DailyMenu.MainCourse />
+                <DailyMenu.Section style={{ gridArea: 'mainCourses' }}>
+                    <DailyMenu.Section.Title label={'main course'} />
+                    <DailyMenu.Section.Dishes>
+                        {mainCourses.map(({ name, ingredients }) => (
+                            <TwoLinesInformation
+                                key={name}
+                                first={name}
+                                second={ingredients.join(', ')}
+                            />
+                        ))}
+                    </DailyMenu.Section.Dishes>
                 </DailyMenu.Section>
 
-                <DailyMenu.Section>
-                    <DailyMenu.Section.Title />
-                    <DailyMenu.Dessert />
+                <DailyMenu.Section
+                    style={{
+                        marginTop: '1em',
+                        gridArea: 'desserts',
+                        marginLeft: '1em',
+                    }}
+                >
+                    <DailyMenu.Section.Title label={'dessert'} />
+                    <DailyMenu.Section.Dishes>
+                        {desserts.map(({ name, ingredients }) => (
+                            <TwoLinesInformation
+                                key={name}
+                                first={name}
+                                second={ingredients.join(', ')}
+                            />
+                        ))}
+                    </DailyMenu.Section.Dishes>
                 </DailyMenu.Section>
 
-                <DailyMenu.Section>
-                    <DailyMenu.Section.Title />
-                    <DailyMenu.Drinks />
+                <DailyMenu.Section
+                    style={{
+                        border: '2px dotted #ff1101',
+                        gridArea: 'drinks',
+                    }}
+                >
+                    <DailyMenu.Section.Title label={'drinks'} />
+                    <DailyMenu.Section.Dishes>
+                        {drinks.map(({ name, ingredients }) => (
+                            <TwoLinesInformation
+                                key={name}
+                                first={name}
+                                second={ingredients.join(', ')}
+                            />
+                        ))}
+                    </DailyMenu.Section.Dishes>
                 </DailyMenu.Section>
             </DailyMenu>
-
-            {/* <div>
-        <h4>Antipastis</h4>
-        <strong>Jamon de palma</strong>
-        <span>Jamon, oil</span>
-      </div>
-      <div>
-        <h4>Dishes</h4>
-        <strong>Carot pie</strong>
-        <span>Carots, eggs, cream, origan</span>
-        <strong>Mountain Duck</strong>
-        <span>potatoes, duck, spinachs, cream, honey, pepper</span>
-      </div>
-      <div>
-        <h4>Desserts</h4>
-        <strong>Banana bread</strong>
-        <span>banana, eggs, flour</span>
-        <strong>Pancakes</strong>
-        <span>eggs, milk, flour</span>
-      </div>
-      <div>
-        <h4>Drinks</h4>
-        <strong>Citronnade</strong>
-        <span>citron, mint, ginger</span>
-        <strong>Milkshake</strong>
-        <span>kinder bueno, milk, ice</span>
-      </div> */}
-            {/* <MenuOfTheDay
-        selectedMeals={selectedMeals}
-        onSelectMenuButtonClick={handleSelectMenuButtonClick}
-        hue={getUserHue() || 0}
-      />
-      {modalDisplayed && (
-        <MenuSelectModal
-          defaultRecipe={
-            selectedMeals.find(
-              (meal: Meal) => meal.typeOfMeal === currentTypeOfMeal
-            ).recipe
-          }
-          onChooseRecipeClick={handleChooseRecipeClick}
-          recipes={recipes}
-          onCloseModal={handleCloseModal}
-        />
-      )} */}
         </>
     )
 }

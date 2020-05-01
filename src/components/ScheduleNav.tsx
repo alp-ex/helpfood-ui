@@ -28,12 +28,12 @@ const PlanningNav = ({
     weekStartAt = 1,
     currentDay,
     hsl: { hue, luminosity },
-    onDayChoose,
 }: Props) => {
     const sortedDayOfWeek = [
         ...daysOfTheWeek.slice(weekStartAt - 1),
         ...daysOfTheWeek.slice(0, weekStartAt - 1),
     ].slice(0, daysInAWeek)
+    const [shouldDisplayAllDays, setShouldDisplayAllDays] = useState(false)
     const [currentDayIndex, setCurrentDayIndex] = useState(
         sortedDayOfWeek.findIndex(
             (day) => day.toLowerCase() === currentDay.toLowerCase()
@@ -51,10 +51,11 @@ const PlanningNav = ({
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                padding: '0.5% 13%',
+                padding: '2% 2% 0',
                 fontSize: '1.5em',
-                color: `hsl(0, 0%, 100%)`,
-                background: `hsl(${hue}, 100%, ${luminosity}%)`,
+                color: 'rgba(255, 17, 1, 0.53)',
+                width: '50vw',
+                fontFamily: `'Josefin Slab', serif`,
             }}
         >
             {/* alter brightness when disabled */}
@@ -71,7 +72,45 @@ const PlanningNav = ({
             >
                 <MdChevronLeft />
             </span>
-            <span>{daysOfTheWeek[currentDayIndex]}</span>
+
+            {shouldDisplayAllDays ? (
+                <ul
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-around',
+                        width: '100%',
+                    }}
+                >
+                    {daysOfTheWeek.map((day, index) => (
+                        <span
+                            key={day}
+                            style={{
+                                cursor: 'pointer',
+                                color:
+                                    index === currentDayIndex
+                                        ? 'rgba(255, 17, 1, 0.18)'
+                                        : 'inherit',
+                            }}
+                            onClick={() => {
+                                setCurrentDayIndex(index)
+                                setShouldDisplayAllDays(false)
+                            }}
+                        >
+                            {day.substring(0, 1)}
+                        </span>
+                    ))}
+                </ul>
+            ) : (
+                <span
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                        setShouldDisplayAllDays(true)
+                    }}
+                >
+                    {daysOfTheWeek[currentDayIndex]}
+                </span>
+            )}
+
             <span
                 style={{
                     minWidth: '50px',
