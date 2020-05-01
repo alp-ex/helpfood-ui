@@ -3,7 +3,6 @@ import ScheduleNav from '@components/ScheduleNav'
 import MenuOfTheDay from '@components/MenuOfTheDay'
 import MenuSelectModal from '@components/MenuSelectModal'
 import { getUserHue } from '../services/getUserInformations'
-import { meals, recipes } from '../fixtures'
 import DailyMenu from '@components/DailyMenu'
 import TwoLinesInformation from '@components/TwoLinesInformation'
 
