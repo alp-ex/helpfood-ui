@@ -1,46 +1,119 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, CSSProperties, MouseEvent } from 'react'
+import EditIcon from '@assets/editIcon.svg'
+
+interface PrivateSectionProps {
+    style?: CSSProperties
+    children?: ReactNode
+}
 
 interface SectionProps {
-    style?: {
-        gridArea?: string
-        border?: string
-        margin?: number | string
-        marginLeft?: number | string
-        marginTop?: number | string
-    }
+    rootStyle?: CSSProperties
+    editButtonStyle?: CSSProperties
     children?: ReactNode
-    onClick?: () => void
+    onEditButtonClick?: (event: MouseEvent) => void
+}
+
+interface SectionFormProps {
+    rootStyle?: CSSProperties
+    submitButtonStyle?: CSSProperties
+    abortButtonStyle?: CSSProperties
+    children?: ReactNode
+    onAbortButtonClick: (event: MouseEvent) => void
+    onSubmitButtonClick: (event: MouseEvent) => void
 }
 
 interface TitleProps {
     label: string
 }
 
-const Section = ({ children, onClick, style: customStyle }: SectionProps) => {
+const _Section = ({ children, style: customStyle }: PrivateSectionProps) => {
     return (
-        <section style={{ display: 'flex', padding: '2%', ...customStyle }}>
+        <section
+            style={{ display: 'flex', padding: '1em 0.5em', ...customStyle }}
+        >
             {children}
         </section>
     )
 }
 
-const Title = ({ label }: TitleProps) => {
+const Section = ({
+    children,
+    onEditButtonClick,
+    rootStyle: customRootStyle,
+    editButtonStyle: customEditButtonStyle,
+}: SectionProps) => {
     return (
-        <h3
+        <_Section style={customRootStyle}>
+            {children}
+
+            <img
+                onClick={onEditButtonClick}
+                src={EditIcon}
+                style={{
+                    margin: '0.4em',
+                    width: '0.7em',
+                    cursor: 'pointer',
+                    ...customEditButtonStyle,
+                }}
+            />
+        </_Section>
+    )
+}
+
+const SectionForm = ({
+    children,
+    onAbortButtonClick,
+    onSubmitButtonClick,
+    rootStyle: customRootStyle,
+    abortButtonStyle: customAbortButtonStyle,
+    submitButtonStyle: customSubmitButtonStyle,
+}: SectionFormProps) => {
+    return (
+        <_Section
             style={{
-                color: 'rgb(255, 255, 255)',
-                textTransform: 'uppercase',
-                whiteSpace: 'nowrap',
-                writingMode: 'vertical-lr',
-                transform: 'rotate(180deg)',
-                marginLeft: '0px',
-                alignSelf: 'baseline',
-                fontSize: '2em',
-                WebkitTextStroke: '0.01px red',
+                width: '100%',
+                boxSizing: 'border-box',
+                position: 'fixed',
+                background: '#fff5b2',
+                zIndex: 300,
+                height: '100vh',
+                bottom: '0',
+                left: '0',
             }}
         >
-            {label}
-        </h3>
+            {children}
+            {/* 
+            <FormBoutonsGroup>
+                <AbortButton onClick={onAbortButtonClick} />
+                <SubmitButton onClick={onSubmitButtonClick} />
+            </FormBoutonsGroup> */}
+        </_Section>
+    )
+}
+
+const Title = ({ label }: TitleProps) => {
+    return (
+        <div
+            style={{
+                writingMode: 'vertical-lr',
+                whiteSpace: 'nowrap',
+                alignSelf: 'baseline',
+                fontSize: '2em',
+                display: 'flex',
+            }}
+        >
+            <h3
+                style={{
+                    transform: 'rotate(180deg)',
+                    marginLeft: '0px',
+                    color: 'rgb(255, 255, 255)',
+                    textTransform: 'uppercase',
+                    WebkitTextStroke: '0.01px red',
+                }}
+            >
+                {label}
+            </h3>
+        </div>
     )
 }
 

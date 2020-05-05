@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import WeekDaysNav from '@components/WeekDaysNav'
 import DailyMenu from '@components/DailyMenu'
 import TwoLinesInformation from '@components/TwoLinesInformation'
+import { MdModeEdit } from 'react-icons/md'
 
 const MealPlan = () => {
     const currentWeekDay = new Intl.DateTimeFormat('en-US', {
@@ -111,7 +112,7 @@ const MealPlan = () => {
             {/* use uuid to generate unique key because we cant trust be ? */}
             <DailyMenu>
                 <DailyMenu.Section
-                    style={{
+                    rootStyle={{
                         gridArea: 'starters / starters / starters / starters',
                         border: '2px dotted #ff1101',
                         marginTop: '1em',
@@ -131,7 +132,11 @@ const MealPlan = () => {
                     </DailyMenu.Section.Dishes>
                 </DailyMenu.Section>
 
-                <DailyMenu.Section style={{ gridArea: 'mainCourses' }}>
+                <DailyMenu.Section
+                    rootStyle={{
+                        gridArea: 'mainCourses',
+                    }}
+                >
                     <DailyMenu.Section.Title label={'main course'} />
                     <DailyMenu.Section.Dishes>
                         {days[currentDay.toLowerCase()].mainCourses.map(
@@ -147,9 +152,9 @@ const MealPlan = () => {
                 </DailyMenu.Section>
 
                 <DailyMenu.Section
-                    style={{
+                    rootStyle={{
                         gridArea: 'desserts',
-                        margin: '3em',
+                        margin: '1em',
                     }}
                 >
                     <DailyMenu.Section.Title label={'dessert'} />
@@ -167,7 +172,7 @@ const MealPlan = () => {
                 </DailyMenu.Section>
 
                 <DailyMenu.Section
-                    style={{
+                    rootStyle={{
                         border: '2px dotted #ff1101',
                         gridArea: 'drinks',
                     }}
