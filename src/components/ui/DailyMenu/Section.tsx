@@ -1,4 +1,4 @@
-import React, { ReactNode, CSSProperties, MouseEvent } from 'react'
+import React, { ReactNode, CSSProperties, MouseEvent, useState } from 'react'
 import EditIcon from '@assets/editIcon.svg'
 
 interface PrivateSectionProps {
@@ -10,7 +10,7 @@ interface SectionProps {
     rootStyle?: CSSProperties
     editButtonStyle?: CSSProperties
     children?: ReactNode
-    onEditButtonClick?: (event: MouseEvent) => void
+    onEditButtonClick: (event: MouseEvent) => void
 }
 
 interface SectionFormProps {
@@ -19,7 +19,7 @@ interface SectionFormProps {
     abortButtonStyle?: CSSProperties
     children?: ReactNode
     onAbortButtonClick: (event: MouseEvent) => void
-    onSubmitButtonClick: (event: MouseEvent) => void
+    onSubmitButtonClick: ({ event: MouseEvent, formState: {} }) => void
 }
 
 interface TitleProps {
@@ -47,12 +47,15 @@ const Section = ({
             {children}
 
             <img
-                onClick={onEditButtonClick}
+                onClick={(evt: MouseEvent) => {
+                    onEditButtonClick(evt)
+                }}
                 src={EditIcon}
                 style={{
                     margin: '0.4em',
                     width: '0.7em',
                     cursor: 'pointer',
+                    alignSelf: 'baseline',
                     ...customEditButtonStyle,
                 }}
             />
@@ -62,9 +65,9 @@ const Section = ({
 
 const SectionForm = ({
     children,
+    rootStyle: customRootStyle,
     onAbortButtonClick,
     onSubmitButtonClick,
-    rootStyle: customRootStyle,
     abortButtonStyle: customAbortButtonStyle,
     submitButtonStyle: customSubmitButtonStyle,
 }: SectionFormProps) => {
@@ -79,11 +82,11 @@ const SectionForm = ({
                 height: '100vh',
                 bottom: '0',
                 left: '0',
+                ...customRootStyle,
             }}
         >
             {children}
-            {/* 
-            <FormBoutonsGroup>
+            {/* <FormBoutonsGroup>
                 <AbortButton onClick={onAbortButtonClick} />
                 <SubmitButton onClick={onSubmitButtonClick} />
             </FormBoutonsGroup> */}
@@ -135,5 +138,6 @@ const Dishes = ({ children }) => {
 
 Section.Title = Title
 Section.Dishes = Dishes
+Section.EditForm = SectionForm
 
 export default Section

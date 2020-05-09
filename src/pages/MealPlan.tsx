@@ -1,8 +1,39 @@
-import React, { useState } from 'react'
-import WeekDaysNav from '@components/WeekDaysNav'
-import DailyMenu from '@components/DailyMenu'
-import TwoLinesInformation from '@components/TwoLinesInformation'
-import { MdModeEdit } from 'react-icons/md'
+import React, { useState, useEffect, useReducer } from 'react'
+import WeekDaysNav from '@components/ui/WeekDaysNav'
+import DailyMenu from '@components/ui/DailyMenu'
+import TwoLinesInformation from '@components/ui/TwoLinesInformation'
+
+const {
+    SUBMIT_MENU_CHANGES,
+    ABORT_MENU_CHANGES,
+    START_MENU_CHANGES,
+    SAVE_MENU_FORM_STATE,
+} = Object.freeze({
+    SAVE_MENU_FORM_STATE: 'save current state of changes made in edit mode',
+    SUBMIT_MENU_CHANGES: 'menu changes has been submitted',
+    ABORT_MENU_CHANGES: 'menu changes has been aborted',
+    START_MENU_CHANGES: 'we ran edit mode for one menu section',
+})
+
+const mealPlanReducer = (prevState, { type, payload = null }) => {
+    switch (type) {
+        case SUBMIT_MENU_CHANGES: {
+            // add optimistic render
+            return { ...prevState }
+        }
+        case ABORT_MENU_CHANGES: {
+            return { ...prevState }
+        }
+        case START_MENU_CHANGES: {
+            return { ...prevState, sectionInEditMode: payload }
+        }
+        case SAVE_MENU_FORM_STATE: {
+            return { ...prevState, currentFormState: payload }
+        }
+        default:
+            throw new Error(`Unhandled action type: ${type}`)
+    }
+}
 
 const MealPlan = () => {
     const currentWeekDay = new Intl.DateTimeFormat('en-US', {
@@ -13,6 +44,13 @@ const MealPlan = () => {
     const handleCurrentDayChange = (day: string) => {
         setCurrentDay(day)
     }
+    const [{ sectionInEditMode, currentFormState }, dispatch] = useReducer(
+        mealPlanReducer,
+        {
+            sectionInEditMode: null,
+            currentFormState: null,
+        }
+    )
 
     const { starters, mainCourses, desserts, drinks } = {
         starters: [{ name: 'Jamon de Parma', ingredients: ['jamon', 'oil'] }],
@@ -53,50 +91,164 @@ const MealPlan = () => {
         ],
     }
 
-    const days = {
-        monday: {
-            starters: [],
-            mainCourses: [mainCourses[0], mainCourses[4]],
-            desserts: [],
-            drinks: [drinks[0]],
-        },
-        tuesday: {
-            starters: [starters[0]],
-            mainCourses: [mainCourses[5], mainCourses[3], mainCourses[0]],
-            desserts: [desserts[0]],
-            drinks: [],
-        },
-        wednesday: {
-            starters: [],
-            mainCourses: [mainCourses[0], mainCourses[4]],
-            desserts: [],
-            drinks: [drinks[0]],
-        },
-        thursday: {
-            starters,
-            mainCourses,
-            desserts,
-            drinks,
-        },
-        friday: {
-            starters: [],
-            mainCourses: [mainCourses[0], mainCourses[4]],
-            desserts: [],
-            drinks: [drinks[0]],
-        },
-        saturday: {
-            starters: [],
-            mainCourses: [mainCourses[0], mainCourses[4]],
-            desserts: [],
-            drinks: [drinks[0]],
-        },
-        sunday: {
-            starters: [],
-            mainCourses: [mainCourses[0], mainCourses[4]],
-            desserts: [],
-            drinks: [drinks[0]],
-        },
-    }
+    const mealsPlan = new Map([
+        [
+            'monday',
+            {
+                mealsSection: [
+                    {
+                        category: 'starters',
+                        dishes: [],
+                        style: {
+                            highlighted: true,
+                        },
+                    },
+                    {
+                        category: 'desserts',
+                        dishes: [],
+                        style: {
+                            highlighted: false,
+                        },
+                    },
+                    {
+                        category: 'mainCourses',
+                        dishes: [
+                            mainCourses[5],
+                            mainCourses[3],
+                            mainCourses[0],
+                        ],
+                        style: {
+                            highlighted: false,
+                        },
+                    },
+                    {
+                        category: 'drinks',
+                        dishes: [],
+                        style: {
+                            highlighted: true,
+                        },
+                    },
+                ],
+            },
+        ],
+        [
+            'tuesday',
+            {
+                mealsSection: [
+                    {
+                        category: 'starters',
+                        dishes: [],
+                        style: {
+                            highlighted: false,
+                        },
+                    },
+                    {
+                        category: 'desserts',
+                        dishes: [],
+                        style: {
+                            highlighted: true,
+                        },
+                    },
+                    {
+                        category: 'mainCourses',
+                        dishes: [
+                            mainCourses[5],
+                            mainCourses[3],
+                            mainCourses[0],
+                        ],
+                        style: {
+                            highlighted: false,
+                        },
+                    },
+                    {
+                        category: 'drinks',
+                        dishes: [],
+                        style: {
+                            highlighted: true,
+                        },
+                    },
+                ],
+            },
+        ],
+        [
+            'wednesday',
+            {
+                mealsSection: [
+                    {
+                        category: 'starters',
+                        dishes: [],
+                        style: {
+                            highlighted: false,
+                        },
+                    },
+                    {
+                        category: 'desserts',
+                        dishes: [],
+                        style: {
+                            highlighted: true,
+                        },
+                    },
+                    {
+                        category: 'mainCourses',
+                        dishes: [
+                            mainCourses[5],
+                            mainCourses[3],
+                            mainCourses[0],
+                        ],
+                        style: {
+                            highlighted: false,
+                        },
+                    },
+                    {
+                        category: 'drinks',
+                        dishes: [],
+                        style: {
+                            highlighted: true,
+                        },
+                    },
+                ],
+            },
+        ],
+        [
+            'saturday',
+            {
+                mealsSection: [
+                    {
+                        category: 'starters',
+                        dishes: [],
+                        style: {
+                            highlighted: false,
+                        },
+                    },
+                    {
+                        category: 'desserts',
+                        dishes: [],
+                        style: {
+                            highlighted: true,
+                        },
+                    },
+                    {
+                        category: 'mainCourses',
+                        dishes: [
+                            mainCourses[5],
+                            mainCourses[3],
+                            mainCourses[0],
+                        ],
+                        style: {
+                            highlighted: false,
+                        },
+                    },
+                    {
+                        category: 'drinks',
+                        dishes: [],
+                        style: {
+                            highlighted: true,
+                        },
+                    },
+                ],
+            },
+        ],
+    ])
 
     return (
         <>
@@ -109,87 +261,74 @@ const MealPlan = () => {
                 onChange={handleCurrentDayChange}
             />
 
-            {/* use uuid to generate unique key because we cant trust be ? */}
             <DailyMenu>
-                <DailyMenu.Section
-                    rootStyle={{
-                        gridArea: 'starters / starters / starters / starters',
-                        border: '2px dotted #ff1101',
-                        marginTop: '1em',
-                    }}
-                >
-                    <DailyMenu.Section.Title label={'starters'} />
-                    <DailyMenu.Section.Dishes>
-                        {days[currentDay.toLowerCase()].starters.map(
-                            ({ name, ingredients }) => (
-                                <TwoLinesInformation
-                                    key={name}
-                                    first={name}
-                                    second={ingredients.join(', ')}
-                                />
-                            )
-                        )}
-                    </DailyMenu.Section.Dishes>
-                </DailyMenu.Section>
-
-                <DailyMenu.Section
-                    rootStyle={{
-                        gridArea: 'mainCourses',
-                    }}
-                >
-                    <DailyMenu.Section.Title label={'main course'} />
-                    <DailyMenu.Section.Dishes>
-                        {days[currentDay.toLowerCase()].mainCourses.map(
-                            ({ name, ingredients }) => (
-                                <TwoLinesInformation
-                                    key={name}
-                                    first={name}
-                                    second={ingredients.join(', ')}
-                                />
-                            )
-                        )}
-                    </DailyMenu.Section.Dishes>
-                </DailyMenu.Section>
-
-                <DailyMenu.Section
-                    rootStyle={{
-                        gridArea: 'desserts',
-                        margin: '1em',
-                    }}
-                >
-                    <DailyMenu.Section.Title label={'dessert'} />
-                    <DailyMenu.Section.Dishes>
-                        {days[currentDay.toLowerCase()].desserts.map(
-                            ({ name, ingredients }) => (
-                                <TwoLinesInformation
-                                    key={name}
-                                    first={name}
-                                    second={ingredients.join(', ')}
-                                />
-                            )
-                        )}
-                    </DailyMenu.Section.Dishes>
-                </DailyMenu.Section>
-
-                <DailyMenu.Section
-                    rootStyle={{
-                        border: '2px dotted #ff1101',
-                        gridArea: 'drinks',
-                    }}
-                >
-                    <DailyMenu.Section.Title label={'drinks'} />
-                    <DailyMenu.Section.Dishes>
-                        {days[currentDay.toLowerCase()].drinks.map(
-                            ({ name, ingredients }) => (
-                                <TwoLinesInformation
-                                    key={name}
-                                    first={name}
-                                    second={ingredients.join(', ')}
-                                />
-                            )
-                        )}
-                    </DailyMenu.Section.Dishes>
-                </DailyMenu.Section>
+                {mealsPlan
+                    .get(currentDay.toLowerCase())
+                    .mealsSection.map(({ category, dishes, style }) =>
+                        sectionInEditMode === category ? (
+                            <DailyMenu.Section.EditForm
+                                key={category}
+                                onSubmitButtonClick={() => {
+                                    dispatch({
+                                        type: SUBMIT_MENU_CHANGES,
+                                    })
+                                }}
+                                onAbortButtonClick={() => {
+                                    dispatch({ type: ABORT_MENU_CHANGES })
+                                }}
+                            >
+                                <DailyMenu.Section.Title label={category} />
+                                <DailyMenu.Section.Dishes>
+                                    {dishes.map(({ name, ingredients }) => (
+                                        <TwoLinesInformation
+                                            isInEditMode
+                                            key={name}
+                                            title={name}
+                                            content={ingredients.join(', ')}
+                                            onChange={({ title, content }) => {
+                                                dispatch({
+                                                    type: SAVE_MENU_FORM_STATE,
+                                                    payload: {
+                                                        category,
+                                                        name: title,
+                                                        ingredients: content,
+                                                    },
+                                                })
+                                            }}
+                                        />
+                                    ))}
+                                </DailyMenu.Section.Dishes>
+                            </DailyMenu.Section.EditForm>
+                        ) : (
+                            <DailyMenu.Section
+                                key={category}
+                                onEditButtonClick={() => {
+                                    dispatch({
+                                        type: START_MENU_CHANGES,
+                                        payload: category,
+                                    })
+                                }}
+                                rootStyle={{
+                                    gridArea: category,
+                                    border: style.highlighted
+                                        ? '2px dotted #ff1101'
+                                        : 'inherit',
+                                    marginTop: '1em',
+                                }}
+                            >
+                                <DailyMenu.Section.Title label={category} />
+                                <DailyMenu.Section.Dishes>
+                                    {dishes.map(({ name, ingredients }) => (
+                                        <TwoLinesInformation
+                                            key={name}
+                                            title={name}
+                                            content={ingredients.join(', ')}
+                                        />
+                                    ))}
+                                </DailyMenu.Section.Dishes>
+                            </DailyMenu.Section>
+                        )
+                    )}
             </DailyMenu>
         </>
     )
