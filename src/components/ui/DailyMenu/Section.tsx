@@ -1,5 +1,6 @@
-import React, { ReactNode, CSSProperties, MouseEvent, useState } from 'react'
-import EditIcon from '@assets/editIcon.svg'
+import React, { ReactNode, CSSProperties, MouseEvent } from 'react'
+import Button from '../Button'
+import { EditIcon } from '@components/icons'
 
 interface PrivateSectionProps {
     style?: CSSProperties
@@ -14,12 +15,19 @@ interface SectionProps {
 }
 
 interface SectionFormProps {
-    rootStyle?: CSSProperties
-    submitButtonStyle?: CSSProperties
-    abortButtonStyle?: CSSProperties
+    style?: {
+        root?: CSSProperties
+        submitButton?: CSSProperties
+        abortButton?: CSSProperties
+        formValidationButtons?: CSSProperties
+    }
+    label?: {
+        abortButton?: string
+        submitButton?: string
+    }
     children?: ReactNode
     onAbortButtonClick: (event: MouseEvent) => void
-    onSubmitButtonClick: ({ event: MouseEvent, formState: {} }) => void
+    onSubmitButtonClick: (event: MouseEvent) => void
 }
 
 interface TitleProps {
@@ -46,11 +54,10 @@ const Section = ({
         <_Section style={customRootStyle}>
             {children}
 
-            <img
+            <EditIcon
                 onClick={(evt: MouseEvent) => {
                     onEditButtonClick(evt)
                 }}
-                src={EditIcon}
                 style={{
                     margin: '0.4em',
                     width: '0.7em',
@@ -65,11 +72,18 @@ const Section = ({
 
 const SectionForm = ({
     children,
-    rootStyle: customRootStyle,
     onAbortButtonClick,
     onSubmitButtonClick,
-    abortButtonStyle: customAbortButtonStyle,
-    submitButtonStyle: customSubmitButtonStyle,
+    style: {
+        root: customRootStyle,
+        abortButton: customAbortButtonStyle,
+        submitButton: customSubmitButtonStyle,
+        formValidationButtons: customFormValidationButtonsStyle,
+    } = {},
+    label: {
+        abortButton: customAbortButtonLabel,
+        submitButton: customSubmitButtonLabel,
+    } = {},
 }: SectionFormProps) => {
     return (
         <_Section
@@ -86,10 +100,26 @@ const SectionForm = ({
             }}
         >
             {children}
-            {/* <FormBoutonsGroup>
-                <AbortButton onClick={onAbortButtonClick} />
-                <SubmitButton onClick={onSubmitButtonClick} />
-            </FormBoutonsGroup> */}
+
+            <div
+                style={{ display: 'flex', ...customFormValidationButtonsStyle }}
+            >
+                <Button
+                    style={{ cursor: 'pointer', ...customAbortButtonStyle }}
+                    variant="secondary"
+                    onClick={onAbortButtonClick}
+                >
+                    {customAbortButtonLabel || 'Abort'}
+                </Button>
+
+                <Button
+                    style={{ cursor: 'pointer', ...customSubmitButtonStyle }}
+                    variant="primary"
+                    onClick={onSubmitButtonClick}
+                >
+                    {customSubmitButtonLabel || 'Submit'}
+                </Button>
+            </div>
         </_Section>
     )
 }

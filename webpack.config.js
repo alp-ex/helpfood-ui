@@ -8,7 +8,6 @@ module.exports = {
     output: {
         publicPath: '/',
     },
-    // this is too much costly, can't we use it only on dev mode ?
     devtool: 'cheap-module-eval-source-map',
     devServer: {
         contentBase: './dist/assets',
@@ -22,11 +21,7 @@ module.exports = {
         rules: [
             {
                 test: /\.(png|jpe?g|svg|gif)$/i,
-                use: [
-                    {
-                        loader: 'file-loader',
-                    },
-                ],
+                use: ['file-loader', '@svgr/webpack'],
             },
             {
                 test: /\.css$/i,

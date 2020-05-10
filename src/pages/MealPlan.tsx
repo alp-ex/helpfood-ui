@@ -2,13 +2,20 @@ import React, { useState, useEffect, useReducer } from 'react'
 import WeekDaysNav from '@components/ui/WeekDaysNav'
 import DailyMenu from '@components/ui/DailyMenu'
 import TwoLinesInformation from '@components/ui/TwoLinesInformation'
+import Button from '@components/ui/Button'
+import { AddIcon } from '@components/icons'
 
 const {
     SUBMIT_MENU_CHANGES,
     ABORT_MENU_CHANGES,
     START_MENU_CHANGES,
     SAVE_MENU_FORM_STATE,
+    SAVE_UPDATED_DISH_FORM_STATE,
+    START_DISHES_CREATION,
 } = Object.freeze({
+    SAVE_UPDATED_DISH_FORM_STATE:
+        'save current state of changes made to a particular dish in edit mode',
+    START_DISHES_CREATION: 'start creating dishes in edit mode',
     SAVE_MENU_FORM_STATE: 'save current state of changes made in edit mode',
     SUBMIT_MENU_CHANGES: 'menu changes has been submitted',
     ABORT_MENU_CHANGES: 'menu changes has been aborted',
@@ -19,10 +26,10 @@ const mealPlanReducer = (prevState, { type, payload = null }) => {
     switch (type) {
         case SUBMIT_MENU_CHANGES: {
             // add optimistic render
-            return { ...prevState }
+            return { ...prevState, sectionInEditMode: null }
         }
         case ABORT_MENU_CHANGES: {
-            return { ...prevState }
+            return { ...prevState, sectionInEditMode: null }
         }
         case START_MENU_CHANGES: {
             return { ...prevState, sectionInEditMode: payload }
@@ -112,11 +119,7 @@ const MealPlan = () => {
                     },
                     {
                         category: 'mainCourses',
-                        dishes: [
-                            mainCourses[5],
-                            mainCourses[3],
-                            mainCourses[0],
-                        ],
+                        dishes: [mainCourses[5], mainCourses[0]],
                         style: {
                             highlighted: false,
                         },
@@ -171,7 +174,7 @@ const MealPlan = () => {
             },
         ],
         [
-            'wednesday',
+            'sunday',
             {
                 mealsSection: [
                     {
@@ -279,7 +282,10 @@ const MealPlan = () => {
                             >
                                 <DailyMenu.Section.Title label={category} />
                                 <DailyMenu.Section.Dishes>
-                                    {dishes.map(({ name, ingredients }) => (
+                                    {[
+                                        ...dishes,
+                                        ...currentFormState.newDishes,
+                                    ].map(({ name, ingredients }) => (
                                         <TwoLinesInformation
                                             isInEditMode
                                             key={name}
@@ -287,7 +293,7 @@ const MealPlan = () => {
                                             content={ingredients.join(', ')}
                                             onChange={({ title, content }) => {
                                                 dispatch({
-                                                    type: SAVE_MENU_FORM_STATE,
+                                                    type: SAVE_UPDATED_DISH_FORM_STATE,
                                                     payload: {
                                                         category,
                                                         name: title,
@@ -297,6 +303,15 @@ const MealPlan = () => {
                                             }}
                                         />
                                     ))}
+                                    <Button
+                                        onClick={() => {
+                                            dispatch({
+                                                type: START_DISHES_CREATION,
+                                            })
+                                        }}
+                                    >
+                                        <AddIcon onClick={() => {}} />
+                                    </Button>
                                 </DailyMenu.Section.Dishes>
                             </DailyMenu.Section.EditForm>
                         ) : (
