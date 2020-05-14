@@ -2,9 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react'
 import WeekDaysNav from '@components/ui/WeekDaysNav'
 import DailyMenu from '@components/ui/DailyMenu'
 import TwoLinesInformation from '@components/ui/TwoLinesInformation'
-import Button from '@components/ui/Button'
-import { AddIcon, SVGIcon } from '@components/icons'
-import MultiSelect from '@components/ui/MultiSelect'
+import Select from '@components/ui/Select'
 
 const msg = Object.freeze({
     selectDishes: 'Dishes',
@@ -324,17 +322,18 @@ const MealPlan = () => {
                                     ))}
 
                                     <div style={{ display: 'flex' }}>
-                                        <MultiSelect
+                                        <Select
                                             loadOptions={() => {}}
                                             createOptions={() => {}}
                                             // get intl context
                                             placeholder={msg.selectDishes}
                                         />
 
-                                        <MultiSelect
+                                        <Select
                                             loadOptions={() => {}}
                                             createOptions={() => {}}
                                             placeholder={msg.selectIngredients}
+                                            canSelectMultipleValues
                                         />
                                     </div>
                                 </DailyMenu.Section.Dishes>
