@@ -20,8 +20,8 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(png|jpe?g|svg|gif)$/i,
-                use: ['file-loader', '@svgr/webpack'],
+                test: /\.svg$/,
+                use: ['@svgr/webpack'],
             },
             {
                 test: /\.css$/i,

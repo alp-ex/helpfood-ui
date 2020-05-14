@@ -1,6 +1,6 @@
 import React, { ReactNode, CSSProperties, MouseEvent } from 'react'
 import Button from '../Button'
-import { EditIcon } from '@components/icons'
+import { EditIcon, SVGIcon } from '@components/icons'
 
 interface PrivateSectionProps {
     style?: CSSProperties
@@ -36,9 +36,7 @@ interface TitleProps {
 
 const _Section = ({ children, style: customStyle }: PrivateSectionProps) => {
     return (
-        <section
-            style={{ display: 'flex', padding: '1em 0.5em', ...customStyle }}
-        >
+        <section style={{ display: 'flex', padding: '1em', ...customStyle }}>
             {children}
         </section>
     )
@@ -54,18 +52,20 @@ const Section = ({
         <_Section style={customRootStyle}>
             {children}
 
-            <EditIcon
-                onClick={(evt: MouseEvent) => {
-                    onEditButtonClick(evt)
-                }}
-                style={{
-                    margin: '0.4em',
-                    width: '0.7em',
-                    cursor: 'pointer',
-                    alignSelf: 'baseline',
-                    ...customEditButtonStyle,
-                }}
-            />
+            <SVGIcon>
+                <EditIcon
+                    onClick={(evt: MouseEvent) => {
+                        onEditButtonClick(evt)
+                    }}
+                    style={{
+                        width: '1em',
+                        height: 'auto',
+                        cursor: 'pointer',
+                        alignSelf: 'baseline',
+                        ...customEditButtonStyle,
+                    }}
+                />
+            </SVGIcon>
         </_Section>
     )
 }

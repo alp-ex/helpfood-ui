@@ -3,7 +3,13 @@ import WeekDaysNav from '@components/ui/WeekDaysNav'
 import DailyMenu from '@components/ui/DailyMenu'
 import TwoLinesInformation from '@components/ui/TwoLinesInformation'
 import Button from '@components/ui/Button'
-import { AddIcon } from '@components/icons'
+import { AddIcon, SVGIcon } from '@components/icons'
+import MultiSelect from '@components/ui/MultiSelect'
+
+const msg = Object.freeze({
+    selectDishes: 'Dishes',
+    selectIngredients: 'Dishes',
+})
 
 const {
     SUBMIT_MENU_CHANGES,
@@ -32,10 +38,27 @@ const mealPlanReducer = (prevState, { type, payload = null }) => {
             return { ...prevState, sectionInEditMode: null }
         }
         case START_MENU_CHANGES: {
-            return { ...prevState, sectionInEditMode: payload }
+            return {
+                ...prevState,
+                sectionInEditMode: payload.sectionInEditMode,
+            }
+        }
+        case START_DISHES_CREATION: {
+            return {
+                ...prevState,
+                dishesToCreate: [
+                    ...prevState.dishesToCreate,
+                    payload.dishesToCreate,
+                ],
+            }
         }
         case SAVE_MENU_FORM_STATE: {
-            return { ...prevState, currentFormState: payload }
+            return {
+                ...prevState,
+                dishesToCreate: payload.dishesToCreate,
+                dishesToDelete: payload.dishesToDelete,
+                dishesToUpdate: payload.dishesToUpdate,
+            }
         }
         default:
             throw new Error(`Unhandled action type: ${type}`)
@@ -46,16 +69,15 @@ const MealPlan = () => {
     const currentWeekDay = new Intl.DateTimeFormat('en-US', {
         weekday: 'long',
     }).format(Date.now())
-
     const [currentDay, setCurrentDay] = useState(currentWeekDay)
     const handleCurrentDayChange = (day: string) => {
         setCurrentDay(day)
     }
-    const [{ sectionInEditMode, currentFormState }, dispatch] = useReducer(
+    const [{ sectionInEditMode, dishesToCreate }, dispatch] = useReducer(
         mealPlanReducer,
         {
             sectionInEditMode: null,
-            currentFormState: null,
+            dishesToCreate: [],
         }
     )
 
@@ -100,7 +122,7 @@ const MealPlan = () => {
 
     const mealsPlan = new Map([
         [
-            'monday',
+            'thursday',
             {
                 mealsSection: [
                     {
@@ -282,10 +304,7 @@ const MealPlan = () => {
                             >
                                 <DailyMenu.Section.Title label={category} />
                                 <DailyMenu.Section.Dishes>
-                                    {[
-                                        ...dishes,
-                                        ...currentFormState.newDishes,
-                                    ].map(({ name, ingredients }) => (
+                                    {dishes.map(({ name, ingredients }) => (
                                         <TwoLinesInformation
                                             isInEditMode
                                             key={name}
@@ -303,15 +322,21 @@ const MealPlan = () => {
                                             }}
                                         />
                                     ))}
-                                    <Button
-                                        onClick={() => {
-                                            dispatch({
-                                                type: START_DISHES_CREATION,
-                                            })
-                                        }}
-                                    >
-                                        <AddIcon onClick={() => {}} />
-                                    </Button>
+
+                                    <div style={{ display: 'flex' }}>
+                                        <MultiSelect
+                                            loadOptions={() => {}}
+                                            createOptions={() => {}}
+                                            // get intl context
+                                            placeholder={msg.selectDishes}
+                                        />
+
+                                        <MultiSelect
+                                            loadOptions={() => {}}
+                                            createOptions={() => {}}
+                                            placeholder={msg.selectIngredients}
+                                        />
+                                    </div>
                                 </DailyMenu.Section.Dishes>
                             </DailyMenu.Section.EditForm>
                         ) : (
@@ -320,7 +345,9 @@ const MealPlan = () => {
                                 onEditButtonClick={() => {
                                     dispatch({
                                         type: START_MENU_CHANGES,
-                                        payload: category,
+                                        payload: {
+                                            sectionInEditMode: category,
+                                        },
                                     })
                                 }}
                                 rootStyle={{

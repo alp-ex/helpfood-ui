@@ -11,12 +11,6 @@ const { UPDATE_MEALS_STARTED, , UPDATE_MEALS_SUCCEED, UPDATE_MEALS_FAILED } = {
     UPDATE_MEALS_FAILED: 'update of meals failed',
 }
 
-// meals: [{
-//     category: dessert,
-//     dishes: [{name: tarte à la courge,
-//     ingredients: [{label: tarte, value: qsd3444kj4455lk4}]}]
-// }]
-
 function mealReducer(prevState, { type, payload }) {
     switch (type) {
         case UPDATE_MEALS_STARTED: {

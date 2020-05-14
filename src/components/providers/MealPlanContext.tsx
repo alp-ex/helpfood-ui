@@ -11,16 +11,6 @@ const { UPDATE_MEAL_PLAN_STARTED, , UPDATE_MEAL_PLAN_SUCCEED, UPDATE_MEAL_PLAN_F
     UPDATE_MEAL_PLAN_FAILED: 'update of meals of specified day and category failed',
 }
 
-// mealsplan: {
-//     monday: {
-//          category: dessert,
-//          dishes: [{
-//              name: tarte à la courge,
-//              ingredients: [{label: tarte, value: qsd3444kj4455lk4}]
-//          }]
-//     }
-// }
-
 function mealPlanReducer(prevState, { type, payload }) {
     switch (type) {
         case UPDATE_MEAL_PLAN_STARTED: {

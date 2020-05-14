@@ -1,7 +1,7 @@
 import { Route, Switch, Redirect } from 'react-router-dom'
 
 // FIXME : add paths in tsconfig
-import Schedule from './pages/MealPlan'
+import MealPlan from './pages/MealPlan'
 import React from 'react'
 import Recipes from './pages/Recipes'
 import ShopList from './pages/ShopList'
@@ -12,7 +12,7 @@ const Router = () => {
             <Redirect exact from="/" to="/schedule" />
 
             <Switch>
-                <Route exact path="/schedule" component={Schedule} />
+                <Route exact path="/schedule" component={MealPlan} />
                 <Route path="/recipes" component={Recipes} />
                 <Route path="/shoplist" component={ShopList} />
             </Switch>
