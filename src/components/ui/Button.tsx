@@ -8,10 +8,33 @@ interface Props {
 }
 
 const variantStyles = new Map([
-    ['primary', { background: 'red', color: 'yellow' }],
+    [
+        'primary',
+        {
+            background: 'red',
+            color: '#fff5b2',
+            border: '1px red solid',
+            fontFamily: 'Josefin Slab',
+            cursor: 'pointer',
+            margin: '1em',
+            padding: '0.5em',
+            fontSize: '1.5em',
+            borderRadius: '5px',
+        },
+    ],
     [
         'secondary',
-        { background: 'transparent', color: 'red', border: '1px red solid' },
+        {
+            background: 'transparent',
+            color: 'red',
+            border: '1px red solid',
+            fontFamily: 'Josefin Slab',
+            cursor: 'pointer',
+            margin: '1em',
+            padding: '0.5em',
+            fontSize: '1.5em',
+            borderRadius: '5px',
+        },
     ],
 ])
 

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, CSSProperties } from 'react'
 import ReactSelect from 'react-select/async-creatable'
 
 interface Props {
@@ -6,6 +6,12 @@ interface Props {
     createOptions: () => void
     placeholder?: ReactNode
     canSelectMultipleValues?: boolean
+    styles?: {
+        container?: CSSProperties
+        control?: CSSProperties
+        placeholder?: CSSProperties
+        option?: CSSProperties
+    }
 }
 
 const Select = ({
@@ -13,9 +19,25 @@ const Select = ({
     createOptions,
     placeholder,
     canSelectMultipleValues = false,
+    styles: {
+        container: customContainerStyle,
+        control: customControlStyle,
+        placeholder: customPlaceholderStyle,
+        option: customOptionStyle,
+    } = {},
 }: Props) => {
     return (
         <ReactSelect
+            // https://github.com/JedWatson/react-select/blob/master/packages/react-select/src/styles.js
+            styles={{
+                container: (styles) => ({ ...styles, ...customContainerStyle }),
+                control: (styles) => ({ ...styles, ...customControlStyle }),
+                option: (styles) => ({ styles, ...customOptionStyle }),
+                placeholder: (styles) => ({
+                    ...styles,
+                    ...customPlaceholderStyle,
+                }),
+            }}
             isMulti={canSelectMultipleValues}
             onCreateOption={createOptions}
             loadOptions={loadOptions}

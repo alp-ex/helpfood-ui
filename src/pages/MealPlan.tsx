@@ -7,6 +7,8 @@ import Select from '@components/ui/Select'
 const msg = Object.freeze({
     selectDishes: 'Dishes',
     selectIngredients: 'Dishes',
+    editDishes: 'Edit',
+    createDishes: 'Create',
 })
 
 const {
@@ -120,7 +122,7 @@ const MealPlan = () => {
 
     const mealsPlan = new Map([
         [
-            'thursday',
+            'friday',
             {
                 mealsSection: [
                     {
@@ -302,8 +304,14 @@ const MealPlan = () => {
                             >
                                 <DailyMenu.Section.Title label={category} />
                                 <DailyMenu.Section.Dishes>
+                                    <h3>{msg.editDishes}</h3>
                                     {dishes.map(({ name, ingredients }) => (
                                         <TwoLinesInformation
+                                            styles={{
+                                                root: {
+                                                    width: '100%',
+                                                },
+                                            }}
                                             isInEditMode
                                             key={name}
                                             title={name}
@@ -321,16 +329,77 @@ const MealPlan = () => {
                                         />
                                     ))}
 
-                                    <div style={{ display: 'flex' }}>
+                                    <h3>{msg.createDishes}</h3>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            width: '80%',
+                                            margin: '0 auto',
+                                        }}
+                                    >
                                         <Select
-                                            loadOptions={() => {}}
+                                            styles={{
+                                                container: {
+                                                    flex: 1,
+                                                },
+                                            }}
+                                            loadOptions={() => {
+                                                return new Promise(
+                                                    (resolve, reject) =>
+                                                        resolve([
+                                                            {
+                                                                value:
+                                                                    'carrot pie',
+                                                                label:
+                                                                    'carrot pie',
+                                                            },
+                                                            {
+                                                                value: 'prout',
+                                                                label: 'prout',
+                                                            },
+                                                            {
+                                                                value:
+                                                                    'couucou',
+                                                                label:
+                                                                    'couucou',
+                                                            },
+                                                        ])
+                                                )
+                                            }}
                                             createOptions={() => {}}
                                             // get intl context
                                             placeholder={msg.selectDishes}
                                         />
 
                                         <Select
-                                            loadOptions={() => {}}
+                                            styles={{
+                                                container: {
+                                                    flex: 1,
+                                                },
+                                            }}
+                                            loadOptions={() => {
+                                                return new Promise(
+                                                    (resolve, reject) =>
+                                                        resolve([
+                                                            {
+                                                                value:
+                                                                    'carrot pie',
+                                                                label:
+                                                                    'carrot pie',
+                                                            },
+                                                            {
+                                                                value: 'prout',
+                                                                label: 'prout',
+                                                            },
+                                                            {
+                                                                value:
+                                                                    'couucou',
+                                                                label:
+                                                                    'couucou',
+                                                            },
+                                                        ])
+                                                )
+                                            }}
                                             createOptions={() => {}}
                                             placeholder={msg.selectIngredients}
                                             canSelectMultipleValues

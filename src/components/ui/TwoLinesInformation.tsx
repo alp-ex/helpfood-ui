@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
+import TextField from './TextField'
 
 interface Props {
+    styles?: { root?: CSSProperties }
     title: string
     content: string
     isInEditMode?: boolean
@@ -12,24 +14,25 @@ const TwoLinesInformation = ({
     content,
     isInEditMode = false,
     onChange,
+    styles: { root: customRootStyle } = {},
 }: Props) => {
     return (
         <article
             style={{
-                width: 'fit-content',
                 fontFamily: `'Josefin Slab', serif`,
+                ...customRootStyle,
             }}
         >
             {/* it doesn't sounds very neat, keep on trying to search a better solution ;) */}
             {isInEditMode ? (
                 <>
-                    <input
+                    <TextField
                         value={title}
                         onChange={(evt) =>
                             onChange({ title: evt.target.value, content })
                         }
                     />
-                    <input
+                    <TextField
                         value={content}
                         onChange={(evt) =>
                             onChange({ title, content: evt.target.value })

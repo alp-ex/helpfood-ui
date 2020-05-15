@@ -102,7 +102,14 @@ const SectionForm = ({
             {children}
 
             <div
-                style={{ display: 'flex', ...customFormValidationButtonsStyle }}
+                style={{
+                    display: 'flex',
+                    position: 'fixed',
+                    justifyContent: 'center',
+                    bottom: 0,
+                    width: '100%',
+                    ...customFormValidationButtonsStyle,
+                }}
             >
                 <Button
                     style={{ cursor: 'pointer', ...customAbortButtonStyle }}
@@ -159,6 +166,7 @@ const Dishes = ({ children }) => {
                 width: '100%',
                 alignItems: 'center',
                 textAlign: 'center',
+                padding: '1em',
             }}
         >
             {children}
@@ -166,8 +174,13 @@ const Dishes = ({ children }) => {
     )
 }
 
+const BlockForm = ({ children }) => {
+    return <form>{children}</form>
+}
+
 Section.Title = Title
 Section.Dishes = Dishes
 Section.EditForm = SectionForm
+SectionForm.Block = SectionForm
 
 export default Section
