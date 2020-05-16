@@ -30,7 +30,11 @@ const Select = ({
         <ReactSelect
             // https://github.com/JedWatson/react-select/blob/master/packages/react-select/src/styles.js
             styles={{
-                container: (styles) => ({ ...styles, ...customContainerStyle }),
+                container: (styles) => ({
+                    ...styles,
+                    ...customContainerStyle,
+                    fontSize: '1em',
+                }),
                 control: (styles) => ({ ...styles, ...customControlStyle }),
                 option: (styles) => ({ styles, ...customOptionStyle }),
                 placeholder: (styles) => ({

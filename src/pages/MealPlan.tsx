@@ -7,8 +7,8 @@ import Select from '@components/ui/Select'
 const msg = Object.freeze({
     selectDishes: 'Dishes',
     selectIngredients: 'Dishes',
-    editDishes: 'Edit',
-    createDishes: 'Create',
+    editDishes: 'Edit Dishes',
+    createDishes: 'Create Dishes',
 })
 
 const {
@@ -58,6 +58,11 @@ const mealPlanReducer = (prevState, { type, payload = null }) => {
                 dishesToCreate: payload.dishesToCreate,
                 dishesToDelete: payload.dishesToDelete,
                 dishesToUpdate: payload.dishesToUpdate,
+            }
+        }
+        case SAVE_UPDATED_DISH_FORM_STATE: {
+            return {
+                ...prevState,
             }
         }
         default:
@@ -289,156 +294,39 @@ const MealPlan = () => {
             <DailyMenu>
                 {mealsPlan
                     .get(currentDay.toLowerCase())
-                    .mealsSection.map(({ category, dishes, style }) =>
-                        sectionInEditMode === category ? (
-                            <DailyMenu.Section.EditForm
-                                key={category}
-                                onSubmitButtonClick={() => {
-                                    dispatch({
-                                        type: SUBMIT_MENU_CHANGES,
-                                    })
-                                }}
-                                onAbortButtonClick={() => {
-                                    dispatch({ type: ABORT_MENU_CHANGES })
-                                }}
-                            >
-                                <DailyMenu.Section.Title label={category} />
-                                <DailyMenu.Section.Dishes>
-                                    <h3>{msg.editDishes}</h3>
-                                    {dishes.map(({ name, ingredients }) => (
-                                        <TwoLinesInformation
-                                            styles={{
-                                                root: {
-                                                    width: '100%',
-                                                },
-                                            }}
-                                            isInEditMode
-                                            key={name}
-                                            title={name}
-                                            content={ingredients.join(', ')}
-                                            onChange={({ title, content }) => {
-                                                dispatch({
-                                                    type: SAVE_UPDATED_DISH_FORM_STATE,
-                                                    payload: {
-                                                        category,
-                                                        name: title,
-                                                        ingredients: content,
-                                                    },
-                                                })
-                                            }}
-                                        />
-                                    ))}
-
-                                    <h3>{msg.createDishes}</h3>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            width: '80%',
-                                            margin: '0 auto',
-                                        }}
-                                    >
-                                        <Select
-                                            styles={{
-                                                container: {
-                                                    flex: 1,
-                                                },
-                                            }}
-                                            loadOptions={() => {
-                                                return new Promise(
-                                                    (resolve, reject) =>
-                                                        resolve([
-                                                            {
-                                                                value:
-                                                                    'carrot pie',
-                                                                label:
-                                                                    'carrot pie',
-                                                            },
-                                                            {
-                                                                value: 'prout',
-                                                                label: 'prout',
-                                                            },
-                                                            {
-                                                                value:
-                                                                    'couucou',
-                                                                label:
-                                                                    'couucou',
-                                                            },
-                                                        ])
-                                                )
-                                            }}
-                                            createOptions={() => {}}
-                                            // get intl context
-                                            placeholder={msg.selectDishes}
-                                        />
-
-                                        <Select
-                                            styles={{
-                                                container: {
-                                                    flex: 1,
-                                                },
-                                            }}
-                                            loadOptions={() => {
-                                                return new Promise(
-                                                    (resolve, reject) =>
-                                                        resolve([
-                                                            {
-                                                                value:
-                                                                    'carrot pie',
-                                                                label:
-                                                                    'carrot pie',
-                                                            },
-                                                            {
-                                                                value: 'prout',
-                                                                label: 'prout',
-                                                            },
-                                                            {
-                                                                value:
-                                                                    'couucou',
-                                                                label:
-                                                                    'couucou',
-                                                            },
-                                                        ])
-                                                )
-                                            }}
-                                            createOptions={() => {}}
-                                            placeholder={msg.selectIngredients}
-                                            canSelectMultipleValues
-                                        />
-                                    </div>
-                                </DailyMenu.Section.Dishes>
-                            </DailyMenu.Section.EditForm>
-                        ) : (
-                            <DailyMenu.Section
-                                key={category}
-                                onEditButtonClick={() => {
-                                    dispatch({
-                                        type: START_MENU_CHANGES,
-                                        payload: {
-                                            sectionInEditMode: category,
-                                        },
-                                    })
-                                }}
-                                rootStyle={{
-                                    gridArea: category,
-                                    border: style.highlighted
-                                        ? '2px dotted #ff1101'
-                                        : 'inherit',
-                                    marginTop: '1em',
-                                }}
-                            >
-                                <DailyMenu.Section.Title label={category} />
-                                <DailyMenu.Section.Dishes>
-                                    {dishes.map(({ name, ingredients }) => (
-                                        <TwoLinesInformation
-                                            key={name}
-                                            title={name}
-                                            content={ingredients.join(', ')}
-                                        />
-                                    ))}
-                                </DailyMenu.Section.Dishes>
-                            </DailyMenu.Section>
-                        )
-                    )}
+                    .mealsSection.map(({ category, dishes, style }) => (
+                        <DailyMenu.Section
+                            key={category}
+                            // this would not be an edit button anymore but an add button which open a dialog form
+                            onEditButtonClick={() => {
+                                dispatch({
+                                    type: START_MENU_CHANGES,
+                                    payload: {
+                                        sectionInEditMode: category,
+                                    },
+                                })
+                            }}
+                            rootStyle={{
+                                gridArea: category,
+                                border: style.highlighted
+                                    ? '2px dotted #ff1101'
+                                    : 'inherit',
+                                marginTop: '1em',
+                            }}
+                        >
+                            <DailyMenu.Section.Title label={category} />
+                            <DailyMenu.Section.Dishes>
+                                {dishes.map(({ name, ingredients }) => (
+                                    // each dishes is clickable and open a dialog form
+                                    <TwoLinesInformation
+                                        key={name}
+                                        title={name}
+                                        content={ingredients.join(', ')}
+                                    />
+                                ))}
+                            </DailyMenu.Section.Dishes>
+                        </DailyMenu.Section>
+                    ))}
             </DailyMenu>
         </>
     )
