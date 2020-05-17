@@ -1,133 +1,21 @@
-import React, { ReactNode, CSSProperties, MouseEvent } from 'react'
-import Button from '../Button'
-import { EditIcon, SVGIcon } from '@components/icons'
-
-interface PrivateSectionProps {
-    style?: CSSProperties
-    children?: ReactNode
-}
+import React, { ReactNode, CSSProperties } from 'react'
 
 interface SectionProps {
     rootStyle?: CSSProperties
-    editButtonStyle?: CSSProperties
     children?: ReactNode
-    onEditButtonClick: (event: MouseEvent) => void
-}
-
-interface SectionFormProps {
-    style?: {
-        root?: CSSProperties
-        submitButton?: CSSProperties
-        abortButton?: CSSProperties
-        formValidationButtons?: CSSProperties
-    }
-    label?: {
-        abortButton?: string
-        submitButton?: string
-    }
-    children?: ReactNode
-    onAbortButtonClick: (event: MouseEvent) => void
-    onSubmitButtonClick: (event: MouseEvent) => void
 }
 
 interface TitleProps {
     label: string
 }
 
-const _Section = ({ children, style: customStyle }: PrivateSectionProps) => {
+const Section = ({ children, rootStyle: customRootStyle }: SectionProps) => {
     return (
-        <section style={{ display: 'flex', padding: '1em', ...customStyle }}>
-            {children}
-        </section>
-    )
-}
-
-const Section = ({
-    children,
-    onEditButtonClick,
-    rootStyle: customRootStyle,
-    editButtonStyle: customEditButtonStyle,
-}: SectionProps) => {
-    return (
-        <_Section style={customRootStyle}>
-            {children}
-
-            <SVGIcon>
-                <EditIcon
-                    onClick={(evt: MouseEvent) => {
-                        onEditButtonClick(evt)
-                    }}
-                    style={{
-                        width: '1em',
-                        height: 'auto',
-                        cursor: 'pointer',
-                        alignSelf: 'baseline',
-                        ...customEditButtonStyle,
-                    }}
-                />
-            </SVGIcon>
-        </_Section>
-    )
-}
-
-const SectionForm = ({
-    children,
-    onAbortButtonClick,
-    onSubmitButtonClick,
-    style: {
-        root: customRootStyle,
-        abortButton: customAbortButtonStyle,
-        submitButton: customSubmitButtonStyle,
-        formValidationButtons: customFormValidationButtonsStyle,
-    } = {},
-    label: {
-        abortButton: customAbortButtonLabel,
-        submitButton: customSubmitButtonLabel,
-    } = {},
-}: SectionFormProps) => {
-    return (
-        <_Section
-            style={{
-                width: '100%',
-                boxSizing: 'border-box',
-                position: 'fixed',
-                background: '#fff5b2',
-                zIndex: 300,
-                height: '100vh',
-                bottom: '0',
-                left: '0',
-                ...customRootStyle,
-            }}
+        <section
+            style={{ display: 'flex', padding: '1em', ...customRootStyle }}
         >
             {children}
-
-            <div
-                style={{
-                    display: 'flex',
-                    position: 'fixed',
-                    justifyContent: 'center',
-                    bottom: 0,
-                    width: '100%',
-                    ...customFormValidationButtonsStyle,
-                }}
-            >
-                <Button
-                    style={{ cursor: 'pointer', ...customAbortButtonStyle }}
-                    variant="secondary"
-                    onClick={onAbortButtonClick}
-                >
-                    {customAbortButtonLabel || 'Abort'}
-                </Button>
-
-                <Button
-                    style={{ cursor: 'pointer', ...customSubmitButtonStyle }}
-                    variant="primary"
-                    onClick={onSubmitButtonClick}
-                >
-                    {customSubmitButtonLabel || 'Submit'}
-                </Button>
-            </div>
-        </_Section>
+        </section>
     )
 }
 
@@ -157,30 +45,6 @@ const Title = ({ label }: TitleProps) => {
     )
 }
 
-const Dishes = ({ children }) => {
-    return (
-        <ul
-            style={{
-                display: 'flex',
-                flexFlow: 'column wrap',
-                width: '100%',
-                alignItems: 'center',
-                textAlign: 'center',
-                padding: '1em',
-            }}
-        >
-            {children}
-        </ul>
-    )
-}
-
-const BlockForm = ({ children }) => {
-    return <form>{children}</form>
-}
-
 Section.Title = Title
-Section.Dishes = Dishes
-Section.EditForm = SectionForm
-SectionForm.Block = SectionForm
 
 export default Section

@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useReducer } from 'react'
+import React, { useState, useReducer } from 'react'
 import WeekDaysNav from '@components/ui/WeekDaysNav'
 import DailyMenu from '@components/ui/DailyMenu'
 import TwoLinesInformation from '@components/ui/TwoLinesInformation'
-import Select from '@components/ui/Select'
+import { AddIcon, SVGIcon } from '@components/icons'
+import DishesList from '@components/ui/DishesList'
+import SwipeableList from '@components/ui/SwipeableListItem'
 
 const msg = Object.freeze({
     selectDishes: 'Dishes',
@@ -297,15 +299,6 @@ const MealPlan = () => {
                     .mealsSection.map(({ category, dishes, style }) => (
                         <DailyMenu.Section
                             key={category}
-                            // this would not be an edit button anymore but an add button which open a dialog form
-                            onEditButtonClick={() => {
-                                dispatch({
-                                    type: START_MENU_CHANGES,
-                                    payload: {
-                                        sectionInEditMode: category,
-                                    },
-                                })
-                            }}
                             rootStyle={{
                                 gridArea: category,
                                 border: style.highlighted
@@ -315,16 +308,47 @@ const MealPlan = () => {
                             }}
                         >
                             <DailyMenu.Section.Title label={category} />
-                            <DailyMenu.Section.Dishes>
-                                {dishes.map(({ name, ingredients }) => (
-                                    // each dishes is clickable and open a dialog form
-                                    <TwoLinesInformation
-                                        key={name}
-                                        title={name}
-                                        content={ingredients.join(', ')}
-                                    />
-                                ))}
-                            </DailyMenu.Section.Dishes>
+
+                            <SwipeableList>
+                                {({ ...rest }) => (
+                                    <DishesList>
+                                        {dishes.map(({ name, ingredients }) => (
+                                            <SwipeableList.Item
+                                                onSwipeRight={() => {}}
+                                                onSwipeLeft={() => {}}
+                                                key={name}
+                                                {...rest}
+                                            >
+                                                <DishesList.Item>
+                                                    <TwoLinesInformation
+                                                        key={name}
+                                                        title={name}
+                                                        content={ingredients.join(
+                                                            ', '
+                                                        )}
+                                                    />
+                                                </DishesList.Item>
+                                            </SwipeableList.Item>
+                                        ))}
+                                    </DishesList>
+                                )}
+                            </SwipeableList>
+
+                            <SVGIcon>
+                                <AddIcon
+                                    onClick={(evt: MouseEvent) => {
+                                        dispatch({
+                                            type: START_DISHES_CREATION,
+                                        })
+                                    }}
+                                    style={{
+                                        width: '1em',
+                                        height: 'auto',
+                                        cursor: 'pointer',
+                                        alignSelf: 'baseline',
+                                    }}
+                                />
+                            </SVGIcon>
                         </DailyMenu.Section>
                     ))}
             </DailyMenu>
