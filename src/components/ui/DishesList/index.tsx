@@ -1,7 +1,13 @@
 import React, { ReactNode } from 'react'
+import { useSwipeable } from 'react-swipeable'
+
+type Direction = 'right' | 'left' | 'up' | 'down'
 
 interface DishesItemProps {
     children: ReactNode
+    onSwipedLeft: () => void
+    onSwipedRight: () => void
+    onSwiping: ({ dir: Direction }) => void
 }
 
 interface DishesListProps {
@@ -25,10 +31,21 @@ const DishesList = ({ children }: DishesListProps) => {
     )
 }
 
-const DishesItem = ({ children }: DishesItemProps) => {
-    return <li>{children}</li>
+const DishesSwipeableItem = ({
+    children,
+    onSwipedLeft,
+    onSwipedRight,
+    onSwiping,
+}: DishesItemProps) => {
+    const handlers = useSwipeable({
+        onSwipedLeft,
+        onSwipedRight,
+        onSwiping: ({ dir }) => onSwiping({ dir: dir.toLowerCase() }),
+        trackMouse: true,
+    })
+    return <li {...handlers}>{children}</li>
 }
 
-DishesList.Item = DishesItem
+DishesList.SwipeableItem = DishesSwipeableItem
 
 export default DishesList

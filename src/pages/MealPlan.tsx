@@ -1,10 +1,11 @@
-import React, { useState, useReducer } from 'react'
+import React, { useState, useReducer, Fragment } from 'react'
 import WeekDaysNav from '@components/ui/WeekDaysNav'
 import DailyMenu from '@components/ui/DailyMenu'
 import TwoLinesInformation from '@components/ui/TwoLinesInformation'
 import { AddIcon, SVGIcon } from '@components/icons'
 import DishesList from '@components/ui/DishesList'
-import SwipeableList from '@components/ui/SwipeableListItem'
+import { mealsPlan } from 'fixtures/meals'
+import { createPortal } from 'react-dom'
 
 const msg = Object.freeze({
     selectDishes: 'Dishes',
@@ -13,63 +14,70 @@ const msg = Object.freeze({
     createDishes: 'Create Dishes',
 })
 
-const {
-    SUBMIT_MENU_CHANGES,
-    ABORT_MENU_CHANGES,
-    START_MENU_CHANGES,
-    SAVE_MENU_FORM_STATE,
-    SAVE_UPDATED_DISH_FORM_STATE,
-    START_DISHES_CREATION,
-} = Object.freeze({
-    SAVE_UPDATED_DISH_FORM_STATE:
-        'save current state of changes made to a particular dish in edit mode',
-    START_DISHES_CREATION: 'start creating dishes in edit mode',
-    SAVE_MENU_FORM_STATE: 'save current state of changes made in edit mode',
-    SUBMIT_MENU_CHANGES: 'menu changes has been submitted',
-    ABORT_MENU_CHANGES: 'menu changes has been aborted',
-    START_MENU_CHANGES: 'we ran edit mode for one menu section',
-})
+const AddDishesForm = ({ category, onClose }) => {
+    return (
+        <div
+            style={{
+                height: '100vh',
+                width: '100vw',
+                position: 'fixed',
+                background: '#cecece59',
+                top: '0',
+            }}
+        >
+            <span>{`${category}-to add`}</span>
+            <span
+                style={{ cursor: 'pointer', padding: '1em' }}
+                onClick={onClose}
+            >
+                X
+            </span>
+        </div>
+    )
+}
 
-const mealPlanReducer = (prevState, { type, payload = null }) => {
-    switch (type) {
-        case SUBMIT_MENU_CHANGES: {
-            // add optimistic render
-            return { ...prevState, sectionInEditMode: null }
-        }
-        case ABORT_MENU_CHANGES: {
-            return { ...prevState, sectionInEditMode: null }
-        }
-        case START_MENU_CHANGES: {
-            return {
-                ...prevState,
-                sectionInEditMode: payload.sectionInEditMode,
-            }
-        }
-        case START_DISHES_CREATION: {
-            return {
-                ...prevState,
-                dishesToCreate: [
-                    ...prevState.dishesToCreate,
-                    payload.dishesToCreate,
-                ],
-            }
-        }
-        case SAVE_MENU_FORM_STATE: {
-            return {
-                ...prevState,
-                dishesToCreate: payload.dishesToCreate,
-                dishesToDelete: payload.dishesToDelete,
-                dishesToUpdate: payload.dishesToUpdate,
-            }
-        }
-        case SAVE_UPDATED_DISH_FORM_STATE: {
-            return {
-                ...prevState,
-            }
-        }
-        default:
-            throw new Error(`Unhandled action type: ${type}`)
-    }
+const DishEditingForm = ({ id, name, ingredients, onClose }) => {
+    return (
+        <div
+            style={{
+                height: '100vh',
+                width: '100vw',
+                position: 'fixed',
+                background: '#cecece59',
+                top: '0',
+            }}
+        >
+            <span>{`${id}-${name}-${ingredients}`}</span>
+            <span
+                style={{ cursor: 'pointer', padding: '1em' }}
+                onClick={onClose}
+            >
+                X
+            </span>
+        </div>
+    )
+}
+
+const DishRemovalForm = ({ id, onClose }) => {
+    return (
+        <div
+            style={{
+                height: '100vh',
+                width: '100vw',
+                position: 'fixed',
+                background: '#cecece59',
+                top: '0',
+            }}
+        >
+            <span>{`${id}-to remove`}</span>
+            <span
+                style={{ cursor: 'pointer', padding: '1em' }}
+                onClick={onClose}
+            >
+                X
+            </span>
+        </div>
+    )
 }
 
 const MealPlan = () => {
@@ -77,210 +85,36 @@ const MealPlan = () => {
         weekday: 'long',
     }).format(Date.now())
     const [currentDay, setCurrentDay] = useState(currentWeekDay)
+
     const handleCurrentDayChange = (day: string) => {
         setCurrentDay(day)
     }
-    const [{ sectionInEditMode, dishesToCreate }, dispatch] = useReducer(
-        mealPlanReducer,
+
+    const [renderDialog, setDialogToDisplay] = useReducer(
+        (prevState, action) => {
+            return JSON.stringify(prevState) !== JSON.stringify(action)
+                ? action
+                : prevState
+        },
+        null
+    )
+    const [
+        { swipedDirection, swipedPanelIndex },
+        setSwipePanelIndexToDisplay,
+    ] = useReducer(
+        (prevState, action) => {
+            return JSON.stringify(prevState) !== JSON.stringify(action)
+                ? {
+                      swipedDirection: action.dir,
+                      swipedPanelIndex: action.id,
+                  }
+                : prevState
+        },
         {
-            sectionInEditMode: null,
-            dishesToCreate: [],
+            swipedDirection: '',
+            swipedPanelIndex: '',
         }
     )
-
-    const { starters, mainCourses, desserts, drinks } = {
-        starters: [{ name: 'Jamon de Parma', ingredients: ['jamon', 'oil'] }],
-        mainCourses: [
-            {
-                name: 'Basque Chicken',
-                ingredients: ['chiken', 'basque', 'mozza'],
-            },
-            {
-                name: 'Celtic Couscous',
-                ingredients: ['couscous', 'pork', 'bourbon'],
-            },
-            {
-                name: 'French Blanquette',
-                ingredients: ['cream', 'meat', 'mushroom'],
-            },
-            { name: 'Osso Bucco', ingredients: ['meat', 'tomato', 'persil'] },
-            {
-                name: 'Indian Curry',
-                ingredients: ['curry', 'chicken', 'cream'],
-            },
-            { name: 'Carrot pie', ingredients: ['carrot', 'eggs', 'cream'] },
-            { name: 'Veggie Salad', ingredients: ['laitues', 'eggs', 'oil'] },
-            { name: 'Carrot pie', ingredients: ['carrot', 'eggs', 'cream'] },
-        ],
-        desserts: [
-            { name: 'Tiramisu', ingredients: ['mascarpone', 'biscuits'] },
-        ],
-        drinks: [
-            {
-                name: 'Carrot milkshake',
-                ingredients: ['carrot', 'kiwi', 'milk'],
-            },
-            {
-                name: 'Virgin Mojito',
-                ingredients: ['mint', 'sugar', 'ice'],
-            },
-        ],
-    }
-
-    const mealsPlan = new Map([
-        [
-            'friday',
-            {
-                mealsSection: [
-                    {
-                        category: 'starters',
-                        dishes: [],
-                        style: {
-                            highlighted: true,
-                        },
-                    },
-                    {
-                        category: 'desserts',
-                        dishes: [],
-                        style: {
-                            highlighted: false,
-                        },
-                    },
-                    {
-                        category: 'mainCourses',
-                        dishes: [mainCourses[5], mainCourses[0]],
-                        style: {
-                            highlighted: false,
-                        },
-                    },
-                    {
-                        category: 'drinks',
-                        dishes: [],
-                        style: {
-                            highlighted: true,
-                        },
-                    },
-                ],
-            },
-        ],
-        [
-            'tuesday',
-            {
-                mealsSection: [
-                    {
-                        category: 'starters',
-                        dishes: [],
-                        style: {
-                            highlighted: false,
-                        },
-                    },
-                    {
-                        category: 'desserts',
-                        dishes: [],
-                        style: {
-                            highlighted: true,
-                        },
-                    },
-                    {
-                        category: 'mainCourses',
-                        dishes: [
-                            mainCourses[5],
-                            mainCourses[3],
-                            mainCourses[0],
-                        ],
-                        style: {
-                            highlighted: false,
-                        },
-                    },
-                    {
-                        category: 'drinks',
-                        dishes: [],
-                        style: {
-                            highlighted: true,
-                        },
-                    },
-                ],
-            },
-        ],
-        [
-            'sunday',
-            {
-                mealsSection: [
-                    {
-                        category: 'starters',
-                        dishes: [],
-                        style: {
-                            highlighted: false,
-                        },
-                    },
-                    {
-                        category: 'desserts',
-                        dishes: [],
-                        style: {
-                            highlighted: true,
-                        },
-                    },
-                    {
-                        category: 'mainCourses',
-                        dishes: [
-                            mainCourses[5],
-                            mainCourses[3],
-                            mainCourses[0],
-                        ],
-                        style: {
-                            highlighted: false,
-                        },
-                    },
-                    {
-                        category: 'drinks',
-                        dishes: [],
-                        style: {
-                            highlighted: true,
-                        },
-                    },
-                ],
-            },
-        ],
-        [
-            'saturday',
-            {
-                mealsSection: [
-                    {
-                        category: 'starters',
-                        dishes: [],
-                        style: {
-                            highlighted: false,
-                        },
-                    },
-                    {
-                        category: 'desserts',
-                        dishes: [],
-                        style: {
-                            highlighted: true,
-                        },
-                    },
-                    {
-                        category: 'mainCourses',
-                        dishes: [
-                            mainCourses[5],
-                            mainCourses[3],
-                            mainCourses[0],
-                        ],
-                        style: {
-                            highlighted: false,
-                        },
-                    },
-                    {
-                        category: 'drinks',
-                        dishes: [],
-                        style: {
-                            highlighted: true,
-                        },
-                    },
-                ],
-            },
-        ],
-    ])
 
     return (
         <>
@@ -309,37 +143,79 @@ const MealPlan = () => {
                         >
                             <DailyMenu.Section.Title label={category} />
 
-                            <SwipeableList>
-                                {({ ...rest }) => (
-                                    <DishesList>
-                                        {dishes.map(({ name, ingredients }) => (
-                                            <SwipeableList.Item
-                                                onSwipeRight={() => {}}
-                                                onSwipeLeft={() => {}}
+                            <DishesList>
+                                {dishes.map(({ id, name, ingredients }) => (
+                                    <Fragment key={id}>
+                                        {swipedDirection === 'right' &&
+                                        swipedPanelIndex === id ? (
+                                            <span>edit</span>
+                                        ) : null}
+
+                                        <DishesList.SwipeableItem
+                                            onSwipedRight={() => {
+                                                setDialogToDisplay(
+                                                    ({ onClose }) => (
+                                                        <DishEditingForm
+                                                            id={id}
+                                                            name={name}
+                                                            ingredients={
+                                                                ingredients
+                                                            }
+                                                            onClose={onClose}
+                                                        />
+                                                    )
+                                                )
+                                                // we might want to get initial state from the top
+                                                setSwipePanelIndexToDisplay({
+                                                    swipedDirection: '',
+                                                    swipedPanelIndex: '',
+                                                })
+                                            }}
+                                            onSwipedLeft={() => {
+                                                setDialogToDisplay(
+                                                    ({ onClose }) => (
+                                                        <DishRemovalForm
+                                                            id={id}
+                                                            onClose={onClose}
+                                                        />
+                                                    )
+                                                )
+                                                setSwipePanelIndexToDisplay({
+                                                    swipedDirection: '',
+                                                    swipedPanelIndex: '',
+                                                })
+                                            }}
+                                            onSwiping={({ dir }) => {
+                                                setSwipePanelIndexToDisplay({
+                                                    dir,
+                                                    id,
+                                                })
+                                            }}
+                                        >
+                                            <TwoLinesInformation
                                                 key={name}
-                                                {...rest}
-                                            >
-                                                <DishesList.Item>
-                                                    <TwoLinesInformation
-                                                        key={name}
-                                                        title={name}
-                                                        content={ingredients.join(
-                                                            ', '
-                                                        )}
-                                                    />
-                                                </DishesList.Item>
-                                            </SwipeableList.Item>
-                                        ))}
-                                    </DishesList>
-                                )}
-                            </SwipeableList>
+                                                title={name}
+                                                content={ingredients.join(', ')}
+                                            />
+                                        </DishesList.SwipeableItem>
+
+                                        {swipedDirection === 'left' &&
+                                        swipedPanelIndex === id ? (
+                                            <span>remove</span>
+                                        ) : null}
+                                    </Fragment>
+                                ))}
+                            </DishesList>
 
                             <SVGIcon>
                                 <AddIcon
-                                    onClick={(evt: MouseEvent) => {
-                                        dispatch({
-                                            type: START_DISHES_CREATION,
-                                        })
+                                    onClick={() => {
+                                        setDialogToDisplay(({ onClose }) => (
+                                            <AddDishesForm
+                                                onClose={onClose}
+                                                category={category}
+                                            />
+                                        ))
                                     }}
                                     style={{
                                         width: '1em',
@@ -352,6 +228,14 @@ const MealPlan = () => {
                         </DailyMenu.Section>
                     ))}
             </DailyMenu>
+
+            {/* we might want to create a dialog ui component which is tp to body by default */}
+            {renderDialog
+                ? createPortal(
+                      renderDialog({ onClose: () => setDialogToDisplay(null) }),
+                      document.body
+                  )
+                : null}
         </>
     )
 }
