@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
+import { SVGIcon, ArrowRightIcon } from '@components/icons'
 
 export interface Props {
     daysInAWeek?: number
@@ -80,7 +81,15 @@ const WeekDaysNav = ({
                 }}
                 onClick={handleClickPrevious}
             >
-                <MdChevronLeft />
+                <SVGIcon>
+                    <ArrowRightIcon
+                        style={{
+                            width: '1em',
+                            height: 'auto',
+                            transform: 'rotate(180deg)',
+                        }}
+                    />
+                </SVGIcon>
             </span>
 
             {shouldDisplayAllDays ? (
@@ -132,7 +141,14 @@ const WeekDaysNav = ({
                 }}
                 onClick={handleClickNext}
             >
-                <MdChevronRight />
+                <SVGIcon>
+                    <ArrowRightIcon
+                        style={{
+                            width: '1em',
+                            height: 'auto',
+                        }}
+                    />
+                </SVGIcon>
             </span>
         </div>
     )
