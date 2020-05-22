@@ -1,14 +1,26 @@
-import React, { createContext, useReducer, useContext } from 'react'
-import mealPlanClient from '@client/mealPlanClient'
+import React, { createContext, useReducer, useContext, ReactNode } from 'react'
+// import mealPlanClient from '@client/mealPlanClient'
+import mealPlanFixtures from './fixtures/mealPlan.json'
 
-const MealPlanStateContext = createContext()
-const MealPlanDispatchContext = createContext()
+type Action = { type: string; payload?: {} }
+type Dispatch = (action: Action) => void
+type State = { meals: {} }
+type MealPlanProviderProps = { children: ReactNode }
 
-const { UPDATE_MEAL_PLAN_STARTED, , UPDATE_MEAL_PLAN_SUCCEED, UPDATE_MEAL_PLAN_FAILED } = {
-    UPDATE_MEAL_PLAN_STARTED: 'we start updating meals of specified day and category',
+const MealPlanStateContext = createContext<State | undefined>(undefined)
+const MealPlanDispatchContext = createContext<Dispatch | undefined>(undefined)
+
+const {
+    UPDATE_MEAL_PLAN_STARTED,
+    UPDATE_MEAL_PLAN_SUCCEED,
+    UPDATE_MEAL_PLAN_FAILED,
+} = {
+    UPDATE_MEAL_PLAN_STARTED:
+        'we start updating meals of specified day and category',
     UPDATE_MEAL_PLAN_SUCCEED:
         'update of meals of specified day and category succeed',
-    UPDATE_MEAL_PLAN_FAILED: 'update of meals of specified day and category failed',
+    UPDATE_MEAL_PLAN_FAILED:
+        'update of meals of specified day and category failed',
 }
 
 function mealPlanReducer(prevState, { type, payload }) {
@@ -17,21 +29,21 @@ function mealPlanReducer(prevState, { type, payload }) {
             return {
                 ...prevState,
                 meals: payload,
-                isFetching: true
+                isFetching: true,
             }
         }
         case UPDATE_MEAL_PLAN_SUCCEED: {
             return {
                 ...prevState,
                 meals: payload,
-                isFetching: false
+                isFetching: false,
             }
         }
         case UPDATE_MEAL_PLAN_FAILED: {
             return {
                 ...prevState,
                 meals: payload,
-                isFetching: false
+                isFetching: false,
             }
         }
         default: {
@@ -40,9 +52,9 @@ function mealPlanReducer(prevState, { type, payload }) {
     }
 }
 
-function MealPlanProvider({ children }) {
+function MealPlanProvider({ children }: MealPlanProviderProps) {
     const [state, dispatch] = useReducer(mealPlanReducer, {
-        meals: [],
+        meals: mealPlanFixtures,
     })
 
     return (
@@ -78,18 +90,18 @@ function useMealPlanDispatch() {
     return context
 }
 
-async function updateMeals(dispatch, meals, prevStateOfMeals) {
+async function updateMeals({ dispatch, meals, prevMeals, action }) {
     dispatch({ type: UPDATE_MEAL_PLAN_STARTED, payload: { meals } })
 
     try {
-        const updatedMeals = await mealClient.updateMeal({ meals })
-        dispatch({ type: UPDATE_MEAL_PLAN_SUCCEED, payload: { meals: updatedMeals } })
+        // const updatedMeals = await mealClient.updateMeal({ meals })
+        dispatch({ type: UPDATE_MEAL_PLAN_SUCCEED, payload: { meals } })
     } catch (error) {
         dispatch({
             type: UPDATE_MEAL_PLAN_FAILED,
-            payload: { meals: prevStateOfMeals, error },
+            payload: { meals: prevMeals, error },
         })
     }
 }
 
-export { MealPlanProvider, useMealPlanState, useMealPlanDispatch }
+export { MealPlanProvider, useMealPlanState, useMealPlanDispatch, updateMeals }

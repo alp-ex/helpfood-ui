@@ -1,13 +1,15 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, CSSProperties } from 'react'
+// performance issue with this lib https://github.com/FormidableLabs/react-swipeable/issues/167
 import { useSwipeable } from 'react-swipeable'
 
 type Direction = 'right' | 'left' | 'up' | 'down'
 
 interface DishesItemProps {
     children: ReactNode
-    onSwipedLeft: () => void
-    onSwipedRight: () => void
-    onSwiping: ({ dir: Direction }) => void
+    styles: { root: CSSProperties }
+    onSwipedLeft?: () => void
+    onSwipedRight?: () => void
+    onSwiping?: ({ dir: Direction }) => void
 }
 
 interface DishesListProps {
@@ -36,14 +38,23 @@ const DishesSwipeableItem = ({
     onSwipedLeft,
     onSwipedRight,
     onSwiping,
+    styles: { root: customRootStyle },
 }: DishesItemProps) => {
     const handlers = useSwipeable({
         onSwipedLeft,
         onSwipedRight,
-        onSwiping: ({ dir }) => onSwiping({ dir: dir.toLowerCase() }),
+        onSwiping: onSwiping
+            ? ({ dir, ...rest }) =>
+                  onSwiping({ dir: dir.toLowerCase(), ...rest })
+            : null,
         trackMouse: true,
+        delta: 20,
     })
-    return <li {...handlers}>{children}</li>
+    return (
+        <div style={{ ...customRootStyle }} {...handlers}>
+            {children}
+        </div>
+    )
 }
 
 DishesList.SwipeableItem = DishesSwipeableItem

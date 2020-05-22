@@ -1,8 +1,8 @@
-const BASE_URL = '' // add env config
+const BASE_URL = ''
 const Endoints = Object.freeze({
     UPDATE_MEAL: '',
     GET_MEAL: '',
-}) // add env config
+})
 
 const mealClient = function mealClient() {
     this.uri = BASE_URL

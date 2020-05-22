@@ -1,10 +1,6 @@
-import React from 'react'
-
 import EditIcon from './edit.svg'
 import AddIcon from './add.svg'
+import DeleteIcon from './delete.svg'
+import SVGIcon from './SVGIcon'
 
-const SVGIcon = ({ children }) => {
-    return <div>{children}</div>
-}
-
-export { SVGIcon, EditIcon, AddIcon }
+export { SVGIcon, EditIcon, AddIcon, DeleteIcon }

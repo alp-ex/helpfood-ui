@@ -2,17 +2,14 @@ import React, { useState, useReducer, Fragment } from 'react'
 import WeekDaysNav from '@components/ui/WeekDaysNav'
 import DailyMenu from '@components/ui/DailyMenu'
 import TwoLinesInformation from '@components/ui/TwoLinesInformation'
-import { AddIcon, SVGIcon } from '@components/icons'
+import { DeleteIcon, EditIcon, AddIcon, SVGIcon } from '@components/icons'
 import DishesList from '@components/ui/DishesList'
-import { mealsPlan } from 'fixtures/meals'
 import { createPortal } from 'react-dom'
-
-const msg = Object.freeze({
-    selectDishes: 'Dishes',
-    selectIngredients: 'Dishes',
-    editDishes: 'Edit Dishes',
-    createDishes: 'Create Dishes',
-})
+import {
+    useMealPlanState,
+    useMealPlanDispatch,
+    updateMeals,
+} from '@components/providers/MealPlanContext'
 
 const AddDishesForm = ({ category, onClose }) => {
     return (
@@ -36,7 +33,7 @@ const AddDishesForm = ({ category, onClose }) => {
     )
 }
 
-const DishEditingForm = ({ id, name, ingredients, onClose }) => {
+const DishEditingForm = ({ id, name, ingredients, onClose, onSubmit }) => {
     return (
         <div
             style={{
@@ -47,29 +44,11 @@ const DishEditingForm = ({ id, name, ingredients, onClose }) => {
                 top: '0',
             }}
         >
-            <span>{`${id}-${name}-${ingredients}`}</span>
-            <span
-                style={{ cursor: 'pointer', padding: '1em' }}
-                onClick={onClose}
-            >
-                X
-            </span>
-        </div>
-    )
-}
+            <form>
+                <span>{`${id}-${name}-${ingredients}`}</span>
+                <button onSubmit={onSubmit}>ok</button>
+            </form>
 
-const DishRemovalForm = ({ id, onClose }) => {
-    return (
-        <div
-            style={{
-                height: '100vh',
-                width: '100vw',
-                position: 'fixed',
-                background: '#cecece59',
-                top: '0',
-            }}
-        >
-            <span>{`${id}-to remove`}</span>
             <span
                 style={{ cursor: 'pointer', padding: '1em' }}
                 onClick={onClose}
@@ -85,10 +64,12 @@ const MealPlan = () => {
         weekday: 'long',
     }).format(Date.now())
     const [currentDay, setCurrentDay] = useState(currentWeekDay)
-
     const handleCurrentDayChange = (day: string) => {
         setCurrentDay(day)
     }
+
+    const { meals } = useMealPlanState()
+    const mealPlanDispatch = useMealPlanDispatch()
 
     const [renderDialog, setDialogToDisplay] = useReducer(
         (prevState, action) => {
@@ -128,9 +109,8 @@ const MealPlan = () => {
             />
 
             <DailyMenu>
-                {mealsPlan
-                    .get(currentDay.toLowerCase())
-                    .mealsSection.map(({ category, dishes, style }) => (
+                {meals[currentDay.toLowerCase()].mealsSection.map(
+                    ({ category, dishes, style }) => (
                         <DailyMenu.Section
                             key={category}
                             rootStyle={{
@@ -145,51 +125,119 @@ const MealPlan = () => {
 
                             <DishesList>
                                 {dishes.map(({ id, name, ingredients }) => (
-                                    <Fragment key={id}>
+                                    <li
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            width: '100%',
+                                            cursor: 'pointer',
+                                        }}
+                                        key={id}
+                                    >
                                         {swipedDirection === 'right' &&
                                         swipedPanelIndex === id ? (
-                                            <span>edit</span>
+                                            <SVGIcon
+                                                onClick={() => {
+                                                    setDialogToDisplay(
+                                                        ({ onClose }) => (
+                                                            <DishEditingForm
+                                                                onSubmit={({
+                                                                    editedName,
+                                                                    editedIngredients,
+                                                                }) => {
+                                                                    updateMeals(
+                                                                        {
+                                                                            meals: {
+                                                                                day: currentDay,
+                                                                                category,
+                                                                                dish: {
+                                                                                    id,
+                                                                                    name: editedName,
+                                                                                    ingredients: editedIngredients,
+                                                                                },
+                                                                            },
+                                                                            prevMeals: meals,
+                                                                            dispatch: mealPlanDispatch,
+                                                                            action:
+                                                                                'edit',
+                                                                        }
+                                                                    )
+                                                                }}
+                                                                id={id}
+                                                                name={name}
+                                                                ingredients={
+                                                                    ingredients
+                                                                }
+                                                                onClose={
+                                                                    onClose
+                                                                }
+                                                            />
+                                                        )
+                                                    )
+                                                }}
+                                                style={{
+                                                    textTransform: 'uppercase',
+                                                    height: '3em',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    width: '3em',
+                                                    justifyContent: 'center',
+                                                }}
+                                            >
+                                                <EditIcon
+                                                    style={{
+                                                        width: '1em',
+                                                        height: 'auto',
+                                                        cursor: 'pointer',
+                                                        alignSelf: 'baseline',
+                                                    }}
+                                                />
+                                            </SVGIcon>
                                         ) : null}
 
                                         <DishesList.SwipeableItem
+                                            styles={{ root: { flex: 1 } }}
                                             onSwipedRight={() => {
-                                                setDialogToDisplay(
-                                                    ({ onClose }) => (
-                                                        <DishEditingForm
-                                                            id={id}
-                                                            name={name}
-                                                            ingredients={
-                                                                ingredients
-                                                            }
-                                                            onClose={onClose}
-                                                        />
+                                                if (
+                                                    swipedDirection ===
+                                                        'left' &&
+                                                    swipedPanelIndex === id
+                                                ) {
+                                                    setSwipePanelIndexToDisplay(
+                                                        {
+                                                            dir: '',
+                                                            id: '',
+                                                        }
                                                     )
-                                                )
-                                                // we might want to get initial state from the top
-                                                setSwipePanelIndexToDisplay({
-                                                    swipedDirection: '',
-                                                    swipedPanelIndex: '',
-                                                })
+                                                } else {
+                                                    setSwipePanelIndexToDisplay(
+                                                        {
+                                                            dir: 'right',
+                                                            id,
+                                                        }
+                                                    )
+                                                }
                                             }}
                                             onSwipedLeft={() => {
-                                                setDialogToDisplay(
-                                                    ({ onClose }) => (
-                                                        <DishRemovalForm
-                                                            id={id}
-                                                            onClose={onClose}
-                                                        />
+                                                if (
+                                                    swipedDirection ===
+                                                        'right' &&
+                                                    swipedPanelIndex === id
+                                                ) {
+                                                    setSwipePanelIndexToDisplay(
+                                                        {
+                                                            dir: '',
+                                                            id: '',
+                                                        }
                                                     )
-                                                )
-                                                setSwipePanelIndexToDisplay({
-                                                    swipedDirection: '',
-                                                    swipedPanelIndex: '',
-                                                })
-                                            }}
-                                            onSwiping={({ dir }) => {
-                                                setSwipePanelIndexToDisplay({
-                                                    dir,
-                                                    id,
-                                                })
+                                                } else {
+                                                    setSwipePanelIndexToDisplay(
+                                                        {
+                                                            dir: 'left',
+                                                            id,
+                                                        }
+                                                    )
+                                                }
                                             }}
                                         >
                                             <TwoLinesInformation
@@ -201,9 +249,41 @@ const MealPlan = () => {
 
                                         {swipedDirection === 'left' &&
                                         swipedPanelIndex === id ? (
-                                            <span>remove</span>
+                                            <SVGIcon
+                                                onClick={() => {
+                                                    updateMeals({
+                                                        dispatch: useMealPlanDispatch,
+                                                        meals: {
+                                                            day: currentDay,
+                                                            category,
+                                                            dish: {
+                                                                id,
+                                                            },
+                                                        },
+                                                        prevMeals: meals,
+                                                        action: 'delete',
+                                                    })
+                                                }}
+                                                style={{
+                                                    textTransform: 'uppercase',
+                                                    height: '3em',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    width: '3em',
+                                                    justifyContent: 'center',
+                                                }}
+                                            >
+                                                <DeleteIcon
+                                                    style={{
+                                                        width: '1em',
+                                                        height: 'auto',
+                                                        cursor: 'pointer',
+                                                        alignSelf: 'baseline',
+                                                    }}
+                                                />
+                                            </SVGIcon>
                                         ) : null}
-                                    </Fragment>
+                                    </li>
                                 ))}
                             </DishesList>
 
@@ -226,7 +306,8 @@ const MealPlan = () => {
                                 />
                             </SVGIcon>
                         </DailyMenu.Section>
-                    ))}
+                    )
+                )}
             </DailyMenu>
 
             {/* we might want to create a dialog ui component which is tp to body by default */}
