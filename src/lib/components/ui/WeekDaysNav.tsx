@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { SVGIcon, ArrowRightIcon } from '@components/icons'
+import { SVGIcon, ArrowRightIcon } from 'lib/icons'
 
 export interface Props {
     daysInAWeek?: number
@@ -12,7 +12,7 @@ export interface Props {
     onChange: (day: string) => void
 }
 
-// we might want to interface a prop (for a translation purpose)
+// remove week logic, it should only be a nav component
 const daysOfTheWeek = [
     'Monday',
     'Tuesday',

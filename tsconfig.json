@@ -6,8 +6,11 @@
         "downlevelIteration": true,
         "baseUrl": "./src",
         "paths": {
-            "@components/*": ["components/*"],
-            "@icons/*": ["icons/*"]
+            "@components/*": ["lib/components/*"],
+            "@icons/*": ["lib/icons/*"]
+            // "rsg-components/*": [
+            //     "node_modules/react-styleguidist/lib/client/rsg-components/*"
+            // ]
         }
     }
 }

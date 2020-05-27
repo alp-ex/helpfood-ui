@@ -2,7 +2,7 @@ import React, { useState, useReducer, Fragment } from 'react'
 import WeekDaysNav from '@components/ui/WeekDaysNav'
 import DailyMenu from '@components/ui/DailyMenu'
 import TwoLinesInformation from '@components/ui/TwoLinesInformation'
-import { DeleteIcon, EditIcon, AddIcon, SVGIcon } from '@components/icons'
+import { DeleteIcon, EditIcon, AddIcon, SVGIcon } from '@icons'
 import DishesList from '@components/ui/DishesList'
 import { createPortal } from 'react-dom'
 import {
@@ -71,14 +71,7 @@ const MealPlan = () => {
     const { meals } = useMealPlanState()
     const mealPlanDispatch = useMealPlanDispatch()
 
-    const [renderDialog, setDialogToDisplay] = useReducer(
-        (prevState, action) => {
-            return JSON.stringify(prevState) !== JSON.stringify(action)
-                ? action
-                : prevState
-        },
-        null
-    )
+    const [renderDialog, setDialogToDisplay] = useState(null)
     const [
         { swipedDirection, swipedPanelIndex },
         setSwipePanelIndexToDisplay,
@@ -139,7 +132,7 @@ const MealPlan = () => {
                                             <SVGIcon
                                                 onClick={() => {
                                                     setDialogToDisplay(
-                                                        ({ onClose }) => (
+                                                        () => ({ onClose }) => (
                                                             <DishEditingForm
                                                                 onSubmit={({
                                                                     editedName,
@@ -147,19 +140,12 @@ const MealPlan = () => {
                                                                 }) => {
                                                                     updateMeals(
                                                                         {
-                                                                            meals: {
+                                                                            meal: {
                                                                                 day: currentDay,
                                                                                 category,
-                                                                                dish: {
-                                                                                    id,
-                                                                                    name: editedName,
-                                                                                    ingredients: editedIngredients,
-                                                                                },
+                                                                                dishes,
                                                                             },
-                                                                            prevMeals: meals,
                                                                             dispatch: mealPlanDispatch,
-                                                                            action:
-                                                                                'edit',
                                                                         }
                                                                     )
                                                                 }}
@@ -251,18 +237,14 @@ const MealPlan = () => {
                                         swipedPanelIndex === id ? (
                                             <SVGIcon
                                                 onClick={() => {
-                                                    updateMeals({
-                                                        dispatch: useMealPlanDispatch,
-                                                        meals: {
-                                                            day: currentDay,
-                                                            category,
-                                                            dish: {
-                                                                id,
-                                                            },
-                                                        },
-                                                        prevMeals: meals,
-                                                        action: 'delete',
-                                                    })
+                                                    // onDishDeletion({
+                                                    //     dispatch: mealPlanDispatch,
+                                                    //     meal: {
+                                                    //         day: currentDay,
+                                                    //         category,
+                                                    //         dishId: id,
+                                                    //     },
+                                                    // })
                                                 }}
                                                 style={{
                                                     textTransform: 'uppercase',
@@ -290,12 +272,14 @@ const MealPlan = () => {
                             <SVGIcon>
                                 <AddIcon
                                     onClick={() => {
-                                        setDialogToDisplay(({ onClose }) => (
-                                            <AddDishesForm
-                                                onClose={onClose}
-                                                category={category}
-                                            />
-                                        ))
+                                        setDialogToDisplay(
+                                            () => ({ onClose }) => (
+                                                <AddDishesForm
+                                                    onClose={onClose}
+                                                    category={category}
+                                                />
+                                            )
+                                        )
                                     }}
                                     style={{
                                         width: '1em',
@@ -311,7 +295,7 @@ const MealPlan = () => {
             </DailyMenu>
 
             {/* we might want to create a dialog ui component which is tp to body by default */}
-            {renderDialog
+            {renderDialog !== null
                 ? createPortal(
                       renderDialog({ onClose: () => setDialogToDisplay(null) }),
                       document.body

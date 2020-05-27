@@ -90,16 +90,17 @@ function useMealPlanDispatch() {
     return context
 }
 
-async function updateMeals({ dispatch, meals, prevMeals, action }) {
-    dispatch({ type: UPDATE_MEAL_PLAN_STARTED, payload: { meals } })
+async function updateMeals({ dispatch, meal }) {
+    debugger
+    dispatch({ type: UPDATE_MEAL_PLAN_STARTED, payload: { meal } })
 
     try {
         // const updatedMeals = await mealClient.updateMeal({ meals })
-        dispatch({ type: UPDATE_MEAL_PLAN_SUCCEED, payload: { meals } })
+        dispatch({ type: UPDATE_MEAL_PLAN_SUCCEED, payload: { meal } })
     } catch (error) {
         dispatch({
             type: UPDATE_MEAL_PLAN_FAILED,
-            payload: { meals: prevMeals, error },
+            // payload: { meals: prevMeals, error },
         })
     }
 }

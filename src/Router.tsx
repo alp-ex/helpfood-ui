@@ -4,7 +4,7 @@ import MealPlan from './pages/MealPlan'
 import React from 'react'
 import Recipes from './pages/Recipes'
 import ShopList from './pages/ShopList'
-import { MealPlanProvider } from '@components/providers/MealPlanContext'
+import { MealPlanProvider } from './lib/components/providers/MealPlanContext'
 
 const Router = () => {
     return (

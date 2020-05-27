@@ -13,7 +13,9 @@
         "file-loader": "^6.0.0",
         "html-webpack-plugin": "^3.2.0",
         "prettier": "2.0.5",
+        "react-docgen-typescript": "^1.16.5",
         "react-select": "^3.1.0",
+        "react-styleguidist": "^11.0.6",
         "react-swipeable": "^5.5.1",
         "style-loader": "^0.23.1",
         "ts-loader": "^6.0.4",
@@ -23,6 +25,7 @@
         "webpack-dev-server": "^3.7.2"
     },
     "scripts": {
+        "styleguide": "styleguidist server",
         "build": "webpack",
         "dev": "webpack-dev-server",
         "stats": "yarn build --silent -- --profile --json > bundle.stats.json"
