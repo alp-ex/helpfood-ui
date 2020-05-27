@@ -1,21 +1,37 @@
-import React, { memo, ReactNode } from 'react'
+import React, { memo, ReactNode, CSSProperties } from 'react'
+import { render } from 'react-dom'
 
 interface Props {
     renderLabel: () => ReactNode | null
-    itemsToGroup: ReadonlyArray<{ value: ReactNode; label: string }>
+    itemsToGroup: ReadonlyArray<{ render: () => ReactNode; id: string }>
+    style?: {
+        root?: CSSProperties
+        itemsContainer?: CSSProperties
+        item?: CSSProperties
+    }
 }
 
 export default memo(function LabelledSection({
     renderLabel = () => null,
     itemsToGroup,
+    style: {
+        root: customRootStyle,
+        itemsContainer: customItemsContainerStyle,
+        item: customItemStyle,
+    } = {},
 }: Props) {
     return (
-        <section>
+        <section style={{ display: 'flex', ...customRootStyle }}>
             {renderLabel()}
 
-            <ul>
-                {itemsToGroup.map(({ value, label }) => (
-                    <li key={label}>{value}</li>
+            <ul style={customItemsContainerStyle}>
+                {itemsToGroup.map(({ render, id }) => (
+                    <li
+                        style={{ listStyle: 'none', ...customItemStyle }}
+                        key={id}
+                    >
+                        {render()}
+                    </li>
                 ))}
             </ul>
         </section>

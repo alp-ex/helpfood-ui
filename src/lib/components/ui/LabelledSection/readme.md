@@ -5,12 +5,24 @@ Basic example:
     renderLabel={() => <h3>Title</h3>}
     itemsToGroup={[
         {
-            label: 'first thing',
-            value: () => <span>this is the first thing</span>,
+            id: '1',
+            render: () => <span>{`this is the item number  1`}</span>,
         },
         {
-            label: 'second thing',
-            value: () => <span>this is the second thing</span>,
+            id: '2',
+            render: () => <span>{`this is the item number  2`}</span>,
+        },
+        {
+            id: '3',
+            render: () => <span>{`this is the item number  3`}</span>,
+        },
+        {
+            id: '4',
+            render: () => <span>{`this is the item number  4`}</span>,
+        },
+        {
+            id: '5',
+            render: () => <span>{`this is the item number  5`}</span>,
         },
     ]}
 />
