@@ -98,14 +98,14 @@ const previousTouchMovePageY = React.useRef(null)
         <SelectListView
             style={{
                 root: {
-                    position: 'absolute',
+                    position: 'fixed',
                     top: '0px',
                     left: '0px',
                     height: '100vh',
                     width: '100vw',
                     margin: 0,
                     background: 'white',
-                    zIndex: '1000',
+                    zIndex: '99000',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-around',
