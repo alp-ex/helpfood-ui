@@ -60,14 +60,6 @@ const DishEditingForm = ({ id, name, ingredients, onClose, onSubmit }) => {
 }
 
 const MealPlan = () => {
-    const currentWeekDay = new Intl.DateTimeFormat('en-US', {
-        weekday: 'long',
-    }).format(Date.now())
-    const [currentDay, setCurrentDay] = useState(currentWeekDay)
-    const handleCurrentDayChange = (day: string) => {
-        setCurrentDay(day)
-    }
-
     const { meals } = useMealPlanState()
     const mealPlanDispatch = useMealPlanDispatch()
 
@@ -92,15 +84,6 @@ const MealPlan = () => {
 
     return (
         <>
-            <WeekDaysNav
-                hsl={{
-                    hue: 0,
-                    luminosity: 50,
-                }}
-                currentDay={currentDay}
-                onChange={handleCurrentDayChange}
-            />
-
             <DailyMenu>
                 {meals[currentDay.toLowerCase()].mealsSection.map(
                     ({ category, dishes, style }) => (

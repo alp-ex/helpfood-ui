@@ -31,6 +31,7 @@ export default memo(function SelectListView({
                         cursor: 'pointer',
                         fontWeight: selectedIndex === id ? 'bold' : 'inherit',
                         listStyle: 'none',
+                        fontSize: selectedIndex === id ? '2em' : '1.5em',
                         ...customOptionStyle,
                     }}
                     key={id}

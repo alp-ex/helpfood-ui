@@ -91,7 +91,6 @@ function useMealPlanDispatch() {
 }
 
 async function updateMeals({ dispatch, meal }) {
-    debugger
     dispatch({ type: UPDATE_MEAL_PLAN_STARTED, payload: { meal } })
 
     try {

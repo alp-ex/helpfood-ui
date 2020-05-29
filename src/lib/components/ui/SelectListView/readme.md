@@ -56,11 +56,6 @@ const previousTouchMovePageY = React.useRef(null)
 
             if (debounced.current) {
                 setTimeout(() => {
-                    console.log(
-                        previousTouchMovePageY.current,
-                        inch.pageY,
-                        previousTouchMovePageY.current - inch.pageY
-                    )
                     if (
                         previousTouchMovePageY.current &&
                         previousTouchMovePageY.current > inch.pageY
@@ -105,7 +100,7 @@ const previousTouchMovePageY = React.useRef(null)
                     width: '100vw',
                     margin: 0,
                     background: 'white',
-                    zIndex: '99000',
+                    zIndex: 99000,
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-around',
@@ -147,9 +142,6 @@ const previousTouchMovePageY = React.useRef(null)
                 setSelectedIndex(optionId)
             }}
             onOptionMouseOver={(_, { optionId }) => {
-                setSelectedIndex(optionId)
-            }}
-            onOptionTouchStart={(_, { optionId }) => {
                 setSelectedIndex(optionId)
             }}
             onMouseUp={() => displaySelectListView(false)}

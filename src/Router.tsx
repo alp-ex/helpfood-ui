@@ -9,10 +9,10 @@ import { MealPlanProvider } from './lib/components/providers/MealPlanContext'
 const Router = () => {
     return (
         <>
-            <Redirect exact from="/" to="/schedule" />
+            <Redirect exact from="/" to="/" />
 
             <Switch>
-                <Route
+                {/* <Route
                     exact
                     path="/schedule"
                     render={() => (
@@ -20,7 +20,7 @@ const Router = () => {
                             <MealPlan />
                         </MealPlanProvider>
                     )}
-                />
+                /> */}
                 <Route path="/recipes" component={Recipes} />
                 <Route path="/shoplist" component={ShopList} />
             </Switch>
