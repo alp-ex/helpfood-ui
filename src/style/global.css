@@ -2,11 +2,19 @@
 @import url('https://fonts.googleapis.com/css?family=Josefin+Slab&display=swap');
 
 body {
-    font-family: 'Abel', sans-serif;
     margin-bottom: 11%;
-    background: rgba(255, 225, 0, 0.3);
+}
+
+p,
+button,
+span,
+h3,
+h2,
+h1,
+div {
+    font-family: 'Robotto', sans-serif;
 }
 
 button:active {
-    filter: brightness(98%);
+    filter: brightness(99%);
 }

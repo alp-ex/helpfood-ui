@@ -1,7 +1,14 @@
-import React, { memo, ReactNode, CSSProperties, useRef, useEffect } from 'react'
+import React, {
+    memo,
+    ReactNode,
+    CSSProperties,
+    useRef,
+    useEffect,
+    ElementType,
+} from 'react'
 
 interface Props {
-    component: ReactNode
+    component?: ElementType
     children: ReactNode
     style?: { root?: CSSProperties }
 }
@@ -12,7 +19,7 @@ export default memo(function ToolBar({
     style: { root: customRootStyle } = {},
 }: Props) {
     return (
-        <div
+        <Component
             style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -22,6 +29,6 @@ export default memo(function ToolBar({
             }}
         >
             {children}
-        </div>
+        </Component>
     )
 })
