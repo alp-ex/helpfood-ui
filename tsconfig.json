@@ -6,8 +6,10 @@
         "downlevelIteration": true,
         "baseUrl": "./src",
         "paths": {
-            "@components/*": ["lib/components/*"],
-            "@icons/*": ["lib/icons/*"]
+            "@ui-components/*": ["lib/ui-components/*"],
+            "@providers/*": ["providers/*"],
+            "@icons/*": ["lib/icons/*"],
+            "@utils/*": ["lib/utils/*"]
         }
     }
 }
