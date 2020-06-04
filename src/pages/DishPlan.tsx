@@ -14,6 +14,7 @@ import {
     addIngredientToDish,
     removeIngredientFromDish,
     setDishCategory,
+    setDishName,
     useDishesState,
 } from '@providers/DishesContext'
 import {
@@ -48,6 +49,11 @@ export default function DishPlan({}: Props): ReactElement {
     const previousTouchMovePageY = React.useRef(null)
     const undoableActions = React.useRef([])
 
+    const [dishInEdition, setDishInEdition] = useState({
+        name: { id: '', value: '' },
+        category: { id: '', value: '' },
+        ingredients: [],
+    })
     const [renderDialog, setDialogToDisplay] = useState(null)
     const {
         dishes: fetchedDishes,
@@ -302,17 +308,23 @@ export default function DishPlan({}: Props): ReactElement {
 
                                     {fetchedDishes.length > 0 ? (
                                         <MenuList>
-                                            {fetchedDishes.map(({ id }) => (
-                                                <MenuList.Item
-                                                    onClick={() =>
-                                                        addDishToPlan({
-                                                            id,
-                                                        })
-                                                    }
-                                                >
-                                                    {name}
-                                                </MenuList.Item>
-                                            ))}
+                                            {fetchedDishes.map(
+                                                ({ id, name }) => (
+                                                    <MenuList.Item
+                                                        onClick={() => {
+                                                            setDishInEdition({
+                                                                ...dishInEdition,
+                                                                name: {
+                                                                    id,
+                                                                    value: name,
+                                                                },
+                                                            })
+                                                        }}
+                                                    >
+                                                        {name}
+                                                    </MenuList.Item>
+                                                )
+                                            )}
                                         </MenuList>
                                     ) : null}
 
@@ -332,11 +344,15 @@ export default function DishPlan({}: Props): ReactElement {
                                     {fetchedDishesCategories.length > 0 ? (
                                         <MenuList>
                                             {fetchedDishesCategories.map(
-                                                ({ id }) => (
+                                                ({ id, category }) => (
                                                     <MenuList.Item
                                                         onClick={() =>
-                                                            setDishCategory({
-                                                                id,
+                                                            setDishInEdition({
+                                                                ...dishInEdition,
+                                                                category: {
+                                                                    id,
+                                                                    value: category,
+                                                                },
                                                             })
                                                         }
                                                     >
@@ -363,15 +379,20 @@ export default function DishPlan({}: Props): ReactElement {
                                     {fetchedDishesIngredients.length > 0 ? (
                                         <MenuList>
                                             {fetchedDishesIngredients.map(
-                                                ({ id }) => (
+                                                ({ id, ingredient }) => (
                                                     <MenuList.Item
-                                                        onClick={() =>
-                                                            addIngredientToDish(
-                                                                {
-                                                                    id,
-                                                                }
-                                                            )
-                                                        }
+                                                        onClick={() => {
+                                                            setDishInEdition({
+                                                                ...dishInEdition,
+                                                                ingredients: [
+                                                                    ...dishInEdition.ingredients,
+                                                                    {
+                                                                        id,
+                                                                        value: ingredient,
+                                                                    },
+                                                                ],
+                                                            })
+                                                        }}
                                                     >
                                                         {name}
                                                     </MenuList.Item>
@@ -380,7 +401,7 @@ export default function DishPlan({}: Props): ReactElement {
                                         </MenuList>
                                     ) : null}
 
-                                    {dishIngredientsInEdition.map(({ id }) => (
+                                    {dishInEdition.ingredients.map(({ id }) => (
                                         <Chips
                                             onClose={() =>
                                                 removeIngredientFromDish({
