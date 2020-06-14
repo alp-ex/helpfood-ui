@@ -1,10 +1,8 @@
 import { Route, Switch, Redirect } from 'react-router-dom'
 
-import MealPlan from './pages/MealPlan'
 import React from 'react'
 import Recipes from './pages/Recipes'
 import ShopList from './pages/ShopList'
-import { MealPlanProvider } from './providers/MealPlanContext'
 
 const Router = () => {
     return (

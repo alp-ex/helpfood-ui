@@ -11,18 +11,16 @@ import {
     fetchDishes,
     fetchCategories,
     fetchIngredients,
-    addIngredientToDish,
     removeIngredientFromDish,
-    setDishCategory,
-    setDishName,
     useDishesState,
-} from '@providers/DishesContext'
+    useDishesDispatch,
+} from 'api/dishes/DishesContext'
 import {
     addDishToPlan,
     removeDishFromPlan,
     useDishPlanState,
-    undoDishPlanChanges,
-} from '@providers/DishPlanContext'
+    useDishPlanDispatch,
+} from 'api/dishPlan/DishPlanContext'
 import debounce from '@utils/debounce'
 import MenuList from 'lib/ui-components/MenuList'
 import Chips from 'lib/ui-components/Chips'
@@ -33,8 +31,17 @@ const msg = new Map([
     ['edit plan', 'Edit plan'],
     ['edit recipes', 'Edit recipes'],
     ['type a dish name', 'Type a dish name'],
+    ['type an ingredient name', 'Type an ingredient name'],
+    ['type a category name', 'Type a category name'],
+    ['type a dish plan', 'Type a dish plan'],
     ['finish', 'Finish'],
     ['undo changes', 'Undo changes'],
+    ['name', 'Name'],
+    ["don't save", "Don't save"],
+    ['save', 'Save'],
+    ['category', 'Category'],
+    ['ingredients', 'Ingredients'],
+    ['clear all', 'Clear all'],
 ])
 
 interface Props {}
@@ -49,27 +56,39 @@ export default function DishPlan({}: Props): ReactElement {
     const previousTouchMovePageY = React.useRef(null)
     const undoableActions = React.useRef([])
 
-    const [dishInEdition, setDishInEdition] = useState({
-        name: { id: '', value: '' },
-        category: { id: '', value: '' },
-        ingredients: [],
-    })
     const [renderDialog, setDialogToDisplay] = useState(null)
     const {
         dishes: fetchedDishes,
         categories: fetchedDishesCategories,
         ingredients: fetchedDishesIngredients,
     } = useDishesState()
-    const { plannedDishes } = useDishPlanState()
+    const { dishesWeekPlan } = useDishPlanState()
+    const dishesDispatch = useDishesDispatch()
+    const dishesPlanDispatch = useDishPlanDispatch()
 
     const handleDishSearchInputChange = (event) => {
-        debounce(fetchDishes({ q: event.target.value }))
+        debounce({
+            cb: fetchDishes({
+                dispatch: dishesDispatch,
+                q: event.target.value,
+            }),
+        })
     }
     const handleCategorySearchInputChange = (event) => {
-        debounce(fetchCategories({ q: event.target.value }))
+        debounce({
+            cb: fetchCategories({
+                q: event.target.value,
+                dispatch: dishesDispatch,
+            }),
+        })
     }
     const handleIngredientSearchInputChange = (event) => {
-        debounce(fetchIngredients({ q: event.target.value }))
+        debounce({
+            cb: fetchIngredients({
+                q: event.target.value,
+                dispatch: dishesDispatch,
+            }),
+        })
     }
 
     const renderSelectListView = useCallback(
@@ -174,9 +193,6 @@ export default function DishPlan({}: Props): ReactElement {
                 <Button
                     noBorders
                     onClick={() => {
-                        // EDIT DISH PLAN DIALOG FORM
-                        undoableActions.current = []
-
                         setDialogToDisplay(() => (
                             <>
                                 <ToolBar>
@@ -196,23 +212,24 @@ export default function DishPlan({}: Props): ReactElement {
                                     {fetchedDishes.length > 0 ? (
                                         <MenuList>
                                             {fetchedDishes.map(
-                                                ({ id, name }) => (
+                                                ({
+                                                    id,
+                                                    name,
+                                                    ingredients,
+                                                    category,
+                                                }) => (
                                                     <MenuList.Item
                                                         onClick={() => {
                                                             addDishToPlan({
-                                                                id,
-                                                                day: currentDay,
+                                                                dish: {
+                                                                    id,
+                                                                    name,
+                                                                    day: currentDay,
+                                                                    ingredients,
+                                                                    category,
+                                                                },
+                                                                dispatch: dishesPlanDispatch,
                                                             })
-
-                                                            undoableActions.current.push(
-                                                                () =>
-                                                                    removeDishFromPlan(
-                                                                        {
-                                                                            id,
-                                                                            day: currentDay,
-                                                                        }
-                                                                    )
-                                                            )
                                                         }}
                                                     >
                                                         {name}
@@ -222,47 +239,28 @@ export default function DishPlan({}: Props): ReactElement {
                                         </MenuList>
                                     ) : null}
 
-                                    {plannedDishes
-                                        .filter(
-                                            (dish) => dish.day === currentDay
-                                        )
-                                        .map(({ id, name }) => (
+                                    {dishesWeekPlan[currentDay].map(
+                                        ({id, name}) => (
                                             <Chips
                                                 onClose={() => {
                                                     removeDishFromPlan({
-                                                        id,
-                                                        day: currentDay,
+                                                        dish: {
+                                                            id,
+                                                            day: currentDay,
+                                                        },
+                                                        dispatch: dishesPlanDispatch,
                                                     })
-
-                                                    undoableActions.current.push(
-                                                        () =>
-                                                            addDishToPlan({
-                                                                id,
-                                                                day: currentDay,
-                                                            })
-                                                    )
                                                 }}
                                             >
                                                 {name}
                                             </Chips>
-                                        ))}
+                                        )
+                                    )}
 
                                     <ToolBar>
                                         <Button
                                             onClick={() => {
-                                                undoableActions.current.forEach(
-                                                    (action) => action()
-                                                )
-                                                undoableActions.current = []
-                                            }}
-                                        >
-                                            {msg.get('undo changes')}
-                                        </Button>
-
-                                        <Button
-                                            onClick={() => {
                                                 setDialogToDisplay(null)
-                                                undoableActions.current = []
                                             }}
                                         >
                                             {msg.get('finish')}
@@ -279,7 +277,6 @@ export default function DishPlan({}: Props): ReactElement {
                 <Button
                     noBorders
                     onClick={() => {
-                        // EDIT DISHES DIALOG FORM
                         setDialogToDisplay(() => (
                             <>
                                 <ToolBar>
@@ -291,7 +288,7 @@ export default function DishPlan({}: Props): ReactElement {
                                         {msg.get('clear all')}
                                     </Button>
 
-                                    <Label>{msg.get('edit plan')}</Label>
+                                    <Label>{msg.get('edit dish')}</Label>
                                 </ToolBar>
 
                                 <Form>
@@ -312,13 +309,7 @@ export default function DishPlan({}: Props): ReactElement {
                                                 ({ id, name }) => (
                                                     <MenuList.Item
                                                         onClick={() => {
-                                                            setDishInEdition({
-                                                                ...dishInEdition,
-                                                                name: {
-                                                                    id,
-                                                                    value: name,
-                                                                },
-                                                            })
+                                                          
                                                         }}
                                                     >
                                                         {name}
@@ -344,16 +335,11 @@ export default function DishPlan({}: Props): ReactElement {
                                     {fetchedDishesCategories.length > 0 ? (
                                         <MenuList>
                                             {fetchedDishesCategories.map(
-                                                ({ id, category }) => (
+                                                ({ id, name }) => (
                                                     <MenuList.Item
                                                         onClick={() =>
-                                                            setDishInEdition({
-                                                                ...dishInEdition,
-                                                                category: {
-                                                                    id,
-                                                                    value: category,
-                                                                },
-                                                            })
+                                                        
+                                                            
                                                         }
                                                     >
                                                         {name}
@@ -379,19 +365,10 @@ export default function DishPlan({}: Props): ReactElement {
                                     {fetchedDishesIngredients.length > 0 ? (
                                         <MenuList>
                                             {fetchedDishesIngredients.map(
-                                                ({ id, ingredient }) => (
+                                                ({ id, name }) => (
                                                     <MenuList.Item
                                                         onClick={() => {
-                                                            setDishInEdition({
-                                                                ...dishInEdition,
-                                                                ingredients: [
-                                                                    ...dishInEdition.ingredients,
-                                                                    {
-                                                                        id,
-                                                                        value: ingredient,
-                                                                    },
-                                                                ],
-                                                            })
+                                                         
                                                         }}
                                                     >
                                                         {name}
@@ -401,11 +378,12 @@ export default function DishPlan({}: Props): ReactElement {
                                         </MenuList>
                                     ) : null}
 
-                                    {dishInEdition.ingredients.map(({ id }) => (
+                                    {dishesOfTheDay.ingredients.map(({ id }) => (
                                         <Chips
                                             onClose={() =>
                                                 removeIngredientFromDish({
                                                     id,
+                                                    dispatch: dishesDispatch,
                                                 })
                                             }
                                         >
@@ -419,7 +397,7 @@ export default function DishPlan({}: Props): ReactElement {
                                                 setDialogToDisplay(null)
                                             }}
                                         >
-                                            {msg.get("don's save")}
+                                            {msg.get("don't save")}
                                         </Button>
 
                                         <Button
