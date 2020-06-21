@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useCallback } from 'react'
+import React, { ReactElement, useState, useCallback, useReducer } from 'react'
 import ToolBar from 'lib/ui-components/ToolBar'
 import SelectListView from 'lib/ui-components/SelectListView'
 import { getWeekDaysFromNow } from '@utils/Dates'
@@ -11,16 +11,17 @@ import {
     fetchDishes,
     fetchCategories,
     fetchIngredients,
-    removeIngredientFromDish,
+    addDish,
+    editDish,
     useDishesState,
     useDishesDispatch,
-} from 'api/dishes/DishesContext'
+} from 'api/dishes/context'
 import {
     addDishToPlan,
     removeDishFromPlan,
     useDishPlanState,
     useDishPlanDispatch,
-} from 'api/dishPlan/DishPlanContext'
+} from 'api/dishPlan/context'
 import debounce from '@utils/debounce'
 import MenuList from 'lib/ui-components/MenuList'
 import Chips from 'lib/ui-components/Chips'
@@ -47,17 +48,27 @@ const msg = new Map([
 interface Props {}
 
 export default function DishPlan({}: Props): ReactElement {
-    // we might want to add internationalisation this way :
-    // const { t } = useContext(useI18nContext)
-    // msg.forEach((msgToFormat) => msg.set(msgToFormat, t(msgToFormat)))
-
     const weekDays = getWeekDaysFromNow()
     const [currentDay, setCurrentDay] = useState(weekDays[0])
     const previousTouchMovePageY = React.useRef(null)
-    const undoableActions = React.useRef([])
 
     const [renderDialog, setDialogToDisplay] = useState(null)
+    const [
+        {
+            dishIdBeingEdited,
+            dishIngredientsBeingEdited,
+            dishCategoryBeingEdited,
+            dishNameBeingEdited,
+        },
+        updateDishBeingEditedValues,
+    ] = useState({
+        dishIdBeingEdited: '',
+        dishIngredientsBeingEdited: [],
+        dishCategoryBeingEdited: { id: '', name: '' },
+        dishNameBeingEdited: { id: '', name: '' },
+    })
     const {
+        dishMatch: fetchedDishMatch,
         dishes: fetchedDishes,
         categories: fetchedDishesCategories,
         ingredients: fetchedDishesIngredients,
@@ -240,7 +251,7 @@ export default function DishPlan({}: Props): ReactElement {
                                     ) : null}
 
                                     {dishesWeekPlan[currentDay].map(
-                                        ({id, name}) => (
+                                        ({ id, name }) => (
                                             <Chips
                                                 onClose={() => {
                                                     removeDishFromPlan({
@@ -280,14 +291,6 @@ export default function DishPlan({}: Props): ReactElement {
                         setDialogToDisplay(() => (
                             <>
                                 <ToolBar>
-                                    <Button
-                                        onClick={() => {
-                                            // empty form
-                                        }}
-                                    >
-                                        {msg.get('clear all')}
-                                    </Button>
-
                                     <Label>{msg.get('edit dish')}</Label>
                                 </ToolBar>
 
@@ -301,6 +304,7 @@ export default function DishPlan({}: Props): ReactElement {
                                             'type a dish name'
                                         )}
                                         onChange={handleDishSearchInputChange}
+                                        value={dishNameBeingEdited.name}
                                     />
 
                                     {fetchedDishes.length > 0 ? (
@@ -309,7 +313,15 @@ export default function DishPlan({}: Props): ReactElement {
                                                 ({ id, name }) => (
                                                     <MenuList.Item
                                                         onClick={() => {
-                                                          
+                                                            updateDishBeingEditedValues(
+                                                                (oldState) => ({
+                                                                    ...oldState,
+                                                                    dishNameBeingEdited: {
+                                                                        id,
+                                                                        name,
+                                                                    },
+                                                                })
+                                                            )
                                                         }}
                                                     >
                                                         {name}
@@ -330,6 +342,7 @@ export default function DishPlan({}: Props): ReactElement {
                                         onChange={
                                             handleCategorySearchInputChange
                                         }
+                                        value={dishCategoryBeingEdited.name}
                                     />
 
                                     {fetchedDishesCategories.length > 0 ? (
@@ -338,8 +351,15 @@ export default function DishPlan({}: Props): ReactElement {
                                                 ({ id, name }) => (
                                                     <MenuList.Item
                                                         onClick={() =>
-                                                        
-                                                            
+                                                            updateDishBeingEditedValues(
+                                                                (oldState) => ({
+                                                                    ...oldState,
+                                                                    dishCategoryBeingEdited: {
+                                                                        id,
+                                                                        name,
+                                                                    },
+                                                                })
+                                                            )
                                                         }
                                                     >
                                                         {name}
@@ -368,7 +388,18 @@ export default function DishPlan({}: Props): ReactElement {
                                                 ({ id, name }) => (
                                                     <MenuList.Item
                                                         onClick={() => {
-                                                         
+                                                            updateDishBeingEditedValues(
+                                                                (oldState) => ({
+                                                                    ...oldState,
+                                                                    dishIngredientsBeingEdited: [
+                                                                        ...dishIngredientsBeingEdited,
+                                                                        {
+                                                                            id,
+                                                                            name,
+                                                                        },
+                                                                    ],
+                                                                })
+                                                            )
                                                         }}
                                                     >
                                                         {name}
@@ -378,18 +409,30 @@ export default function DishPlan({}: Props): ReactElement {
                                         </MenuList>
                                     ) : null}
 
-                                    {dishesOfTheDay.ingredients.map(({ id }) => (
-                                        <Chips
-                                            onClose={() =>
-                                                removeIngredientFromDish({
-                                                    id,
-                                                    dispatch: dishesDispatch,
-                                                })
-                                            }
-                                        >
-                                            {name}
-                                        </Chips>
-                                    ))}
+                                    {dishIngredientsBeingEdited.map(
+                                        ({ id, name }) => (
+                                            <Chips
+                                                onClose={() =>
+                                                    updateDishBeingEditedValues(
+                                                        (oldState) => ({
+                                                            ...oldState,
+                                                            dishIngredientsBeingEdited: [
+                                                                ...oldState.dishIngredientsBeingEdited.filter(
+                                                                    ({
+                                                                        id: ingredientToRemoveId,
+                                                                    }) =>
+                                                                        ingredientToRemoveId !==
+                                                                        id
+                                                                ),
+                                                            ],
+                                                        })
+                                                    )
+                                                }
+                                            >
+                                                {name}
+                                            </Chips>
+                                        )
+                                    )}
 
                                     <ToolBar>
                                         <Button
@@ -400,13 +443,41 @@ export default function DishPlan({}: Props): ReactElement {
                                             {msg.get("don't save")}
                                         </Button>
 
-                                        <Button
-                                            onClick={() => {
-                                                setDialogToDisplay(null)
-                                            }}
-                                        >
-                                            {msg.get('save')}
-                                        </Button>
+                                        {fetchedDishMatch.name ===
+                                        dishNameBeingEdited.name ? (
+                                            <Button
+                                                onClick={() => {
+                                                    editDish({
+                                                        dispatch: dishesDispatch,
+                                                        dish: {
+                                                            id: dishIdBeingEdited,
+                                                            ingredients: dishIngredientsBeingEdited,
+                                                            category: dishCategoryBeingEdited,
+                                                            name: dishNameBeingEdited,
+                                                        },
+                                                    })
+                                                    setDialogToDisplay(null)
+                                                }}
+                                            >
+                                                {msg.get('edit')}
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                onClick={() => {
+                                                    addDish({
+                                                        dispatch: dishesDispatch,
+                                                        dish: {
+                                                            ingredients: dishIngredientsBeingEdited,
+                                                            category: dishCategoryBeingEdited,
+                                                            name: dishNameBeingEdited,
+                                                        },
+                                                    })
+                                                    setDialogToDisplay(null)
+                                                }}
+                                            >
+                                                {msg.get('save')}
+                                            </Button>
+                                        )}
                                     </ToolBar>
                                 </Form>
                             </>

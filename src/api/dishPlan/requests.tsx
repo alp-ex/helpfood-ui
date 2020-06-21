@@ -1,17 +1,21 @@
-import { fetchDishPlan, Actions } from './client'
+const dishPlanURI = 'https://www.helpfood-api.com/dish-plan'
 
-export function addDishToPlan({ id, day }) {
-    return fetchDishPlan({
-        method: 'POST',
-        action: Actions.ADD_DISH,
-        data: { id, day },
-    })
-}
+export const Path = Object.freeze({
+    ADD_DISH: 'add-dish-to-plan',
+    REMOVE_DISH: 'remove-dish-from-plan',
+})
 
-export function removeDishToPlan({ id, day }) {
-    return fetchDishPlan({
-        method: 'DELETE',
-        action: 'remove-dish-from-plan',
-        data: { id, day },
+export async function fetchDishPlan({
+    method = 'GET',
+    data,
+    action,
+    contentType = 'application/json',
+}) {
+    return fetch(`${dishPlanURI}/${action}`, {
+        method,
+        headers: {
+            'Content-Type': contentType,
+        },
+        body: JSON.stringify(data),
     })
 }

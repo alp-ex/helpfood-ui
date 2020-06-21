@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useContext, ReactNode } from 'react'
 import {
     addDishToPlan as addDishToPlanAPI,
     removeDishToPlan as removeDishToPlanAPI,
-} from 'api/dishPlan/requests'
+} from 'api/dishPlan/actions'
 import dishPlanFixtures from 'api/fixtures/dishPlan.json'
 
 type Category = {
@@ -51,7 +51,6 @@ const {
     REMOVE_DISH_TO_PLAN_FAILED: 'removing dish to week plan failed',
 }
 
-// this looks a bit heavy
 function DishPlanReducer(prevState, { type, payload }) {
     switch (type) {
         case REMOVE_DISH_TO_PLAN_START: {
@@ -61,15 +60,12 @@ function DishPlanReducer(prevState, { type, payload }) {
                     ...prevState.dishesWeekPlan,
                     [payload.day]: [
                         ...prevState.dishesWeekPlan[payload.day],
-                        prevState.dishesWeekPlan[payload.day].map(
-                            (plannedDish) => {
-                                if (plannedDish.id === payload.id) {
-                                    plannedDish.status = 'pending'
-                                }
-
-                                return plannedDish
-                            }
-                        ),
+                        {
+                            ...prevState.dishesWeekPlan[payload.day].find(
+                                (dish) => dish.id === payload.id
+                            ),
+                            status: 'pending',
+                        },
                     ],
                 },
             }
@@ -81,15 +77,12 @@ function DishPlanReducer(prevState, { type, payload }) {
                     ...prevState.dishesWeekPlan,
                     [payload.day]: [
                         ...prevState.dishesWeekPlan[payload.day],
-                        prevState.dishesWeekPlan[payload.day].map(
-                            (plannedDish) => {
-                                if (plannedDish.id === payload.id) {
-                                    plannedDish.status = 'deleted'
-                                }
-
-                                return plannedDish
-                            }
-                        ),
+                        {
+                            ...prevState.dishesWeekPlan[payload.day].find(
+                                (dish) => dish.id === payload.id
+                            ),
+                            status: 'deleted',
+                        },
                     ],
                 },
             }
@@ -101,15 +94,12 @@ function DishPlanReducer(prevState, { type, payload }) {
                     ...prevState.dishesWeekPlan,
                     [payload.day]: [
                         ...prevState.dishesWeekPlan[payload.day],
-                        prevState.dishesWeekPlan[payload.day].map(
-                            (plannedDish) => {
-                                if (plannedDish.id === payload.id) {
-                                    plannedDish.status = 'error'
-                                }
-
-                                return plannedDish
-                            }
-                        ),
+                        {
+                            ...prevState.dishesWeekPlan[payload.day].find(
+                                (dish) => dish.id === payload.id
+                            ),
+                            status: 'error',
+                        },
                     ],
                 },
             }
@@ -139,15 +129,12 @@ function DishPlanReducer(prevState, { type, payload }) {
                     ...prevState.dishesWeekPlan,
                     [payload.day]: [
                         ...prevState.dishesWeekPlan[payload.day],
-                        prevState.dishesWeekPlan[payload.day].map(
-                            (plannedDish) => {
-                                if (plannedDish.id === payload.id) {
-                                    plannedDish.status = 'success'
-                                }
-
-                                return plannedDish
-                            }
-                        ),
+                        {
+                            ...prevState.dishesWeekPlan[payload.day].find(
+                                (dish) => dish.id === payload.id
+                            ),
+                            status: 'error',
+                        },
                     ],
                 },
             }
@@ -159,15 +146,12 @@ function DishPlanReducer(prevState, { type, payload }) {
                     ...prevState.dishesWeekPlan,
                     [payload.day]: [
                         ...prevState.dishesWeekPlan[payload.day],
-                        prevState.dishesWeekPlan[payload.day].map(
-                            (plannedDish) => {
-                                if (plannedDish.id === payload.id) {
-                                    plannedDish.status = 'error'
-                                }
-
-                                return plannedDish
-                            }
-                        ),
+                        {
+                            ...prevState.dishesWeekPlan[payload.day].find(
+                                (dish) => dish.id === payload.id
+                            ),
+                            status: 'error',
+                        },
                     ],
                 },
             }
