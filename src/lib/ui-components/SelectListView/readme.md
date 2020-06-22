@@ -43,6 +43,7 @@ const previousTouchMovePageY = React.useRef(null)
 
 ;<>
     <span
+        style={{ fontSize: '2em' }}
         onMouseDown={() => displaySelectListView(true)}
         onTouchStart={(event) => (
             event.preventDefault(), displaySelectListView(true)
@@ -87,7 +88,9 @@ const previousTouchMovePageY = React.useRef(null)
         Hold
     </span>
 
-    <span style={{ marginLeft: '2%' }}>selected index : {selectedIndex}</span>
+    <span style={{ marginLeft: '2%' }}>
+        selected index : <strong>{selectedIndex}</strong>
+    </span>
 
     {!selectListViewIsDisplayed ? null : (
         <SelectListView

@@ -1,9 +1,9 @@
 Basic example:
 
 ```js
-<LabelledSection
+<LabelledList
     renderLabel={() => <h3>Title</h3>}
-    itemsToGroup={[
+    items={[
         {
             id: '1',
             render: () => <span>{`this is the item number  1`}</span>,

@@ -7,7 +7,7 @@ import React, {
 
 interface Props {
     children: ReactNode
-    onClose: (event: MouseEvent) => void
+    onClose?: (event: MouseEvent) => void
     style?: { root?: CSSProperties; closeButton?: CSSProperties }
 }
 
@@ -21,27 +21,33 @@ export default function Chips({
             style={{
                 display: 'flex',
                 justifyContent: 'space-between',
+                border: '1px solid black',
+                borderRadius: '30px',
+                padding: '0.5em',
+                fontSize: '1em',
+                width: 'fit-content',
                 ...customRootStyle,
             }}
         >
             {children}
 
-            {/* this might be another ClosableChip component */}
-            <button
-                onClick={onClose}
-                style={{
-                    border: '1px solid black',
-                    borderRadius: '30px',
-                    padding: '1em',
-                    fontSize: '1em',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    ...customCloseButtonStyle,
-                }}
-            >
-                X
-            </button>
+            {onClose ? (
+                <button
+                    onClick={onClose}
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        background: 'transparent',
+                        border: 'none',
+                        marginLeft: '0.5em',
+                        cursor: 'pointer',
+                        ...customCloseButtonStyle,
+                    }}
+                >
+                    X
+                </button>
+            ) : null}
         </div>
     )
 }

@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 
 interface Props {
     renderLabel: () => ReactNode | null
-    itemsToGroup: ReadonlyArray<{ render: () => ReactNode; id: string }>
+    items: ReadonlyArray<{ render: () => ReactNode; id: string }>
     style?: {
         root?: CSSProperties
         itemsContainer?: CSSProperties
@@ -11,9 +11,9 @@ interface Props {
     }
 }
 
-export default memo(function LabelledSection({
+export default memo(function LabelledList({
     renderLabel = () => null,
-    itemsToGroup,
+    items,
     style: {
         root: customRootStyle,
         itemsContainer: customItemsContainerStyle,
@@ -25,7 +25,7 @@ export default memo(function LabelledSection({
             {renderLabel()}
 
             <ul style={customItemsContainerStyle}>
-                {itemsToGroup.map(({ render, id }) => (
+                {items.map(({ render, id }) => (
                     <li
                         style={{ listStyle: 'none', ...customItemStyle }}
                         key={id}
