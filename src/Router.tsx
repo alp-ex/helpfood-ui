@@ -1,8 +1,9 @@
 import { Route, Switch, Redirect } from 'react-router-dom'
 
 import React from 'react'
-import Recipes from './pages/Recipes'
-import ShopList from './pages/ShopList'
+import DishPlan from 'pages/DishPlan'
+import { DishesProvider } from 'api/dishes/context'
+import { DishPlanProvider } from 'api/dishPlan/context'
 
 const Router = () => {
     return (
@@ -10,17 +11,16 @@ const Router = () => {
             <Redirect exact from="/" to="/" />
 
             <Switch>
-                {/* <Route
-                    exact
-                    path="/schedule"
+                <Route
+                    path="/"
                     render={() => (
-                        <MealPlanProvider>
-                            <MealPlan />
-                        </MealPlanProvider>
+                        <DishesProvider>
+                            <DishPlanProvider>
+                                <DishPlan />
+                            </DishPlanProvider>
+                        </DishesProvider>
                     )}
-                /> */}
-                <Route path="/recipes" component={Recipes} />
-                <Route path="/shoplist" component={ShopList} />
+                />
             </Switch>
         </>
     )

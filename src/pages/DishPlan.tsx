@@ -102,7 +102,7 @@ export default function DishPlan({}: Props): ReactElement {
         })
     }
 
-    const renderSelectListView = useCallback(
+    const renderWeekDaysSelectListView = useCallback(
         () => (
             <SelectListView
                 style={{
@@ -132,8 +132,12 @@ export default function DishPlan({}: Props): ReactElement {
     const renderCurrentDayButton = () => (
         <Button
             noBorders
-            onMouseDown={() => setDialogToDisplay(renderSelectListView())}
-            onTouchStart={() => setDialogToDisplay(renderSelectListView())}
+            onMouseDown={() =>
+                setDialogToDisplay(renderWeekDaysSelectListView())
+            }
+            onTouchStart={() =>
+                setDialogToDisplay(renderWeekDaysSelectListView())
+            }
             onTouchEnd={() => setDialogToDisplay(null)}
             onTouchMove={(event) => {
                 const inch = event.targetTouches[0]
