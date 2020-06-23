@@ -254,21 +254,6 @@ export default function DishPlan(): ReactElement {
     )
 
     return (
-        <Button
-            onClick={() =>
-                setDialogToDisplay(() => (
-                    <>
-                        <span>cacoune</span>
-                        {renderEditDishForm()}
-                    </>
-                ))
-            }
-        >
-            GO
-        </Button>
-    )
-
-    return (
         <>
             <ToolBar
                 style={{
