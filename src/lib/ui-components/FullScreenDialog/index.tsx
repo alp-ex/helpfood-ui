@@ -13,18 +13,14 @@ export default function FullScreenDialog({
         <Component
             style={{
                 position: 'fixed',
-                top: '0px',
-                left: '0px',
-                height: '100vh',
                 width: '100vw',
-                margin: 0,
                 background: 'white',
-                zIndex: 1000,
+                zIndex: '1000',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-around',
-                alignItems: 'center',
-                padding: '0',
+                padding: '1em',
+                boxSizing: 'border-box',
             }}
         >
             {children}

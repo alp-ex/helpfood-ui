@@ -4,6 +4,7 @@ import React, {
     ChangeEvent,
     forwardRef,
     Ref,
+    FocusEvent,
 } from 'react'
 
 interface Props {
@@ -13,19 +14,31 @@ interface Props {
     value?: string
     placeholder?: string
     onChange: (event: ChangeEvent<HTMLInputElement>) => void
+    onFocus?: (event: FocusEvent) => void
+    onBlur?: (event: FocusEvent) => void
 }
 
 export default forwardRef(function SearchInput(
-    { children, type = 'text', value, placeholder, onChange }: Props,
+    {
+        children,
+        onFocus,
+        onBlur,
+        type = 'text',
+        value,
+        placeholder,
+        onChange,
+    }: Props,
     ref?: Ref<HTMLInputElement>
 ): ReactElement {
     return (
         <input
+            onBlur={onBlur}
+            onFocus={onFocus}
             ref={ref}
             style={{
                 border: '1px solid black',
                 borderRadius: '30px',
-                padding: '1em',
+                padding: '0.7em',
                 fontSize: '1em',
             }}
             value={value}

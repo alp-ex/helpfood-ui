@@ -10,7 +10,12 @@ export default function Form({ children }: Props): ReactElement {
             onSubmit={(event) => {
                 event.preventDefault()
             }}
-            style={{ display: 'flex', flexDirection: 'column', padding: '1em' }}
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: '1em',
+            }}
         >
             {children}
         </form>

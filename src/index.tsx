@@ -1,8 +1,7 @@
 import App from './App'
 import { render } from 'react-dom'
 import React from 'react'
-import './style/global.css'
-import './style/reset.css'
+import './app.css'
 
 const container = document.querySelector('#helpfood')
 // container.setAttribute('type', "module")

@@ -11,6 +11,29 @@ interface Props {
     style?: { root?: CSSProperties; closeButton?: CSSProperties }
 }
 
+interface ListProps {
+    children: ReactNode
+    style?: { root?: CSSProperties }
+}
+
+const List = function List({
+    children,
+    style: { root: customRootStyle } = {},
+}: ListProps): ReactElement {
+    return (
+        <ul
+            style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                padding: '0.5em',
+                ...customRootStyle,
+            }}
+        >
+            {children}
+        </ul>
+    )
+}
+
 export default function Chips({
     children,
     onClose,
@@ -23,7 +46,8 @@ export default function Chips({
                 justifyContent: 'space-between',
                 border: '1px solid black',
                 borderRadius: '30px',
-                padding: '0.5em',
+                padding: '0.7em',
+                margin: '0.5em',
                 fontSize: '1em',
                 width: 'fit-content',
                 ...customRootStyle,
@@ -51,3 +75,5 @@ export default function Chips({
         </div>
     )
 }
+
+Chips.List = List

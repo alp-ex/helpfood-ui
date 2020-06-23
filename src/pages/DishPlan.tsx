@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useCallback, useReducer } from 'react'
+import React, { ReactElement, useState, useRef } from 'react'
 import ToolBar from 'lib/ui-components/ToolBar'
 import SelectListView from 'lib/ui-components/SelectListView'
 import { getWeekDaysFromNow } from '@utils/Dates'
@@ -45,14 +45,17 @@ const msg = new Map([
     ['clear all', 'Clear all'],
 ])
 
-interface Props {}
-
-export default function DishPlan({}: Props): ReactElement {
+export default function DishPlan(): ReactElement {
     const weekDays = getWeekDaysFromNow()
     const [currentDay, setCurrentDay] = useState(weekDays[0])
-    const previousTouchMovePageY = React.useRef(null)
+    const previousTouchMovePageY = useRef(null)
 
-    const [renderDialog, setDialogToDisplay] = useState(null)
+    const [dialogToRender, setDialogToDisplay] = useState(null)
+    console.log(dialogToRender)
+    const [
+        shouldDisplayEditDishMenuList,
+        setShouldDisplayEditDishMenuList,
+    ] = useState(false)
     const [
         {
             dishIdBeingEdited,
@@ -102,42 +105,38 @@ export default function DishPlan({}: Props): ReactElement {
         })
     }
 
-    const renderWeekDaysSelectListView = useCallback(
-        () => (
-            <SelectListView
-                style={{
-                    option: {
-                        flex: '1 1 0%',
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    },
-                }}
-                selectedIndex={currentDay}
-                onOptionClick={(_, { optionId }) => setCurrentDay(optionId)}
-                options={weekDays.map((weekDay) => ({
-                    render: () => <span>{weekDay}</span>,
-                    id: weekDay,
-                }))}
-                onOptionMouseOver={(_, { optionId }) => {
-                    setCurrentDay(optionId)
-                }}
-                onMouseUp={() => setDialogToDisplay(null)}
-            />
-        ),
-        [currentDay]
+    const renderWeekDaysSelectListView = () => (
+        <SelectListView
+            style={{
+                option: {
+                    flex: '1 1 0%',
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                },
+            }}
+            selectedIndex={currentDay}
+            onOptionClick={(_, { optionId }) => setCurrentDay(optionId)}
+            options={weekDays.map((weekDay) => ({
+                render: () => <span>{weekDay}</span>,
+                id: weekDay,
+            }))}
+            onOptionMouseOver={(_, { optionId }) => {
+                setCurrentDay(optionId)
+            }}
+            onMouseUp={() => setDialogToDisplay(null)}
+        />
     )
-
-    const renderCurrentDayButton = () => (
+    const renderCurrentDayPicker = () => (
         <Button
             noBorders
-            onMouseDown={() =>
-                setDialogToDisplay(renderWeekDaysSelectListView())
-            }
-            onTouchStart={() =>
-                setDialogToDisplay(renderWeekDaysSelectListView())
-            }
+            onMouseDown={() => {
+                setDialogToDisplay(() => renderWeekDaysSelectListView())
+            }}
+            onTouchStart={() => {
+                setDialogToDisplay(() => renderWeekDaysSelectListView())
+            }}
             onTouchEnd={() => setDialogToDisplay(null)}
             onTouchMove={(event) => {
                 const inch = event.targetTouches[0]
@@ -177,6 +176,97 @@ export default function DishPlan({}: Props): ReactElement {
             {currentDay}
         </Button>
     )
+    const renderEditDishForm = () => (
+        <Form>
+            <SearchInput
+                placeholder={msg.get('type a dish name')}
+                onChange={handleDishSearchInputChange}
+                onFocus={() => setShouldDisplayEditDishMenuList(true)}
+                onBlur={() => setShouldDisplayEditDishMenuList(false)}
+            />
+
+            {shouldDisplayEditDishMenuList ? (
+                <MenuList
+                    style={{
+                        root: {
+                            width: 'fit-content',
+                            marginTop: '0.7em',
+                            zIndex: 700,
+                        },
+                    }}
+                >
+                    {fetchedDishes.map(
+                        ({ id, name, ingredients, category }) => (
+                            <MenuList.Item
+                                key={id}
+                                onClick={() => {
+                                    addDishToPlan({
+                                        dish: {
+                                            id,
+                                            name,
+                                            day: currentDay,
+                                            ingredients,
+                                            category,
+                                        },
+                                        dispatch: dishesPlanDispatch,
+                                    })
+                                }}
+                            >
+                                {name}
+                            </MenuList.Item>
+                        )
+                    )}
+                </MenuList>
+            ) : null}
+
+            <Chips.List>
+                {dishesWeekPlan[currentDay.toLowerCase()].dishes.map(
+                    ({ id, name }) => (
+                        <li key={id}>
+                            <Chips
+                                onClose={() => {
+                                    removeDishFromPlan({
+                                        dish: {
+                                            id,
+                                            day: currentDay,
+                                        },
+                                        dispatch: dishesPlanDispatch,
+                                    })
+                                }}
+                            >
+                                {name}
+                            </Chips>
+                        </li>
+                    )
+                )}
+            </Chips.List>
+
+            <ToolBar>
+                <Button
+                    onClick={() => {
+                        setDialogToDisplay(null)
+                    }}
+                >
+                    {msg.get('finish')}
+                </Button>
+            </ToolBar>
+        </Form>
+    )
+
+    return (
+        <Button
+            onClick={() =>
+                setDialogToDisplay(() => (
+                    <>
+                        <span>cacoune</span>
+                        {renderEditDishForm()}
+                    </>
+                ))
+            }
+        >
+            GO
+        </Button>
+    )
 
     return (
         <>
@@ -190,7 +280,7 @@ export default function DishPlan({}: Props): ReactElement {
                     },
                 }}
             >
-                {renderCurrentDayButton()}
+                {renderCurrentDayPicker()}
 
                 <Button noBorders>{msg.get('settings')}</Button>
             </ToolBar>
@@ -211,77 +301,12 @@ export default function DishPlan({}: Props): ReactElement {
                         setDialogToDisplay(() => (
                             <>
                                 <ToolBar>
-                                    {renderCurrentDayButton()}
+                                    {renderCurrentDayPicker()}
 
                                     {msg.get('edit plan')}
                                 </ToolBar>
 
-                                <Form>
-                                    <SearchInput
-                                        placeholder={msg.get(
-                                            'type a dish name'
-                                        )}
-                                        onChange={handleDishSearchInputChange}
-                                    />
-
-                                    {fetchedDishes.length > 0 ? (
-                                        <MenuList>
-                                            {fetchedDishes.map(
-                                                ({
-                                                    id,
-                                                    name,
-                                                    ingredients,
-                                                    category,
-                                                }) => (
-                                                    <MenuList.Item
-                                                        onClick={() => {
-                                                            addDishToPlan({
-                                                                dish: {
-                                                                    id,
-                                                                    name,
-                                                                    day: currentDay,
-                                                                    ingredients,
-                                                                    category,
-                                                                },
-                                                                dispatch: dishesPlanDispatch,
-                                                            })
-                                                        }}
-                                                    >
-                                                        {name}
-                                                    </MenuList.Item>
-                                                )
-                                            )}
-                                        </MenuList>
-                                    ) : null}
-
-                                    {dishesWeekPlan[currentDay].map(
-                                        ({ id, name }) => (
-                                            <Chips
-                                                onClose={() => {
-                                                    removeDishFromPlan({
-                                                        dish: {
-                                                            id,
-                                                            day: currentDay,
-                                                        },
-                                                        dispatch: dishesPlanDispatch,
-                                                    })
-                                                }}
-                                            >
-                                                {name}
-                                            </Chips>
-                                        )
-                                    )}
-
-                                    <ToolBar>
-                                        <Button
-                                            onClick={() => {
-                                                setDialogToDisplay(null)
-                                            }}
-                                        >
-                                            {msg.get('finish')}
-                                        </Button>
-                                    </ToolBar>
-                                </Form>
+                                {renderEditDishForm()}
                             </>
                         ))
                     }}
@@ -312,10 +337,18 @@ export default function DishPlan({}: Props): ReactElement {
                                     />
 
                                     {fetchedDishes.length > 0 ? (
-                                        <MenuList>
+                                        <MenuList
+                                            style={{
+                                                root: {
+                                                    width: 'fit-content',
+                                                    marginTop: '0.7em',
+                                                },
+                                            }}
+                                        >
                                             {fetchedDishes.map(
                                                 ({ id, name }) => (
                                                     <MenuList.Item
+                                                        key={id}
                                                         onClick={() => {
                                                             updateDishBeingEditedValues(
                                                                 (oldState) => ({
@@ -350,10 +383,18 @@ export default function DishPlan({}: Props): ReactElement {
                                     />
 
                                     {fetchedDishesCategories.length > 0 ? (
-                                        <MenuList>
+                                        <MenuList
+                                            style={{
+                                                root: {
+                                                    width: 'fit-content',
+                                                    marginTop: '0.7em',
+                                                },
+                                            }}
+                                        >
                                             {fetchedDishesCategories.map(
                                                 ({ id, name }) => (
                                                     <MenuList.Item
+                                                        key={id}
                                                         onClick={() =>
                                                             updateDishBeingEditedValues(
                                                                 (oldState) => ({
@@ -387,10 +428,18 @@ export default function DishPlan({}: Props): ReactElement {
                                     />
 
                                     {fetchedDishesIngredients.length > 0 ? (
-                                        <MenuList>
+                                        <MenuList
+                                            style={{
+                                                root: {
+                                                    width: 'fit-content',
+                                                    marginTop: '0.7em',
+                                                },
+                                            }}
+                                        >
                                             {fetchedDishesIngredients.map(
                                                 ({ id, name }) => (
                                                     <MenuList.Item
+                                                        key={id}
                                                         onClick={() => {
                                                             updateDishBeingEditedValues(
                                                                 (oldState) => ({
@@ -416,6 +465,7 @@ export default function DishPlan({}: Props): ReactElement {
                                     {dishIngredientsBeingEdited.map(
                                         ({ id, name }) => (
                                             <Chips
+                                                key={id}
                                                 onClose={() =>
                                                     updateDishBeingEditedValues(
                                                         (oldState) => ({
@@ -492,11 +542,9 @@ export default function DishPlan({}: Props): ReactElement {
                 </Button>
             </ToolBar>
 
-            {renderDialog
+            {dialogToRender
                 ? createPortal(
-                      () => (
-                          <FullScreenDialog>{renderDialog()}</FullScreenDialog>
-                      ),
+                      <FullScreenDialog>{dialogToRender}</FullScreenDialog>,
                       document.body
                   )
                 : null}
