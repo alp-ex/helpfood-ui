@@ -4,34 +4,36 @@ interface Props {
     onOptionClick: (event: MouseEvent, { optionId: string }) => void
     onOptionMouseOver?: (event: MouseEvent, { optionId: string }) => void
     onMouseUp?: () => void
-    selectedIndex: string
+    selectedId: string
     options: ReadonlyArray<{ render: () => ReactNode | null; id: string }>
     style?: { root?: CSSProperties; option?: CSSProperties }
 }
 
 export default memo(function SelectListView({
-    selectedIndex,
+    selectedId,
     onOptionClick,
     onOptionMouseOver,
     onMouseUp,
     options,
     style: { root: customRootStyle, option: customOptionStyle } = {},
 }: Props) {
+    console.log(selectedId, 'cacouuuuune')
     return (
         <ul onMouseUp={onMouseUp} style={customRootStyle}>
             {options.map(({ render, id }) => (
                 <li
                     onMouseOver={(event) => {
                         if (onOptionMouseOver) {
+                            console.log(selectedId, id)
                             onOptionMouseOver(event, { optionId: id })
                         }
                     }}
                     onClick={(event) => onOptionClick(event, { optionId: id })}
                     style={{
                         cursor: 'pointer',
-                        fontWeight: selectedIndex === id ? 'bold' : 'inherit',
+                        fontWeight: selectedId === id ? 'bold' : 'inherit',
                         listStyle: 'none',
-                        fontSize: selectedIndex === id ? '2em' : '1.5em',
+                        fontSize: selectedId === id ? '2em' : '1.5em',
                         ...customOptionStyle,
                     }}
                     key={id}

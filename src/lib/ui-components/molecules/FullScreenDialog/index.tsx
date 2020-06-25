@@ -21,6 +21,7 @@ export default function FullScreenDialog({
                 justifyContent: 'space-around',
                 padding: '1em',
                 boxSizing: 'border-box',
+                height: '100vh',
             }}
         >
             {children}

@@ -1,12 +1,12 @@
 import React, { ReactElement, useState, useRef } from 'react'
-import ToolBar from 'lib/ui-components/ToolBar'
-import SelectListView from 'lib/ui-components/SelectListView'
+import ToolBar from '@ui-components/atoms/ToolBar'
+import SelectListView from '@ui-components/molecules/SelectListView'
 import { getWeekDaysFromNow } from '@utils/Dates'
-import Button from 'lib/ui-components/Button'
+import Button from '@ui-components/atoms/Button'
 import { createPortal } from 'react-dom'
-import FullScreenDialog from 'lib/ui-components/FullScreenDialog'
-import Form from 'lib/ui-components/Form'
-import SearchInput from 'lib/ui-components/SearchInput'
+import FullScreenDialog from '@ui-components/molecules/FullScreenDialog'
+import Form from '@ui-components/atoms/Form'
+import SearchInput from '@ui-components/atoms/SearchInput'
 import {
     fetchDishes,
     fetchCategories,
@@ -23,9 +23,10 @@ import {
     useDishPlanDispatch,
 } from 'api/dishPlan/context'
 import debounce from '@utils/debounce'
-import MenuList from 'lib/ui-components/MenuList'
-import Chips from 'lib/ui-components/Chips'
-import Label from 'lib/ui-components/Label'
+import MenuList from '@ui-components/molecules/MenuList'
+import Chips from '@ui-components/atoms/Chips'
+import Label from '@ui-components/atoms/Label'
+import WeekDayPicker from '@ui-components/molecules/WeekDayPicker'
 
 const msg = new Map([
     ['settings', 'Settings'],
@@ -47,11 +48,9 @@ const msg = new Map([
 
 export default function DishPlan(): ReactElement {
     const weekDays = getWeekDaysFromNow()
-    const [currentDay, setCurrentDay] = useState(weekDays[0])
-    const previousTouchMovePageY = useRef(null)
-
     const [dialogToRender, setDialogToDisplay] = useState(null)
-    console.log(dialogToRender)
+    const [pickedDay, pickDay] = useState(weekDays[0])
+
     const [
         shouldDisplayEditDishMenuList,
         setShouldDisplayEditDishMenuList,
@@ -105,77 +104,6 @@ export default function DishPlan(): ReactElement {
         })
     }
 
-    const renderWeekDaysSelectListView = () => (
-        <SelectListView
-            style={{
-                option: {
-                    flex: '1 1 0%',
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                },
-            }}
-            selectedIndex={currentDay}
-            onOptionClick={(_, { optionId }) => setCurrentDay(optionId)}
-            options={weekDays.map((weekDay) => ({
-                render: () => <span>{weekDay}</span>,
-                id: weekDay,
-            }))}
-            onOptionMouseOver={(_, { optionId }) => {
-                setCurrentDay(optionId)
-            }}
-            onMouseUp={() => setDialogToDisplay(null)}
-        />
-    )
-    const renderCurrentDayPicker = () => (
-        <Button
-            noBorders
-            onMouseDown={() => {
-                setDialogToDisplay(() => renderWeekDaysSelectListView())
-            }}
-            onTouchStart={() => {
-                setDialogToDisplay(() => renderWeekDaysSelectListView())
-            }}
-            onTouchEnd={() => setDialogToDisplay(null)}
-            onTouchMove={(event) => {
-                const inch = event.targetTouches[0]
-
-                if (
-                    previousTouchMovePageY.current &&
-                    previousTouchMovePageY.current > inch.pageY
-                ) {
-                    setCurrentDay((prevState) => {
-                        const prevDayIndex = weekDays.findIndex(
-                            (weekDay) => weekDay === prevState
-                        )
-                        return prevDayIndex < weekDays.length - 1
-                            ? weekDays[prevDayIndex + 1]
-                            : prevState
-                    })
-                }
-
-                if (
-                    previousTouchMovePageY.current &&
-                    previousTouchMovePageY.current < inch.pageY
-                ) {
-                    setCurrentDay((prevState) => {
-                        const prevDayIndex = weekDays.findIndex(
-                            (weekDay) => weekDay === prevState
-                        )
-
-                        return prevDayIndex > 0
-                            ? weekDays[prevDayIndex - 1]
-                            : prevState
-                    })
-                }
-
-                previousTouchMovePageY.current = inch.pageY
-            }}
-        >
-            {currentDay}
-        </Button>
-    )
     const renderEditDishForm = () => (
         <Form>
             <SearchInput
@@ -204,7 +132,7 @@ export default function DishPlan(): ReactElement {
                                         dish: {
                                             id,
                                             name,
-                                            day: currentDay,
+                                            day: pickedDay,
                                             ingredients,
                                             category,
                                         },
@@ -220,7 +148,7 @@ export default function DishPlan(): ReactElement {
             ) : null}
 
             <Chips.List>
-                {dishesWeekPlan[currentDay.toLowerCase()].dishes.map(
+                {dishesWeekPlan[pickedDay.toLowerCase()].dishes.map(
                     ({ id, name }) => (
                         <li key={id}>
                             <Chips
@@ -228,7 +156,7 @@ export default function DishPlan(): ReactElement {
                                     removeDishFromPlan({
                                         dish: {
                                             id,
-                                            day: currentDay,
+                                            day: pickedDay,
                                         },
                                         dispatch: dishesPlanDispatch,
                                     })
@@ -265,7 +193,11 @@ export default function DishPlan(): ReactElement {
                     },
                 }}
             >
-                {renderCurrentDayPicker()}
+                <WeekDayPicker
+                    weekDays={weekDays}
+                    pickDay={pickDay}
+                    pickedDay={pickedDay}
+                />
 
                 <Button noBorders>{msg.get('settings')}</Button>
             </ToolBar>
@@ -286,7 +218,11 @@ export default function DishPlan(): ReactElement {
                         setDialogToDisplay(() => (
                             <>
                                 <ToolBar>
-                                    {renderCurrentDayPicker()}
+                                    <WeekDayPicker
+                                        weekDays={weekDays}
+                                        pickDay={pickDay}
+                                        pickedDay={pickedDay}
+                                    />
 
                                     {msg.get('edit plan')}
                                 </ToolBar>
