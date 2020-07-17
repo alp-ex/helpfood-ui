@@ -9,7 +9,7 @@ interface Props {
     style?: { root?: CSSProperties; option?: CSSProperties }
 }
 
-export default memo(function SelectListView({
+export default function SelectListView({
     selectedId,
     onOptionClick,
     onOptionMouseOver,
@@ -17,14 +17,12 @@ export default memo(function SelectListView({
     options,
     style: { root: customRootStyle, option: customOptionStyle } = {},
 }: Props) {
-    console.log(selectedId, 'cacouuuuune')
     return (
         <ul onMouseUp={onMouseUp} style={customRootStyle}>
             {options.map(({ render, id }) => (
                 <li
                     onMouseOver={(event) => {
                         if (onOptionMouseOver) {
-                            console.log(selectedId, id)
                             onOptionMouseOver(event, { optionId: id })
                         }
                     }}
@@ -43,4 +41,4 @@ export default memo(function SelectListView({
             ))}
         </ul>
     )
-})
+}

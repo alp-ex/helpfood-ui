@@ -1,11 +1,5 @@
 import Button from '@ui-components/atoms/Button'
-import React, {
-    useState,
-    useRef,
-    useEffect,
-    Dispatch,
-    useCallback,
-} from 'react'
+import React, { useState, useRef, Dispatch } from 'react'
 import { createPortal } from 'react-dom'
 import FullScreenDialog from '../FullScreenDialog'
 import SelectListView from '../SelectListView'
@@ -17,63 +11,34 @@ interface Props {
 }
 
 export default function WeekDayPicker({ pickDay, weekDays, pickedDay }: Props) {
-    const [dialogToRender, setDialogToDisplay] = useState(null)
+    const [shouldRenderDialog, setShouldRenderDialog] = useState(false)
     const previousTouchMovePageY = useRef(null)
-    const renderWeekDaysSelectListView = useCallback(() => {
-        console.log(pickedDay, 'rerender here')
-
-        return (
-            <SelectListView
-                style={{
-                    root: {
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                    },
-                    option: {
-                        flex: '1 1 0%',
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    },
-                }}
-                selectedId={pickedDay}
-                onOptionClick={(_, { optionId }) => pickDay(optionId)}
-                options={weekDays.map((weekDay) => ({
-                    render: () => <span>{weekDay}</span>,
-                    id: weekDay,
-                }))}
-                onOptionMouseOver={(_, { optionId }) => {
-                    pickDay(optionId)
-                }}
-                onMouseUp={() => setDialogToDisplay(null)}
-            />
-        )
-    }, [pickedDay])
 
     return (
         <>
             <Button
                 noBorders
                 onMouseDown={() => {
-                    setDialogToDisplay(renderWeekDaysSelectListView)
+                    setShouldRenderDialog(true)
                 }}
                 onTouchStart={() => {
-                    setDialogToDisplay(() => renderWeekDaysSelectListView)
+                    setShouldRenderDialog(true)
                 }}
-                onTouchEnd={() => setDialogToDisplay(null)}
+                onTouchEnd={() => {
+                    setShouldRenderDialog(false)
+                }}
                 onTouchMove={(event) => {
-                    const inch = event.targetTouches[0]
+                    const touch = event.targetTouches[0]
 
                     if (
                         previousTouchMovePageY.current &&
-                        previousTouchMovePageY.current > inch.pageY
+                        previousTouchMovePageY.current > touch.pageY
                     ) {
                         pickDay((prevState) => {
                             const prevDayIndex = weekDays.findIndex(
                                 (weekDay) => weekDay === prevState
                             )
+
                             return prevDayIndex < weekDays.length - 1
                                 ? weekDays[prevDayIndex + 1]
                                 : prevState
@@ -82,7 +47,7 @@ export default function WeekDayPicker({ pickDay, weekDays, pickedDay }: Props) {
 
                     if (
                         previousTouchMovePageY.current &&
-                        previousTouchMovePageY.current < inch.pageY
+                        previousTouchMovePageY.current < touch.pageY
                     ) {
                         pickDay((prevState) => {
                             const prevDayIndex = weekDays.findIndex(
@@ -95,15 +60,44 @@ export default function WeekDayPicker({ pickDay, weekDays, pickedDay }: Props) {
                         })
                     }
 
-                    previousTouchMovePageY.current = inch.pageY
+                    previousTouchMovePageY.current = touch.pageY
                 }}
             >
                 {pickedDay}
             </Button>
 
-            {dialogToRender
+            {shouldRenderDialog
                 ? createPortal(
-                      <FullScreenDialog>{dialogToRender}</FullScreenDialog>,
+                      <FullScreenDialog>
+                          <SelectListView
+                              style={{
+                                  root: {
+                                      height: '100%',
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                  },
+                                  option: {
+                                      flex: '1 1 0%',
+                                      width: '100%',
+                                      display: 'flex',
+                                      justifyContent: 'center',
+                                      alignItems: 'center',
+                                  },
+                              }}
+                              selectedId={pickedDay}
+                              onOptionClick={(_, { optionId }) => {
+                                  pickDay(optionId)
+                              }}
+                              options={weekDays.map((weekDay) => ({
+                                  render: () => <span>{weekDay}</span>,
+                                  id: weekDay,
+                              }))}
+                              onOptionMouseOver={(_, { optionId }) => {
+                                  pickDay(optionId)
+                              }}
+                              onMouseUp={() => setShouldRenderDialog(false)}
+                          />
+                      </FullScreenDialog>,
                       document.body
                   )
                 : null}
