@@ -15,7 +15,7 @@ type Dish = {
     id: string
     name: string
     ingredients: Ingredient
-    category: string
+    category: Category
 }
 
 type Category = {

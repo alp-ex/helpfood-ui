@@ -1,13 +1,20 @@
-import React, { ReactElement, ReactNode, ElementType } from 'react'
+import React, {
+    ReactElement,
+    ReactNode,
+    ElementType,
+    CSSProperties,
+} from 'react'
 
 interface Props {
     component?: ElementType
     children: ReactNode
+    style?: { root?: CSSProperties }
 }
 
 export default function FullScreenDialog({
     component: Component = 'div',
     children,
+    style: { root: customRootStyle } = {},
 }: Props): ReactElement {
     return (
         <Component
@@ -18,10 +25,11 @@ export default function FullScreenDialog({
                 zIndex: '1000',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-around',
+                justifyContent: 'flex-start',
                 padding: '1em',
                 boxSizing: 'border-box',
                 height: '100vh',
+                ...customRootStyle,
             }}
         >
             {children}

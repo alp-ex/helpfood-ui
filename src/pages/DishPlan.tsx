@@ -26,6 +26,7 @@ import MenuList from '@ui-components/molecules/MenuList'
 import Chips from '@ui-components/atoms/Chips'
 import Label from '@ui-components/atoms/Label'
 import WeekDayPicker from '@ui-components/molecules/WeekDayPicker'
+import EditDishesForm from '@ui-components/organismes/EditDishForm'
 
 const msg = new Map([
     ['settings', 'Settings'],
@@ -50,8 +51,8 @@ export default function DishPlan(): ReactElement {
     const [dialogToRender, setDialogToDisplay] = useState(null)
     const [pickedDay, pickDay] = useState(weekDays[0])
     const [
-        shouldDisplayEditDishMenuList,
-        setShouldDisplayEditDishMenuList,
+        shouldDisplaySearchDishMenuList,
+        setShouldDisplaySearchDishMenuList,
     ] = useState(false)
     const [
         {
@@ -102,85 +103,6 @@ export default function DishPlan(): ReactElement {
         })
     }
 
-    const renderEditDishForm = () => {
-        return (
-            <Form>
-                <SearchInput
-                    placeholder={msg.get('type a dish name')}
-                    onChange={handleDishSearchInputChange}
-                    onFocus={() => setShouldDisplayEditDishMenuList(true)}
-                    onBlur={() => setShouldDisplayEditDishMenuList(false)}
-                />
-
-                {shouldDisplayEditDishMenuList ? (
-                    <MenuList
-                        style={{
-                            root: {
-                                width: 'fit-content',
-                                marginTop: '0.7em',
-                                zIndex: 700,
-                            },
-                        }}
-                    >
-                        {fetchedDishes.map(
-                            ({ id, name, ingredients, category }) => (
-                                <MenuList.Item
-                                    key={id}
-                                    onClick={() => {
-                                        addDishToPlan({
-                                            dish: {
-                                                id,
-                                                name,
-                                                day: pickedDay,
-                                                ingredients,
-                                                category,
-                                            },
-                                            dispatch: dishesPlanDispatch,
-                                        })
-                                    }}
-                                >
-                                    {name}
-                                </MenuList.Item>
-                            )
-                        )}
-                    </MenuList>
-                ) : null}
-
-                <Chips.List>
-                    {dishesWeekPlan[pickedDay.toLowerCase()].dishes.map(
-                        ({ id, name }) => (
-                            <li key={id}>
-                                <Chips
-                                    onClose={() => {
-                                        removeDishFromPlan({
-                                            dish: {
-                                                id,
-                                                day: pickedDay,
-                                            },
-                                            dispatch: dishesPlanDispatch,
-                                        })
-                                    }}
-                                >
-                                    {name}
-                                </Chips>
-                            </li>
-                        )
-                    )}
-                </Chips.List>
-
-                <ToolBar>
-                    <Button
-                        onClick={() => {
-                            setDialogToDisplay(null)
-                        }}
-                    >
-                        {msg.get('finish')}
-                    </Button>
-                </ToolBar>
-            </Form>
-        )
-    }
-
     return (
         <>
             <ToolBar
@@ -217,7 +139,7 @@ export default function DishPlan(): ReactElement {
                     onClick={() => {
                         setDialogToDisplay(() => {
                             return (
-                                <>
+                                <FullScreenDialog>
                                     <ToolBar>
                                         <WeekDayPicker
                                             weekDays={weekDays}
@@ -228,8 +150,67 @@ export default function DishPlan(): ReactElement {
                                         {msg.get('edit plan')}
                                     </ToolBar>
 
-                                    {renderEditDishForm()}
-                                </>
+                                    <EditDishesForm
+                                        labels={{
+                                            searchDishPlaceHolder: msg.get(
+                                                'type a dish name'
+                                            ),
+                                            onSubmit: msg.get('finish'),
+                                        }}
+                                        onDishSearchTermChange={
+                                            handleDishSearchInputChange
+                                        }
+                                        dishes={
+                                            dishesWeekPlan[
+                                                pickedDay.toLowerCase()
+                                            ].dishes
+                                        }
+                                        onSubmit={() => {
+                                            setDialogToDisplay(null)
+                                        }}
+                                        onSearchDishOptionClick={({
+                                            id,
+                                            ingredients,
+                                            category,
+                                        }) => {
+                                            addDishToPlan({
+                                                dish: {
+                                                    id,
+                                                    name,
+                                                    day: pickedDay,
+                                                    ingredients,
+                                                    category,
+                                                },
+                                                dispatch: dishesPlanDispatch,
+                                            })
+                                        }}
+                                        onCloseDishChips={({ id }) => {
+                                            removeDishFromPlan({
+                                                dish: {
+                                                    id,
+                                                    day: pickedDay,
+                                                },
+                                                dispatch: dishesPlanDispatch,
+                                            })
+                                        }}
+                                        shouldDisplaySearchDishMenuList={
+                                            shouldDisplaySearchDishMenuList
+                                        }
+                                        searchDishMenuListOptions={
+                                            fetchedDishes
+                                        }
+                                        onSearchInputFocus={() =>
+                                            setShouldDisplaySearchDishMenuList(
+                                                true
+                                            )
+                                        }
+                                        onSearchInputBlur={() =>
+                                            setShouldDisplaySearchDishMenuList(
+                                                false
+                                            )
+                                        }
+                                    />
+                                </FullScreenDialog>
                             )
                         })
                     }}
@@ -241,7 +222,7 @@ export default function DishPlan(): ReactElement {
                     noBorders
                     onClick={() => {
                         setDialogToDisplay(() => (
-                            <>
+                            <FullScreenDialog>
                                 <ToolBar>
                                     <Label>{msg.get('edit dish')}</Label>
                                 </ToolBar>
@@ -457,7 +438,7 @@ export default function DishPlan(): ReactElement {
                                         )}
                                     </ToolBar>
                                 </Form>
-                            </>
+                            </FullScreenDialog>
                         ))
                     }}
                 >
@@ -466,10 +447,7 @@ export default function DishPlan(): ReactElement {
             </ToolBar>
 
             {dialogToRender
-                ? createPortal(
-                      <FullScreenDialog>{dialogToRender}</FullScreenDialog>,
-                      document.body
-                  )
+                ? createPortal(dialogToRender, document.body)
                 : null}
         </>
     )

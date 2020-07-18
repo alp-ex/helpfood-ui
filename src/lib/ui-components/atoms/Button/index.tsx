@@ -1,4 +1,10 @@
-import React, { ReactElement, ReactNode, MouseEvent, TouchEvent } from 'react'
+import React, {
+    ReactElement,
+    ReactNode,
+    MouseEvent,
+    TouchEvent,
+    CSSProperties,
+} from 'react'
 
 interface Props {
     children: ReactNode
@@ -8,6 +14,7 @@ interface Props {
     onTouchStart?: (event: TouchEvent) => void
     onTouchEnd?: (event: TouchEvent) => void
     onTouchMove?: (event: TouchEvent) => void
+    style?: { root?: CSSProperties }
 }
 
 export default function Button({
@@ -18,6 +25,7 @@ export default function Button({
     onTouchEnd,
     onTouchMove,
     noBorders = false,
+    style: { root: customRootStyle } = {},
 }: Props): ReactElement {
     return (
         <button
@@ -28,6 +36,7 @@ export default function Button({
                 border: noBorders ? 'none' : '1px black solid',
                 padding: '1em',
                 fontSize: '1em',
+                ...customRootStyle,
             }}
             onClick={onClick}
             onMouseDown={onMouseDown}

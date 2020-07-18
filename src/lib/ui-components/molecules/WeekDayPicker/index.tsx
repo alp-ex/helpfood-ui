@@ -17,6 +17,10 @@ export default function WeekDayPicker({ pickDay, weekDays, pickedDay }: Props) {
     return (
         <>
             <Button
+                onClick={(event) => {
+                    event.preventDefault()
+                    setShouldRenderDialog(true)
+                }}
                 noBorders
                 onMouseDown={() => {
                     setShouldRenderDialog(true)
@@ -85,8 +89,11 @@ export default function WeekDayPicker({ pickDay, weekDays, pickedDay }: Props) {
                                   },
                               }}
                               selectedId={pickedDay}
-                              onOptionClick={(_, { optionId }) => {
+                              onOptionClick={(event, { optionId }) => {
+                                  event.preventDefault()
+                                  //   RENDER WARNING
                                   pickDay(optionId)
+                                  setShouldRenderDialog(false)
                               }}
                               options={weekDays.map((weekDay) => ({
                                   render: () => <span>{weekDay}</span>,
