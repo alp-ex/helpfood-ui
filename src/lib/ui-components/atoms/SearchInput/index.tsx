@@ -12,22 +12,13 @@ interface Props {
     type?: string
     children?: ReactNode
     value?: string
-    placeholder?: string
     onChange: (event: ChangeEvent<HTMLInputElement>) => void
     onFocus?: (event: FocusEvent) => void
     onBlur?: (event: FocusEvent) => void
 }
 
 export default forwardRef(function SearchInput(
-    {
-        children,
-        onFocus,
-        onBlur,
-        type = 'text',
-        value,
-        placeholder,
-        onChange,
-    }: Props,
+    { children, onFocus, onBlur, type = 'text', value, onChange }: Props,
     ref?: Ref<HTMLInputElement>
 ): ReactElement {
     return (
@@ -44,7 +35,6 @@ export default forwardRef(function SearchInput(
             value={value}
             onChange={onChange}
             type={type}
-            placeholder={placeholder}
         >
             {children}
         </input>

@@ -10,27 +10,12 @@ import {
     addDishAPI,
     editDishAPI,
 } from './actions'
+import { Dish, Category, Ingredient } from './types'
 
-type Dish = {
-    id: string
-    name: string
-    ingredients: Ingredient
-    category: Category
-}
-
-type Category = {
-    id: string
-    name: string
-}
-
-type Ingredient = {
-    id: string
-    name: string
-}
 type Action = { type: string; payload?: {} }
 type Dispatch = (action: Action) => void
 type State = {
-    dishMatch: Dish
+    matchedDishes: ReadonlyArray<Dish>
     dishes: ReadonlyArray<Dish>
     categories: ReadonlyArray<Category>
     ingredients: ReadonlyArray<Ingredient>
@@ -182,17 +167,20 @@ function dishesReducer(prevState, { type, payload }) {
             }
         }
         case SEARCH_DISHES_SUCCEED: {
+            const { dishes, matchedDishes } = payload
+
             return {
                 ...prevState,
+                matchedDishes,
                 dishes: [
                     ...prevState.dishes,
                     {
                         ...prevState.dishes.map(
-                            (dish) => dish.id === payload.id
+                            (dish) => dish.id === dishes.id
                         ),
-                        name: payload.name,
-                        category: payload.category,
-                        ingredients: payload.ingredients,
+                        name: dishes.name,
+                        category: dishes.category,
+                        ingredients: dishes.ingredients,
                         status: 'added',
                     },
                 ],
@@ -319,7 +307,7 @@ function dishesReducer(prevState, { type, payload }) {
 
 export function DishesProvider({ children }: DishesProviderProps) {
     const [state, dispatch] = useReducer(dishesReducer, {
-        dishMatch: '',
+        matchedDishes: [],
         dishes: dishesFixtures.dishes,
         categories: categoriesFixtures.categories,
         ingredients: ingredientsFixtures.ingredients,
@@ -367,14 +355,14 @@ export async function fetchDishes({ dispatch, q }) {
             q,
         })
         const {
-            data: { dishes, matchedDish },
+            data: { dishes, matchedDishes },
         } = await response.json()
 
         dispatch({
             type: SEARCH_DISHES_SUCCEED,
             payload: {
                 dishes,
-                matchedDish,
+                matchedDishes,
             },
         })
     } catch (error) {

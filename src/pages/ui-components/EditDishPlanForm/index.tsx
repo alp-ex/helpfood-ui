@@ -25,7 +25,6 @@ type Ingredient = {
 
 interface Props {
     labels: {
-        searchDishPlaceHolder: string
         onSubmit: string
     }
     onDishSearchTermChange: (event: ChangeEvent) => void
@@ -43,11 +42,8 @@ interface Props {
     dishes: ReadonlyArray<Dish>
 }
 
-const EditDishesForm = ({
-    labels: {
-        searchDishPlaceHolder: customSearchDishPlaceHolder,
-        onSubmit: onSubmitLabel,
-    },
+const EditDishPlanForm = ({
+    labels: { onSubmit: onSubmitLabel },
     onDishSearchTermChange,
     shouldDisplaySearchDishMenuList,
     searchDishMenuListOptions,
@@ -61,7 +57,6 @@ const EditDishesForm = ({
     return (
         <Form>
             <SearchInput
-                placeholder={customSearchDishPlaceHolder}
                 onChange={onDishSearchTermChange}
                 onFocus={onSearchInputFocus}
                 onBlur={onSearchInputBlur}
@@ -106,7 +101,16 @@ const EditDishesForm = ({
                 ))}
             </Chips.List>
 
-            <ToolBar>
+            <ToolBar
+                style={{
+                    root: {
+                        position: 'fixed',
+                        bottom: '1em',
+                        justifyContent: 'space-around',
+                        width: '100%',
+                    },
+                }}
+            >
                 <Button
                     style={{
                         root: { position: 'fixed', bottom: '1em' },
@@ -120,4 +124,4 @@ const EditDishesForm = ({
     )
 }
 
-export default EditDishesForm
+export default EditDishPlanForm

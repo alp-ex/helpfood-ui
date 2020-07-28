@@ -5,13 +5,11 @@ Basic example:
     <input
         type="text"
         style={{ border: '1px solid black', margin: '1em', padding: '1em' }}
-        placeholder="type something"
     />
 
     <input
         type="text"
         style={{ border: '1px solid black', margin: '1em', padding: '1em' }}
-        placeholder="type something else"
     />
 
     <div>
@@ -23,7 +21,6 @@ Basic example:
                 padding: '1em',
                 cursor: 'pointer',
             }}
-            placeholder="type something else"
         >
             Ok
         </button>

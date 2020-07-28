@@ -4,8 +4,6 @@ import { getWeekDaysFromNow } from '@utils/Dates'
 import Button from '@ui-components/atoms/Button'
 import { createPortal } from 'react-dom'
 import FullScreenDialog from '@ui-components/molecules/FullScreenDialog'
-import Form from '@ui-components/atoms/Form'
-import SearchInput from '@ui-components/atoms/SearchInput'
 import {
     fetchDishes,
     fetchCategories,
@@ -22,25 +20,23 @@ import {
     useDishPlanDispatch,
 } from 'api/dishPlan/context'
 import debounce from '@utils/debounce'
-import MenuList from '@ui-components/molecules/MenuList'
-import Chips from '@ui-components/atoms/Chips'
 import Label from '@ui-components/atoms/Label'
 import WeekDayPicker from '@ui-components/molecules/WeekDayPicker'
-import EditDishesForm from '@ui-components/organismes/EditDishForm'
+import EditRecipeForm from 'pages/ui-components/EditRecipeForm'
+import EditDishPlanForm from 'pages/ui-components/EditDishPlanForm'
 
 const msg = new Map([
     ['settings', 'Settings'],
     ['edit plan', 'Edit plan'],
     ['edit recipes', 'Edit recipes'],
-    ['type a dish name', 'Type a dish name'],
-    ['type an ingredient name', 'Type an ingredient name'],
-    ['type a category name', 'Type a category name'],
-    ['type a dish plan', 'Type a dish plan'],
+    ['edit dish', 'Edit dish'],
     ['finish', 'Finish'],
     ['undo changes', 'Undo changes'],
     ['name', 'Name'],
     ["don't save", "Don't save"],
     ['save', 'Save'],
+    ['edit', 'Edit'],
+    ['create', 'Create'],
     ['category', 'Category'],
     ['ingredients', 'Ingredients'],
     ['clear all', 'Clear all'],
@@ -69,7 +65,7 @@ export default function DishPlan(): ReactElement {
         dishNameBeingEdited: { id: '', name: '' },
     })
     const {
-        dishMatch: fetchedDishMatch,
+        matchedDishes: fetchedMatchedDishes,
         dishes: fetchedDishes,
         categories: fetchedDishesCategories,
         ingredients: fetchedDishesIngredients,
@@ -124,6 +120,8 @@ export default function DishPlan(): ReactElement {
                 <Button noBorders>{msg.get('settings')}</Button>
             </ToolBar>
 
+            {/* <-- CONTENT COMPONENT --> */}
+
             <ToolBar
                 style={{
                     root: {
@@ -141,20 +139,13 @@ export default function DishPlan(): ReactElement {
                             return (
                                 <FullScreenDialog>
                                     <ToolBar>
-                                        <WeekDayPicker
-                                            weekDays={weekDays}
-                                            pickDay={pickDay}
-                                            pickedDay={pickedDay}
-                                        />
+                                        <Label>{pickedDay}</Label>
 
-                                        {msg.get('edit plan')}
+                                        <Label>{msg.get('edit plan')}</Label>
                                     </ToolBar>
 
-                                    <EditDishesForm
+                                    <EditDishPlanForm
                                         labels={{
-                                            searchDishPlaceHolder: msg.get(
-                                                'type a dish name'
-                                            ),
                                             onSubmit: msg.get('finish'),
                                         }}
                                         onDishSearchTermChange={
@@ -227,217 +218,113 @@ export default function DishPlan(): ReactElement {
                                     <Label>{msg.get('edit dish')}</Label>
                                 </ToolBar>
 
-                                <Form>
-                                    <Label component="strong">
-                                        {msg.get('name')}
-                                    </Label>
-
-                                    <SearchInput
-                                        placeholder={msg.get(
-                                            'type a dish name'
-                                        )}
-                                        onChange={handleDishSearchInputChange}
-                                        value={dishNameBeingEdited.name}
-                                    />
-
-                                    {fetchedDishes.length > 0 ? (
-                                        <MenuList
-                                            style={{
-                                                root: {
-                                                    width: 'fit-content',
-                                                    marginTop: '0.7em',
+                                <EditRecipeForm
+                                    labels={{
+                                        recipeName: msg.get('name'),
+                                        categoryName: msg.get('category'),
+                                        ingredientsName: msg.get('ingredients'),
+                                        abort: msg.get("don't save"),
+                                        editDish: msg.get('edit'),
+                                        createDish: msg.get('create'),
+                                    }}
+                                    onRecipeNameChange={
+                                        handleDishSearchInputChange
+                                    }
+                                    onCategoryNameChange={
+                                        handleCategorySearchInputChange
+                                    }
+                                    onIngredientNameChange={
+                                        handleIngredientSearchInputChange
+                                    }
+                                    values={{
+                                        recipeName: dishNameBeingEdited.name,
+                                        categoryName:
+                                            dishCategoryBeingEdited.name,
+                                        ingredients: dishIngredientsBeingEdited,
+                                    }}
+                                    dishes={fetchedDishes}
+                                    matchedDishes={fetchedMatchedDishes}
+                                    categories={fetchedDishesCategories}
+                                    ingredients={fetchedDishesIngredients}
+                                    onDishOptionClick={({ id, name }) => {
+                                        updateDishBeingEditedValues(
+                                            (oldState) => ({
+                                                ...oldState,
+                                                dishNameBeingEdited: {
+                                                    id,
+                                                    name,
                                                 },
-                                            }}
-                                        >
-                                            {fetchedDishes.map(
-                                                ({ id, name }) => (
-                                                    <MenuList.Item
-                                                        key={id}
-                                                        onClick={() => {
-                                                            updateDishBeingEditedValues(
-                                                                (oldState) => ({
-                                                                    ...oldState,
-                                                                    dishNameBeingEdited: {
-                                                                        id,
-                                                                        name,
-                                                                    },
-                                                                })
-                                                            )
-                                                        }}
-                                                    >
-                                                        {name}
-                                                    </MenuList.Item>
-                                                )
-                                            )}
-                                        </MenuList>
-                                    ) : null}
-
-                                    <Label component="strong">
-                                        {msg.get('category')}
-                                    </Label>
-
-                                    <SearchInput
-                                        placeholder={msg.get(
-                                            'type a category name'
-                                        )}
-                                        onChange={
-                                            handleCategorySearchInputChange
-                                        }
-                                        value={dishCategoryBeingEdited.name}
-                                    />
-
-                                    {fetchedDishesCategories.length > 0 ? (
-                                        <MenuList
-                                            style={{
-                                                root: {
-                                                    width: 'fit-content',
-                                                    marginTop: '0.7em',
-                                                },
-                                            }}
-                                        >
-                                            {fetchedDishesCategories.map(
-                                                ({ id, name }) => (
-                                                    <MenuList.Item
-                                                        key={id}
-                                                        onClick={() =>
-                                                            updateDishBeingEditedValues(
-                                                                (oldState) => ({
-                                                                    ...oldState,
-                                                                    dishCategoryBeingEdited: {
-                                                                        id,
-                                                                        name,
-                                                                    },
-                                                                })
-                                                            )
-                                                        }
-                                                    >
-                                                        {name}
-                                                    </MenuList.Item>
-                                                )
-                                            )}
-                                        </MenuList>
-                                    ) : null}
-
-                                    <Label component="strong">
-                                        {msg.get('ingredients')}
-                                    </Label>
-
-                                    <SearchInput
-                                        placeholder={msg.get(
-                                            'type an ingredient name'
-                                        )}
-                                        onChange={
-                                            handleIngredientSearchInputChange
-                                        }
-                                    />
-
-                                    {fetchedDishesIngredients.length > 0 ? (
-                                        <MenuList
-                                            style={{
-                                                root: {
-                                                    width: 'fit-content',
-                                                    marginTop: '0.7em',
-                                                },
-                                            }}
-                                        >
-                                            {fetchedDishesIngredients.map(
-                                                ({ id, name }) => (
-                                                    <MenuList.Item
-                                                        key={id}
-                                                        onClick={() => {
-                                                            updateDishBeingEditedValues(
-                                                                (oldState) => ({
-                                                                    ...oldState,
-                                                                    dishIngredientsBeingEdited: [
-                                                                        ...dishIngredientsBeingEdited,
-                                                                        {
-                                                                            id,
-                                                                            name,
-                                                                        },
-                                                                    ],
-                                                                })
-                                                            )
-                                                        }}
-                                                    >
-                                                        {name}
-                                                    </MenuList.Item>
-                                                )
-                                            )}
-                                        </MenuList>
-                                    ) : null}
-
-                                    {dishIngredientsBeingEdited.map(
-                                        ({ id, name }) => (
-                                            <Chips
-                                                key={id}
-                                                onClose={() =>
-                                                    updateDishBeingEditedValues(
-                                                        (oldState) => ({
-                                                            ...oldState,
-                                                            dishIngredientsBeingEdited: [
-                                                                ...oldState.dishIngredientsBeingEdited.filter(
-                                                                    ({
-                                                                        id: ingredientToRemoveId,
-                                                                    }) =>
-                                                                        ingredientToRemoveId !==
-                                                                        id
-                                                                ),
-                                                            ],
-                                                        })
-                                                    )
-                                                }
-                                            >
-                                                {name}
-                                            </Chips>
+                                            })
                                         )
-                                    )}
-
-                                    <ToolBar>
-                                        <Button
-                                            onClick={() => {
-                                                setDialogToDisplay(null)
-                                            }}
-                                        >
-                                            {msg.get("don't save")}
-                                        </Button>
-
-                                        {fetchedDishMatch.name ===
-                                        dishNameBeingEdited.name ? (
-                                            <Button
-                                                onClick={() => {
-                                                    editDish({
-                                                        dispatch: dishesDispatch,
-                                                        dish: {
-                                                            id: dishIdBeingEdited,
-                                                            ingredients: dishIngredientsBeingEdited,
-                                                            category: dishCategoryBeingEdited,
-                                                            name: dishNameBeingEdited,
-                                                        },
-                                                    })
-                                                    setDialogToDisplay(null)
-                                                }}
-                                            >
-                                                {msg.get('edit')}
-                                            </Button>
-                                        ) : (
-                                            <Button
-                                                onClick={() => {
-                                                    addDish({
-                                                        dispatch: dishesDispatch,
-                                                        dish: {
-                                                            ingredients: dishIngredientsBeingEdited,
-                                                            category: dishCategoryBeingEdited,
-                                                            name: dishNameBeingEdited,
-                                                        },
-                                                    })
-                                                    setDialogToDisplay(null)
-                                                }}
-                                            >
-                                                {msg.get('save')}
-                                            </Button>
-                                        )}
-                                    </ToolBar>
-                                </Form>
+                                    }}
+                                    onCategoryOptionClick={({ id, name }) => {
+                                        updateDishBeingEditedValues(
+                                            (oldState) => ({
+                                                ...oldState,
+                                                dishCategoryBeingEdited: {
+                                                    id,
+                                                    name,
+                                                },
+                                            })
+                                        )
+                                    }}
+                                    onIngredientOptionClick={({ id, name }) => {
+                                        updateDishBeingEditedValues(
+                                            (oldState) => ({
+                                                ...oldState,
+                                                dishIngredientsBeingEdited: [
+                                                    ...dishIngredientsBeingEdited,
+                                                    {
+                                                        id,
+                                                        name,
+                                                    },
+                                                ],
+                                            })
+                                        )
+                                    }}
+                                    onCloseIngredientChips={({ id }) => {
+                                        updateDishBeingEditedValues(
+                                            (oldState) => ({
+                                                ...oldState,
+                                                dishIngredientsBeingEdited: [
+                                                    ...oldState.dishIngredientsBeingEdited.filter(
+                                                        ({
+                                                            id: ingredientToRemoveId,
+                                                        }) =>
+                                                            ingredientToRemoveId !==
+                                                            id
+                                                    ),
+                                                ],
+                                            })
+                                        )
+                                    }}
+                                    onAbort={() => {
+                                        setDialogToDisplay(null)
+                                    }}
+                                    onEditDishButtonClick={() => {
+                                        editDish({
+                                            dispatch: dishesDispatch,
+                                            dish: {
+                                                id: dishIdBeingEdited,
+                                                ingredients: dishIngredientsBeingEdited,
+                                                category: dishCategoryBeingEdited,
+                                                name: dishNameBeingEdited,
+                                            },
+                                        })
+                                        setDialogToDisplay(null)
+                                    }}
+                                    onCreateDishButtonClick={() => {
+                                        addDish({
+                                            dispatch: dishesDispatch,
+                                            dish: {
+                                                ingredients: dishIngredientsBeingEdited,
+                                                category: dishCategoryBeingEdited,
+                                                name: dishNameBeingEdited,
+                                            },
+                                        })
+                                        setDialogToDisplay(null)
+                                    }}
+                                />
                             </FullScreenDialog>
                         ))
                     }}

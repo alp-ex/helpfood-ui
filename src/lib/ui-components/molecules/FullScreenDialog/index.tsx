@@ -19,6 +19,7 @@ export default function FullScreenDialog({
     return (
         <Component
             style={{
+                overflow: 'auto',
                 position: 'fixed',
                 width: '100vw',
                 background: 'white',
