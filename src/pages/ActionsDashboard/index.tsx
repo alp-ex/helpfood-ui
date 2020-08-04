@@ -1,7 +1,4 @@
-import React, { ReactElement, useState, useRef } from 'react'
-import ToolBar from '@ui-components/atoms/ToolBar'
-import { getWeekDaysFromNow } from '@utils/Dates'
-import Button from '@ui-components/atoms/Button'
+import React, { useState, ReactElement } from 'react'
 import { createPortal } from 'react-dom'
 import FullScreenDialog from '@ui-components/molecules/FullScreenDialog'
 import {
@@ -21,12 +18,16 @@ import {
 } from 'api/dishPlan/context'
 import debounce from '@utils/debounce'
 import Label from '@ui-components/atoms/Label'
-import WeekDayPicker from '@ui-components/molecules/WeekDayPicker'
-import EditRecipeForm from 'pages/ui-components/EditRecipeForm'
-import EditDishPlanForm from 'pages/ui-components/EditDishPlanForm'
+import EditRecipeForm from 'pages/ActionsDashboard/ui-components/EditRecipeForm'
+import EditDishPlanForm from 'pages/ActionsDashboard/ui-components/EditDishPlanForm'
+import ToolBar from '@ui-components/atoms/ToolBar'
+import Button from '@ui-components/atoms/Button'
+import { useCalendarState } from 'api/calendar/context'
+
+interface Props {}
 
 const msg = new Map([
-    ['settings', 'Settings'],
+    ['actions', 'Actions'],
     ['edit plan', 'Edit plan'],
     ['edit recipes', 'Edit recipes'],
     ['edit dish', 'Edit dish'],
@@ -42,10 +43,10 @@ const msg = new Map([
     ['clear all', 'Clear all'],
 ])
 
-export default function DishPlan(): ReactElement {
-    const weekDays = getWeekDaysFromNow()
+export default function ActionsDashboard(): ReactElement {
+    const { currentDay } = useCalendarState()
     const [dialogToRender, setDialogToDisplay] = useState(null)
-    const [pickedDay, pickDay] = useState(weekDays[0])
+
     const [
         shouldDisplaySearchDishMenuList,
         setShouldDisplaySearchDishMenuList,
@@ -104,27 +105,6 @@ export default function DishPlan(): ReactElement {
             <ToolBar
                 style={{
                     root: {
-                        top: 0,
-                        position: 'fixed',
-                        width: '100%',
-                        boxSizing: 'border-box',
-                    },
-                }}
-            >
-                <WeekDayPicker
-                    weekDays={weekDays}
-                    pickDay={pickDay}
-                    pickedDay={pickedDay}
-                />
-
-                <Button noBorders>{msg.get('settings')}</Button>
-            </ToolBar>
-
-            {/* <-- CONTENT COMPONENT --> */}
-
-            <ToolBar
-                style={{
-                    root: {
                         bottom: 0,
                         position: 'fixed',
                         width: '100%',
@@ -139,9 +119,7 @@ export default function DishPlan(): ReactElement {
                             return (
                                 <FullScreenDialog>
                                     <ToolBar>
-                                        <Label>{pickedDay}</Label>
-
-                                        <Label>{msg.get('edit plan')}</Label>
+                                        <Label>{currentDay}</Label>
                                     </ToolBar>
 
                                     <EditDishPlanForm
@@ -153,7 +131,7 @@ export default function DishPlan(): ReactElement {
                                         }
                                         dishes={
                                             dishesWeekPlan[
-                                                pickedDay.toLowerCase()
+                                                currentDay.toLowerCase()
                                             ].dishes
                                         }
                                         onSubmit={() => {
@@ -168,7 +146,7 @@ export default function DishPlan(): ReactElement {
                                                 dish: {
                                                     id,
                                                     name,
-                                                    day: pickedDay,
+                                                    day: currentDay,
                                                     ingredients,
                                                     category,
                                                 },
@@ -179,7 +157,7 @@ export default function DishPlan(): ReactElement {
                                             removeDishFromPlan({
                                                 dish: {
                                                     id,
-                                                    day: pickedDay,
+                                                    day: currentDay,
                                                 },
                                                 dispatch: dishesPlanDispatch,
                                             })
@@ -214,10 +192,6 @@ export default function DishPlan(): ReactElement {
                     onClick={() => {
                         setDialogToDisplay(() => (
                             <FullScreenDialog>
-                                <ToolBar>
-                                    <Label>{msg.get('edit dish')}</Label>
-                                </ToolBar>
-
                                 <EditRecipeForm
                                     labels={{
                                         recipeName: msg.get('name'),

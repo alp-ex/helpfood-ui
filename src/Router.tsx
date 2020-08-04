@@ -1,24 +1,44 @@
 import { Route, Switch, Redirect } from 'react-router-dom'
 
 import React from 'react'
-import DishPlan from 'pages/DishPlan'
+import DailyMenu from 'pages/DailyMenu'
+import ActionsDashboard from 'pages/ActionsDashboard'
 import { DishesProvider } from 'api/dishes/context'
 import { DishPlanProvider } from 'api/dishPlan/context'
+import { CalendarProvider } from 'api/calendar/context'
+
+export const Routes = Object.freeze({
+    ROOT: '/',
+    ACTIONS: '/actions',
+})
 
 const Router = () => {
     return (
         <>
-            <Redirect exact from="/" to="/" />
-
             <Switch>
                 <Route
-                    path="/"
+                    exact
+                    path={Routes.ROOT}
                     render={() => (
-                        <DishesProvider>
-                            <DishPlanProvider>
-                                <DishPlan />
-                            </DishPlanProvider>
-                        </DishesProvider>
+                        <CalendarProvider>
+                            <DishesProvider>
+                                <DishPlanProvider>
+                                    <DailyMenu />
+                                </DishPlanProvider>
+                            </DishesProvider>
+                        </CalendarProvider>
+                    )}
+                />
+                <Route
+                    path={Routes.ACTIONS}
+                    render={() => (
+                        <CalendarProvider>
+                            <DishesProvider>
+                                <DishPlanProvider>
+                                    <ActionsDashboard />
+                                </DishPlanProvider>
+                            </DishesProvider>
+                        </CalendarProvider>
                     )}
                 />
             </Switch>
