@@ -23,6 +23,8 @@ import EditDishPlanForm from 'pages/ActionsDashboard/ui-components/EditDishPlanF
 import ToolBar from '@ui-components/atoms/ToolBar'
 import Button from '@ui-components/atoms/Button'
 import { useCalendarState } from 'api/calendar/context'
+import { Routes } from 'Router'
+import { Link } from 'react-router-dom'
 
 interface Props {}
 
@@ -34,6 +36,7 @@ const msg = new Map([
     ['finish', 'Finish'],
     ['undo changes', 'Undo changes'],
     ['name', 'Name'],
+    ['back', 'Back'],
     ["don't save", "Don't save"],
     ['save', 'Save'],
     ['edit', 'Edit'],
@@ -102,210 +105,186 @@ export default function ActionsDashboard(): ReactElement {
 
     return (
         <>
-            <ToolBar
-                style={{
-                    root: {
-                        bottom: 0,
-                        position: 'fixed',
-                        width: '100%',
-                        boxSizing: 'border-box',
-                    },
-                }}
-            >
-                <Button
-                    noBorders
-                    onClick={() => {
-                        setDialogToDisplay(() => {
-                            return (
-                                <FullScreenDialog>
-                                    <ToolBar>
-                                        <Label>{currentDay}</Label>
-                                    </ToolBar>
+            <Link to={Routes.ROOT}>
+                <Button noBorders>{msg.get('back')}</Button>
+            </Link>
 
-                                    <EditDishPlanForm
-                                        labels={{
-                                            onSubmit: msg.get('finish'),
-                                        }}
-                                        onDishSearchTermChange={
-                                            handleDishSearchInputChange
-                                        }
-                                        dishes={
-                                            dishesWeekPlan[
-                                                currentDay.toLowerCase()
-                                            ].dishes
-                                        }
-                                        onSubmit={() => {
-                                            setDialogToDisplay(null)
-                                        }}
-                                        onSearchDishOptionClick={({
-                                            id,
-                                            ingredients,
-                                            category,
-                                        }) => {
-                                            addDishToPlan({
-                                                dish: {
-                                                    id,
-                                                    name,
-                                                    day: currentDay,
-                                                    ingredients,
-                                                    category,
-                                                },
-                                                dispatch: dishesPlanDispatch,
-                                            })
-                                        }}
-                                        onCloseDishChips={({ id }) => {
-                                            removeDishFromPlan({
-                                                dish: {
-                                                    id,
-                                                    day: currentDay,
-                                                },
-                                                dispatch: dishesPlanDispatch,
-                                            })
-                                        }}
-                                        shouldDisplaySearchDishMenuList={
-                                            shouldDisplaySearchDishMenuList
-                                        }
-                                        searchDishMenuListOptions={
-                                            fetchedDishes
-                                        }
-                                        onSearchInputFocus={() =>
-                                            setShouldDisplaySearchDishMenuList(
-                                                true
-                                            )
-                                        }
-                                        onSearchInputBlur={() =>
-                                            setShouldDisplaySearchDishMenuList(
-                                                false
-                                            )
-                                        }
-                                    />
-                                </FullScreenDialog>
-                            )
-                        })
-                    }}
-                >
-                    {msg.get('edit plan')}
-                </Button>
-
-                <Button
-                    noBorders
-                    onClick={() => {
-                        setDialogToDisplay(() => (
+            <Button
+                noBorders
+                onClick={() => {
+                    setDialogToDisplay(() => {
+                        return (
                             <FullScreenDialog>
-                                <EditRecipeForm
+                                <ToolBar>
+                                    <Label>{currentDay}</Label>
+                                </ToolBar>
+
+                                <EditDishPlanForm
                                     labels={{
-                                        recipeName: msg.get('name'),
-                                        categoryName: msg.get('category'),
-                                        ingredientsName: msg.get('ingredients'),
-                                        abort: msg.get("don't save"),
-                                        editDish: msg.get('edit'),
-                                        createDish: msg.get('create'),
+                                        onSubmit: msg.get('finish'),
                                     }}
-                                    onRecipeNameChange={
+                                    onDishSearchTermChange={
                                         handleDishSearchInputChange
                                     }
-                                    onCategoryNameChange={
-                                        handleCategorySearchInputChange
+                                    dishes={
+                                        dishesWeekPlan[currentDay.toLowerCase()]
+                                            .dishes
                                     }
-                                    onIngredientNameChange={
-                                        handleIngredientSearchInputChange
+                                    onSubmit={() => {
+                                        setDialogToDisplay(null)
+                                    }}
+                                    onSearchDishOptionClick={({
+                                        id,
+                                        ingredients,
+                                        category,
+                                    }) => {
+                                        addDishToPlan({
+                                            dish: {
+                                                id,
+                                                name,
+                                                day: currentDay,
+                                                ingredients,
+                                                category,
+                                            },
+                                            dispatch: dishesPlanDispatch,
+                                        })
+                                    }}
+                                    onCloseDishChips={({ id }) => {
+                                        removeDishFromPlan({
+                                            dish: {
+                                                id,
+                                                day: currentDay,
+                                            },
+                                            dispatch: dishesPlanDispatch,
+                                        })
+                                    }}
+                                    shouldDisplaySearchDishMenuList={
+                                        shouldDisplaySearchDishMenuList
                                     }
-                                    values={{
-                                        recipeName: dishNameBeingEdited.name,
-                                        categoryName:
-                                            dishCategoryBeingEdited.name,
-                                        ingredients: dishIngredientsBeingEdited,
-                                    }}
-                                    dishes={fetchedDishes}
-                                    matchedDishes={fetchedMatchedDishes}
-                                    categories={fetchedDishesCategories}
-                                    ingredients={fetchedDishesIngredients}
-                                    onDishOptionClick={({ id, name }) => {
-                                        updateDishBeingEditedValues(
-                                            (oldState) => ({
-                                                ...oldState,
-                                                dishNameBeingEdited: {
-                                                    id,
-                                                    name,
-                                                },
-                                            })
+                                    searchDishMenuListOptions={fetchedDishes}
+                                    onSearchInputFocus={() =>
+                                        setShouldDisplaySearchDishMenuList(true)
+                                    }
+                                    onSearchInputBlur={() =>
+                                        setShouldDisplaySearchDishMenuList(
+                                            false
                                         )
-                                    }}
-                                    onCategoryOptionClick={({ id, name }) => {
-                                        updateDishBeingEditedValues(
-                                            (oldState) => ({
-                                                ...oldState,
-                                                dishCategoryBeingEdited: {
-                                                    id,
-                                                    name,
-                                                },
-                                            })
-                                        )
-                                    }}
-                                    onIngredientOptionClick={({ id, name }) => {
-                                        updateDishBeingEditedValues(
-                                            (oldState) => ({
-                                                ...oldState,
-                                                dishIngredientsBeingEdited: [
-                                                    ...dishIngredientsBeingEdited,
-                                                    {
-                                                        id,
-                                                        name,
-                                                    },
-                                                ],
-                                            })
-                                        )
-                                    }}
-                                    onCloseIngredientChips={({ id }) => {
-                                        updateDishBeingEditedValues(
-                                            (oldState) => ({
-                                                ...oldState,
-                                                dishIngredientsBeingEdited: [
-                                                    ...oldState.dishIngredientsBeingEdited.filter(
-                                                        ({
-                                                            id: ingredientToRemoveId,
-                                                        }) =>
-                                                            ingredientToRemoveId !==
-                                                            id
-                                                    ),
-                                                ],
-                                            })
-                                        )
-                                    }}
-                                    onAbort={() => {
-                                        setDialogToDisplay(null)
-                                    }}
-                                    onEditDishButtonClick={() => {
-                                        editDish({
-                                            dispatch: dishesDispatch,
-                                            dish: {
-                                                id: dishIdBeingEdited,
-                                                ingredients: dishIngredientsBeingEdited,
-                                                category: dishCategoryBeingEdited,
-                                                name: dishNameBeingEdited,
-                                            },
-                                        })
-                                        setDialogToDisplay(null)
-                                    }}
-                                    onCreateDishButtonClick={() => {
-                                        addDish({
-                                            dispatch: dishesDispatch,
-                                            dish: {
-                                                ingredients: dishIngredientsBeingEdited,
-                                                category: dishCategoryBeingEdited,
-                                                name: dishNameBeingEdited,
-                                            },
-                                        })
-                                        setDialogToDisplay(null)
-                                    }}
+                                    }
                                 />
                             </FullScreenDialog>
-                        ))
-                    }}
-                >
-                    {msg.get('edit recipes')}
-                </Button>
-            </ToolBar>
+                        )
+                    })
+                }}
+            >
+                {msg.get('edit plan')}
+            </Button>
+
+            <Button
+                noBorders
+                onClick={() => {
+                    setDialogToDisplay(() => (
+                        <FullScreenDialog>
+                            <EditRecipeForm
+                                labels={{
+                                    recipeName: msg.get('name'),
+                                    categoryName: msg.get('category'),
+                                    ingredientsName: msg.get('ingredients'),
+                                    abort: msg.get("don't save"),
+                                    editDish: msg.get('edit'),
+                                    createDish: msg.get('create'),
+                                }}
+                                onRecipeNameChange={handleDishSearchInputChange}
+                                onCategoryNameChange={
+                                    handleCategorySearchInputChange
+                                }
+                                onIngredientNameChange={
+                                    handleIngredientSearchInputChange
+                                }
+                                values={{
+                                    recipeName: dishNameBeingEdited.name,
+                                    categoryName: dishCategoryBeingEdited.name,
+                                    ingredients: dishIngredientsBeingEdited,
+                                }}
+                                dishes={fetchedDishes}
+                                matchedDishes={fetchedMatchedDishes}
+                                categories={fetchedDishesCategories}
+                                ingredients={fetchedDishesIngredients}
+                                onDishOptionClick={({ id, name }) => {
+                                    updateDishBeingEditedValues((oldState) => ({
+                                        ...oldState,
+                                        dishNameBeingEdited: {
+                                            id,
+                                            name,
+                                        },
+                                    }))
+                                }}
+                                onCategoryOptionClick={({ id, name }) => {
+                                    updateDishBeingEditedValues((oldState) => ({
+                                        ...oldState,
+                                        dishCategoryBeingEdited: {
+                                            id,
+                                            name,
+                                        },
+                                    }))
+                                }}
+                                onIngredientOptionClick={({ id, name }) => {
+                                    updateDishBeingEditedValues((oldState) => ({
+                                        ...oldState,
+                                        dishIngredientsBeingEdited: [
+                                            ...dishIngredientsBeingEdited,
+                                            {
+                                                id,
+                                                name,
+                                            },
+                                        ],
+                                    }))
+                                }}
+                                onCloseIngredientChips={({ id }) => {
+                                    updateDishBeingEditedValues((oldState) => ({
+                                        ...oldState,
+                                        dishIngredientsBeingEdited: [
+                                            ...oldState.dishIngredientsBeingEdited.filter(
+                                                ({
+                                                    id: ingredientToRemoveId,
+                                                }) =>
+                                                    ingredientToRemoveId !== id
+                                            ),
+                                        ],
+                                    }))
+                                }}
+                                onAbort={() => {
+                                    setDialogToDisplay(null)
+                                }}
+                                onEditDishButtonClick={() => {
+                                    editDish({
+                                        dispatch: dishesDispatch,
+                                        dish: {
+                                            id: dishIdBeingEdited,
+                                            ingredients: dishIngredientsBeingEdited,
+                                            category: dishCategoryBeingEdited,
+                                            name: dishNameBeingEdited,
+                                        },
+                                    })
+                                    setDialogToDisplay(null)
+                                }}
+                                onCreateDishButtonClick={() => {
+                                    addDish({
+                                        dispatch: dishesDispatch,
+                                        dish: {
+                                            ingredients: dishIngredientsBeingEdited,
+                                            category: dishCategoryBeingEdited,
+                                            name: dishNameBeingEdited,
+                                        },
+                                    })
+                                    setDialogToDisplay(null)
+                                }}
+                            />
+                        </FullScreenDialog>
+                    ))
+                }}
+            >
+                {msg.get('edit recipes')}
+            </Button>
 
             {dialogToRender
                 ? createPortal(dialogToRender, document.body)
