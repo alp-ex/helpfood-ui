@@ -27,7 +27,10 @@ export default memo(function LabelledList({
             <ul style={customItemsContainerStyle}>
                 {items.map(({ render, id }) => (
                     <li
-                        style={{ listStyle: 'none', ...customItemStyle }}
+                        style={{
+                            listStyle: 'none',
+                            ...customItemStyle,
+                        }}
                         key={id}
                     >
                         {render()}

@@ -21,7 +21,6 @@ export default function Label({
             style={{
                 margin: '1em',
                 fontSize: '1em',
-                fontFamily: 'Josefin Slab',
                 ...customRootStyle,
             }}
         >

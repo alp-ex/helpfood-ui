@@ -30,6 +30,7 @@ export default function FullScreenDialog({
                 padding: '1em',
                 boxSizing: 'border-box',
                 height: '100vh',
+                top: 0,
                 ...customRootStyle,
             }}
         >

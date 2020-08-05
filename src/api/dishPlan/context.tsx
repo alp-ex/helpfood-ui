@@ -13,10 +13,11 @@ type Ingredient = {
     id: string
     name: string
 }
-type DishesDayPlan = {
+type DishesDayPlan = ReadonlyArray<{
+    id: string
     category: Category
     dishes: ReadonlyArray<{ id: string; name: string; ingredients: Ingredient }>
-}
+}>
 type Action = { type: string; payload?: {} }
 type Dispatch = (action: Action) => void
 type State = {
