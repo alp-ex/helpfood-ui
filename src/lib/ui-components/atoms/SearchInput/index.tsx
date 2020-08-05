@@ -12,17 +12,28 @@ interface Props {
     type?: string
     children?: ReactNode
     value?: string
+    autoComplete?: string
     onChange: (event: ChangeEvent<HTMLInputElement>) => void
     onFocus?: (event: FocusEvent) => void
     onBlur?: (event: FocusEvent) => void
 }
 
 export default forwardRef(function SearchInput(
-    { children, onFocus, onBlur, type = 'text', value, onChange }: Props,
+    {
+        children,
+        // looks like a workaround right ? off value doesn't work
+        autoComplete = 'nope',
+        onFocus,
+        onBlur,
+        type = 'text',
+        value,
+        onChange,
+    }: Props,
     ref?: Ref<HTMLInputElement>
 ): ReactElement {
     return (
         <input
+            autoComplete={autoComplete}
             onBlur={onBlur}
             onFocus={onFocus}
             ref={ref}

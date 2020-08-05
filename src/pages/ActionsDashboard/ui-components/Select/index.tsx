@@ -1,18 +1,11 @@
-import React, {
-    ReactElement,
-    ChangeEvent,
-    ElementType,
-    useRef,
-    createRef,
-    useState,
-} from 'react'
+import React, { ReactElement, ChangeEvent, ElementType, useState } from 'react'
 import MenuList from '@ui-components/molecules/MenuList'
 import SearchInput from '@ui-components/atoms/SearchInput'
 
 interface Props {
     component?: ElementType
     onChange: (event: ChangeEvent) => void
-    defaultValue?: string
+    value?: string
     items: ReadonlyArray<{ id: string; name: string }>
     onOptionClick: ({ id, name }: { id: string; name: string }) => void
 }
@@ -20,7 +13,7 @@ interface Props {
 export default function Select({
     component: Component = 'div',
     onChange,
-    defaultValue = '',
+    value,
     items,
     onOptionClick,
 }: Props): ReactElement {
@@ -40,8 +33,7 @@ export default function Select({
                     setInputFocused(false)
                 }}
                 onChange={onChange}
-                // cant stay like this omg
-                value={defaultValue}
+                value={value}
             />
 
             {inputFocused && items.length > 0 ? (
@@ -59,7 +51,7 @@ export default function Select({
                     {items.map(({ id, name }) => (
                         <MenuList.Item
                             key={id}
-                            onClick={() => {
+                            onMouseDown={() => {
                                 onOptionClick({ id, name })
                             }}
                         >

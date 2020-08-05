@@ -22,9 +22,9 @@ interface Props {
     onCategoryNameChange: (event: ChangeEvent) => void
     onIngredientNameChange: (event: ChangeEvent) => void
     values: {
-        recipeName: string
-        categoryName: string
-        ingredients: ReadonlyArray<Ingredient>
+        recipe: string
+        category: string
+        ingredients: ReadonlyArray<string>
     }
     dishes: ReadonlyArray<Dish>
     matchedDishes: ReadonlyArray<Dish>
@@ -56,8 +56,8 @@ const EditRecipeForm = ({
     categories,
     ingredients,
     values: {
-        recipeName: recipeNameValue,
-        categoryName: categoryNameValue,
+        recipe: recipeNameValue,
+        category: categoryNameValue,
         ingredients: ingredientsValues,
     },
     onDishOptionClick,
@@ -68,13 +68,14 @@ const EditRecipeForm = ({
     onEditDishButtonClick,
     onCreateDishButtonClick,
 }: Props) => {
+    console.log(ingredientsValues)
     return (
         <Form>
             <Label component="strong">{recipeNameLabel}</Label>
 
             <Select
                 onChange={onRecipeNameChange}
-                defaultValue={recipeNameValue}
+                value={recipeNameValue}
                 onOptionClick={({ id, name }) => {
                     onDishOptionClick({ id, name })
                 }}
@@ -85,7 +86,7 @@ const EditRecipeForm = ({
 
             <Select
                 onChange={onCategoryNameChange}
-                defaultValue={categoryNameValue}
+                value={categoryNameValue}
                 onOptionClick={({ id, name }) => {
                     onCategoryOptionClick({ id, name })
                 }}
@@ -100,11 +101,15 @@ const EditRecipeForm = ({
                     onIngredientOptionClick({ id, name })
                 }}
                 items={ingredients}
+                // value={ingredientNameValue}
             />
 
-            {ingredientsValues.map(({ id, name }) => (
-                <Chips key={id} onClose={() => onCloseIngredientChips({ id })}>
-                    {name}
+            {ingredientsValues.map((ingredient) => (
+                <Chips
+                    key={ingredient}
+                    onClose={() => onCloseIngredientChips({ id })}
+                >
+                    {ingredient}
                 </Chips>
             ))}
 

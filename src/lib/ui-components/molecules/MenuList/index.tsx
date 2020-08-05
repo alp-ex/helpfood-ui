@@ -13,7 +13,8 @@ interface Props {
 interface MenuListProps extends Props {}
 
 interface MenuItemProps extends Props {
-    onClick: (event: MouseEvent) => void
+    // onMouseDown seems to be executed before onBlur
+    onMouseDown: (event: MouseEvent) => void
 }
 
 export default function MenuList({
@@ -36,11 +37,11 @@ export default function MenuList({
 MenuList.Item = function MenuItem({
     children,
     style: { root: customRootStyle } = {},
-    onClick,
+    onMouseDown,
 }: MenuItemProps): ReactElement {
     return (
         <li
-            onClick={onClick}
+            onMouseDown={onMouseDown}
             style={{
                 listStyle: 'none',
                 padding: '1em',

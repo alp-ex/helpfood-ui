@@ -1,10 +1,11 @@
-import React, { ChangeEvent, FocusEvent } from 'react'
+import React, { ChangeEvent, FocusEvent, Fragment } from 'react'
 import Form from '@ui-components/atoms/Form'
 import SearchInput from '@ui-components/atoms/SearchInput'
 import MenuList from '@ui-components/molecules/MenuList'
 import Chips from '@ui-components/atoms/Chips'
 import ToolBar from '@ui-components/atoms/ToolBar'
 import Button from '@ui-components/atoms/Button'
+import Label from '@ui-components/atoms/Label'
 
 type Dish = {
     id: string
@@ -39,7 +40,11 @@ interface Props {
     onSearchInputBlur: (event: FocusEvent) => void
     onSearchInputFocus: (event: FocusEvent) => void
     onSubmit: () => void
-    dishes: ReadonlyArray<Dish>
+    plan: ReadonlyArray<{
+        dishes: ReadonlyArray<Dish>
+        category: Category
+        id: string
+    }>
 }
 
 const EditDishPlanForm = ({
@@ -50,7 +55,7 @@ const EditDishPlanForm = ({
     onSearchDishOptionClick,
     onCloseDishChips,
     onSubmit,
-    dishes,
+    plan,
     onSearchInputBlur,
     onSearchInputFocus,
 }: Props) => {
@@ -91,15 +96,21 @@ const EditDishPlanForm = ({
                 </MenuList>
             ) : null}
 
-            <Chips.List>
-                {dishes.map(({ id, name }) => (
-                    <li key={id}>
-                        <Chips onClose={() => onCloseDishChips({ id })}>
-                            {name}
-                        </Chips>
-                    </li>
-                ))}
-            </Chips.List>
+            {plan.map(({ dishes, category, id }) => (
+                <Fragment key={id}>
+                    <Label>{category}</Label>
+
+                    <Chips.List>
+                        {dishes.map(({ id, name }) => (
+                            <li key={id}>
+                                <Chips onClose={() => onCloseDishChips({ id })}>
+                                    {name}
+                                </Chips>
+                            </li>
+                        ))}
+                    </Chips.List>
+                </Fragment>
+            ))}
 
             <ToolBar
                 style={{
