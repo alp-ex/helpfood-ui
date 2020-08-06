@@ -1,8 +1,6 @@
 import React, { ChangeEvent } from 'react'
 import Form from '@ui-components/atoms/Form'
 import Label from '@ui-components/atoms/Label'
-import SearchInput from '@ui-components/atoms/SearchInput'
-import MenuList from '@ui-components/molecules/MenuList'
 import Chips from '@ui-components/atoms/Chips'
 import ToolBar from '@ui-components/atoms/ToolBar'
 import Button from '@ui-components/atoms/Button'
@@ -18,9 +16,9 @@ interface Props {
         editDish: string
         createDish: string
     }
-    onRecipeNameChange: (event: ChangeEvent) => void
-    onCategoryNameChange: (event: ChangeEvent) => void
-    onIngredientNameChange: (event: ChangeEvent) => void
+    onRecipeNameChange: (event: ChangeEvent<HTMLInputElement>) => void
+    onCategoryNameChange: (event: ChangeEvent<HTMLInputElement>) => void
+    onIngredientNameChange: (event: ChangeEvent<HTMLInputElement>) => void
     values: {
         recipe: string
         category: string
@@ -30,10 +28,10 @@ interface Props {
     matchedDishes: ReadonlyArray<Dish>
     categories: ReadonlyArray<Category>
     ingredients: ReadonlyArray<Ingredient>
-    onDishOptionClick: ({ id, name }) => void
-    onCategoryOptionClick: ({ id, name }) => void
-    onIngredientOptionClick: ({ id, name }) => void
-    onCloseIngredientChips: ({ id }) => void
+    onDishOptionClick: ({ name }) => void
+    onCategoryOptionClick: ({ name }) => void
+    onIngredientOptionClick: ({ name }) => void
+    onCloseIngredientChips: ({ ingredientName }) => void
     onAbort: () => void
     onEditDishButtonClick: () => void
     onCreateDishButtonClick: () => void
@@ -68,7 +66,6 @@ const EditRecipeForm = ({
     onEditDishButtonClick,
     onCreateDishButtonClick,
 }: Props) => {
-    console.log(ingredientsValues)
     return (
         <Form>
             <Label component="strong">{recipeNameLabel}</Label>
@@ -76,8 +73,8 @@ const EditRecipeForm = ({
             <Select
                 onChange={onRecipeNameChange}
                 value={recipeNameValue}
-                onOptionClick={({ id, name }) => {
-                    onDishOptionClick({ id, name })
+                onOptionClick={({ name }) => {
+                    onDishOptionClick({ name })
                 }}
                 items={dishes}
             />
@@ -87,8 +84,8 @@ const EditRecipeForm = ({
             <Select
                 onChange={onCategoryNameChange}
                 value={categoryNameValue}
-                onOptionClick={({ id, name }) => {
-                    onCategoryOptionClick({ id, name })
+                onOptionClick={({ name }) => {
+                    onCategoryOptionClick({ name })
                 }}
                 items={categories}
             />
@@ -97,19 +94,18 @@ const EditRecipeForm = ({
 
             <Select
                 onChange={onIngredientNameChange}
-                onOptionClick={({ id, name }) => {
-                    onIngredientOptionClick({ id, name })
+                onOptionClick={({ name }) => {
+                    onIngredientOptionClick({ name })
                 }}
                 items={ingredients}
-                // value={ingredientNameValue}
             />
 
-            {ingredientsValues.map((ingredient) => (
+            {ingredientsValues.map((ingredientName) => (
                 <Chips
-                    key={ingredient}
-                    onClose={() => onCloseIngredientChips({ id })}
+                    key={ingredientName}
+                    onClose={() => onCloseIngredientChips({ ingredientName })}
                 >
-                    {ingredient}
+                    {ingredientName}
                 </Chips>
             ))}
 

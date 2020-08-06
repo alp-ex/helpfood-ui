@@ -1,5 +1,4 @@
 import React, { useState, ReactElement } from 'react'
-import { createPortal } from 'react-dom'
 import FullScreenDialog from '@ui-components/molecules/FullScreenDialog'
 import {
     fetchDishes,
@@ -67,6 +66,7 @@ export default function ActionsDashboard(): ReactElement {
             recipeIngredientsValue,
             recipeCategoryValue,
             recipeNameValue,
+            recipeIdValue,
         },
         setValues: updateRecipeFormValues,
     } = useForm({
@@ -74,6 +74,7 @@ export default function ActionsDashboard(): ReactElement {
             recipeIngredientsValue: [],
             recipeCategoryValue: '',
             recipeNameValue: '',
+            recipeIdValue: '',
         },
     })
 
@@ -208,12 +209,29 @@ export default function ActionsDashboard(): ReactElement {
                             editDish: msg.get('edit'),
                             createDish: msg.get('create'),
                         }}
-                        onRecipeNameChange={(event) =>
-                            updateRecipeFormValues((oldState) => ({
-                                ...oldState,
-                                recipeNameValue: event.target.value,
-                            }))
-                        }
+                        onRecipeNameChange={(event) => {
+                            const searchTerm = event.target.value
+                            const matchedDish = fetchedMatchedDishes.find(
+                                ({ name }) => name === searchTerm
+                            )
+
+                            if (matchedDish !== undefined) {
+                                updateRecipeFormValues((oldState) => ({
+                                    ...oldState,
+                                    recipeIdValue: matchedDish.id,
+                                    recipeNameValue: matchedDish.name,
+                                    recipeCategoryValue: matchedDish.category,
+                                    recipeIngredientsValue:
+                                        matchedDish.ingredients,
+                                }))
+                            } else {
+                                updateRecipeFormValues((oldState) => ({
+                                    ...oldState,
+                                    recipeIdValue: '',
+                                    recipeNameValue: searchTerm,
+                                }))
+                            }
+                        }}
                         onCategoryNameChange={(event) =>
                             updateRecipeFormValues((oldState) => ({
                                 ...oldState,
@@ -239,10 +257,26 @@ export default function ActionsDashboard(): ReactElement {
                         categories={fetchedDishesCategories}
                         ingredients={fetchedDishesIngredients}
                         onDishOptionClick={({ name }) => {
-                            updateRecipeFormValues((oldState) => ({
-                                ...oldState,
-                                recipeNameValue: name,
-                            }))
+                            const matchedDish = fetchedMatchedDishes.find(
+                                ({ name: matchName }) => matchName === name
+                            )
+
+                            if (matchedDish !== undefined) {
+                                updateRecipeFormValues((oldState) => ({
+                                    ...oldState,
+                                    recipeIdValue: matchedDish.id,
+                                    recipeNameValue: matchedDish.name,
+                                    recipeCategoryValue: matchedDish.category,
+                                    recipeIngredientsValue:
+                                        matchedDish.ingredients,
+                                }))
+                            } else {
+                                updateRecipeFormValues((oldState) => ({
+                                    ...oldState,
+                                    recipeIdValue: '',
+                                    recipeNameValue: name,
+                                }))
+                            }
                         }}
                         onCategoryOptionClick={({ name }) => {
                             updateRecipeFormValues((oldState) => ({
@@ -259,13 +293,13 @@ export default function ActionsDashboard(): ReactElement {
                                 ],
                             }))
                         }}
-                        onCloseIngredientChips={({ id }) => {
+                        onCloseIngredientChips={({ ingredientName }) => {
                             updateRecipeFormValues((oldState) => ({
                                 ...oldState,
                                 recipeIngredientsValue: [
                                     ...oldState.recipeIngredientsValue.filter(
-                                        ({ id: ingredientToRemoveId }) =>
-                                            ingredientToRemoveId !== id
+                                        (ingredient) =>
+                                            ingredientName !== ingredient
                                     ),
                                 ],
                             }))
@@ -277,6 +311,7 @@ export default function ActionsDashboard(): ReactElement {
                             editDish({
                                 dispatch: dishesDispatch,
                                 dish: {
+                                    id: recipeIdValue,
                                     ingredients: recipeIngredientsValue,
                                     category: recipeCategoryValue,
                                     name: recipeNameValue,

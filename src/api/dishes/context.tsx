@@ -307,7 +307,7 @@ function dishesReducer(prevState, { type, payload }) {
 
 export function DishesProvider({ children }: DishesProviderProps) {
     const [state, dispatch] = useReducer(dishesReducer, {
-        matchedDishes: [],
+        matchedDishes: dishesFixtures.dishes,
         dishes: dishesFixtures.dishes,
         categories: categoriesFixtures.categories,
         ingredients: ingredientsFixtures.ingredients,
