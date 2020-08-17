@@ -1,15 +1,12 @@
 import React, { createContext, useReducer, useContext, ReactNode } from 'react'
 
-import dishesFixtures from 'api/fixtures/dishes.json'
-import categoriesFixtures from 'api/fixtures/categories.json'
-import ingredientsFixtures from 'api/fixtures/ingredients.json'
 import {
     searchDishesAPI,
     searchCategoriesAPI,
     searchIngredientsAPI,
     addDishAPI,
     editDishAPI,
-} from './actions'
+} from '../../services/dish/actions'
 import { Dish, Category, Ingredient } from './types'
 
 type Action = { type: string; payload?: {} }
@@ -150,54 +147,55 @@ function dishesReducer(prevState, { type, payload }) {
             }
         }
         case SEARCH_DISHES_START: {
+            console.log(payload)
             return {
                 ...prevState,
-                dishes: [
-                    ...prevState.dishes,
-                    {
-                        ...prevState.dishes.map(
-                            (dish) => dish.id === payload.id
-                        ),
-                        status: 'pending',
-                        name: payload.name,
-                        category: payload.category,
-                        ingredients: payload.ingredients,
-                    },
-                ],
+                // dishes: [
+                //     {
+                //         ...prevState.dishes.map(
+                //             (dish) => dish.id === payload.id
+                //         ),
+                //         status: 'pending',
+                //         name: payload.name,
+                //         category: payload.category,
+                //         ingredients: payload.ingredients,
+                //     },
+                //     ...prevState.dishes,
+                // ],
             }
         }
         case SEARCH_DISHES_SUCCEED: {
             const { dishes, matchedDishes } = payload
-
+            console.log(matchedDishes)
             return {
                 ...prevState,
                 matchedDishes,
-                dishes: [
-                    ...prevState.dishes,
-                    {
-                        ...prevState.dishes.map(
-                            (dish) => dish.id === dishes.id
-                        ),
-                        name: dishes.name,
-                        category: dishes.category,
-                        ingredients: dishes.ingredients,
-                        status: 'added',
-                    },
-                ],
+                // dishes: [
+                //     {
+                //         ...prevState.dishes.map(
+                //             (dish) => dish.id === dishes.id
+                //         ),
+                //         name: dishes.name,
+                //         category: dishes.category,
+                //         ingredients: dishes.ingredients,
+                //         status: 'added',
+                //     },
+                //     ...prevState.dishes,
+                // ],
             }
         }
         case SEARCH_DISHES_FAILED: {
             return {
                 ...prevState,
-                dishes: [
-                    ...prevState.dishes,
-                    {
-                        ...prevState.dishes.map(
-                            (dish) => dish.id === payload.id
-                        ),
-                        status: 'error',
-                    },
-                ],
+                // dishes: [
+                //     ...prevState.dishes,
+                //     {
+                //         ...prevState.dishes.map(
+                //             (dish) => dish.id === payload.id
+                //         ),
+                //         status: 'error',
+                //     },
+                // ],
             }
         }
         case EDIT_DISH_START: {
@@ -307,10 +305,10 @@ function dishesReducer(prevState, { type, payload }) {
 
 export function DishesProvider({ children }: DishesProviderProps) {
     const [state, dispatch] = useReducer(dishesReducer, {
-        matchedDishes: dishesFixtures.dishes,
-        dishes: dishesFixtures.dishes,
-        categories: categoriesFixtures.categories,
-        ingredients: ingredientsFixtures.ingredients,
+        matchedDishes: [],
+        dishes: [],
+        categories: [],
+        ingredients: [],
     })
 
     return (
@@ -485,6 +483,7 @@ export async function addDish({
         })
     }
 }
+
 export async function editDish({
     dispatch,
     dish: { id, name, ingredients, category },

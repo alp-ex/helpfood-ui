@@ -1,4 +1,4 @@
-import React, { useState, ReactElement } from 'react'
+import React, { useState, ReactElement, useEffect } from 'react'
 import FullScreenDialog from '@ui-components/molecules/FullScreenDialog'
 import {
     fetchDishes,
@@ -8,20 +8,20 @@ import {
     editDish,
     useDishesState,
     useDishesDispatch,
-} from 'api/dishes/context'
+} from 'api/providers/dish/context'
 import {
     addDishToPlan,
     removeDishFromPlan,
     useDishPlanState,
     useDishPlanDispatch,
-} from 'api/dishPlan/context'
+} from 'api/providers/mealPlan/context'
 import debounce from '@utils/debounce'
 import Label from '@ui-components/atoms/Label'
 import EditRecipeForm from 'pages/ActionsDashboard/ui-components/EditRecipeForm'
 import EditDishPlanForm from 'pages/ActionsDashboard/ui-components/EditDishPlanForm'
 import ToolBar from '@ui-components/atoms/ToolBar'
 import Button from '@ui-components/atoms/Button'
-import { useCalendarState } from 'api/calendar/context'
+import { useCalendarState } from 'api/providers/calendar/context'
 import { Routes } from 'Router'
 import { Link } from 'react-router-dom'
 import useForm from '@utils/useForm'
@@ -88,34 +88,6 @@ export default function ActionsDashboard(): ReactElement {
     const dishesDispatch = useDishesDispatch()
     const dishesPlanDispatch = useDishPlanDispatch()
 
-    const handleDishSearchInputChange = (event) => {
-        debounce({
-            cb: () =>
-                fetchDishes({
-                    dispatch: dishesDispatch,
-                    q: event.target.value,
-                }),
-        })
-    }
-    const handleCategorySearchInputChange = (event) => {
-        debounce({
-            cb: () =>
-                fetchCategories({
-                    q: event.target.value,
-                    dispatch: dishesDispatch,
-                }),
-        })
-    }
-    const handleIngredientSearchInputChange = (event) => {
-        debounce({
-            cb: () =>
-                fetchIngredients({
-                    q: event.target.value,
-                    dispatch: dishesDispatch,
-                }),
-        })
-    }
-
     return (
         <>
             <Link to={Routes.ROOT}>
@@ -154,7 +126,15 @@ export default function ActionsDashboard(): ReactElement {
                         labels={{
                             onSubmit: msg.get('finish'),
                         }}
-                        onDishSearchTermChange={handleDishSearchInputChange}
+                        onDishSearchTermChange={(event) => {
+                            debounce({
+                                cb: () =>
+                                    fetchDishes({
+                                        q: event.target.value,
+                                        dispatch: dishesDispatch,
+                                    }),
+                            })
+                        }}
                         plan={dishesWeekPlan[currentDay.toLowerCase()]}
                         onSubmit={() => {
                             setShouldDisplayEditPlanDialog(false)
@@ -215,6 +195,14 @@ export default function ActionsDashboard(): ReactElement {
                                 ({ name }) => name === searchTerm
                             )
 
+                            debounce({
+                                cb: () =>
+                                    fetchDishes({
+                                        dispatch: dishesDispatch,
+                                        q: searchTerm,
+                                    }),
+                            })
+
                             if (matchedDish !== undefined) {
                                 updateRecipeFormValues((oldState) => ({
                                     ...oldState,
@@ -232,21 +220,41 @@ export default function ActionsDashboard(): ReactElement {
                                 }))
                             }
                         }}
-                        onCategoryNameChange={(event) =>
+                        onCategoryNameChange={(event) => {
+                            const searchTerm = event.target.value
+
+                            debounce({
+                                cb: () =>
+                                    fetchCategories({
+                                        q: searchTerm,
+                                        dispatch: dishesDispatch,
+                                    }),
+                            })
+
                             updateRecipeFormValues((oldState) => ({
                                 ...oldState,
-                                recipeCategoryValue: event.target.value,
+                                recipeCategoryValue: searchTerm,
                             }))
-                        }
-                        onIngredientNameChange={(event) =>
+                        }}
+                        onIngredientNameChange={(event) => {
+                            const searchTerm = event.target.value
+
+                            debounce({
+                                cb: () =>
+                                    fetchIngredients({
+                                        q: searchTerm,
+                                        dispatch: dishesDispatch,
+                                    }),
+                            })
+
                             updateRecipeFormValues((oldState) => ({
                                 ...oldState,
                                 recipeIngredientsValue: [
                                     ...oldState.recipeIngredientsValue,
-                                    event.target.value,
+                                    searchTerm,
                                 ],
                             }))
-                        }
+                        }}
                         values={{
                             recipe: recipeNameValue,
                             category: recipeCategoryValue,

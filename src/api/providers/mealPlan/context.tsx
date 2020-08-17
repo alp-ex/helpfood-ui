@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useContext, ReactNode } from 'react'
 import {
     addDishToPlan as addDishToPlanAPI,
     removeDishToPlan as removeDishToPlanAPI,
-} from 'api/dishPlan/actions'
+} from 'api/services/mealPlan/actions'
 import dishPlanFixtures from 'api/fixtures/dishPlan.json'
 
 type Category = {

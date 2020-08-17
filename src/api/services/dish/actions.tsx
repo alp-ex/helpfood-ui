@@ -2,21 +2,21 @@ import { fetchDishes, Path } from './requests'
 
 export function searchDishesAPI({ q }) {
     return fetchDishes({
-        action: Path.GET_DISHES,
+        action: Path.SEARCH_DISHES,
         data: { q },
     })
 }
 
 export function searchCategoriesAPI({ q }) {
     return fetchDishes({
-        action: Path.GET_CATEGORIES,
+        action: Path.SEARCH_CATEGORIES,
         data: { q },
     })
 }
 
 export function searchIngredientsAPI({ q }) {
     return fetchDishes({
-        action: Path.GET_INGREDIENTS,
+        action: Path.SEARCH_INGREDIENTS,
         data: { q },
     })
 }

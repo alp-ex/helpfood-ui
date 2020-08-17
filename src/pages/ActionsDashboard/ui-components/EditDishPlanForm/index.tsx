@@ -28,7 +28,7 @@ interface Props {
     labels: {
         onSubmit: string
     }
-    onDishSearchTermChange: (event: ChangeEvent) => void
+    onDishSearchTermChange: (event: ChangeEvent<HTMLInputElement>) => void
     shouldDisplaySearchDishMenuList: boolean
     searchDishMenuListOptions: ReadonlyArray<Dish>
     onSearchDishOptionClick: ({

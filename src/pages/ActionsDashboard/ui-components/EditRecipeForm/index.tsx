@@ -4,7 +4,7 @@ import Label from '@ui-components/atoms/Label'
 import Chips from '@ui-components/atoms/Chips'
 import ToolBar from '@ui-components/atoms/ToolBar'
 import Button from '@ui-components/atoms/Button'
-import { Ingredient, Dish, Category } from 'api/dishes/types'
+import { Ingredient, Dish, Category } from 'api/providers/dish/types'
 import Select from '../Select'
 
 interface Props {

@@ -6,10 +6,10 @@ import {
     useCalendarState,
     useCalendarDispatch,
     setCurrentDay,
-} from 'api/calendar/context'
+} from 'api/providers/calendar/context'
 import { Link } from 'react-router-dom'
 import { Routes } from 'Router'
-import { useDishPlanState } from 'api/dishPlan/context'
+import { useDishPlanState } from 'api/providers/mealPlan/context'
 import Label from '@ui-components/atoms/Label'
 import LabelledList from '@ui-components/molecules/LabelledList'
 

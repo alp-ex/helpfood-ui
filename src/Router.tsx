@@ -3,9 +3,9 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import React from 'react'
 import DailyMenu from 'pages/DailyMenu'
 import ActionsDashboard from 'pages/ActionsDashboard'
-import { DishesProvider } from 'api/dishes/context'
-import { DishPlanProvider } from 'api/dishPlan/context'
-import { CalendarProvider } from 'api/calendar/context'
+import { DishesProvider } from 'api/providers/dish/context'
+import { DishPlanProvider } from 'api/providers/mealPlan/context'
+import { CalendarProvider } from 'api/providers/calendar/context'
 
 export const Routes = Object.freeze({
     ROOT: '/',
@@ -29,6 +29,7 @@ const Router = () => {
                         </CalendarProvider>
                     )}
                 />
+
                 <Route
                     path={Routes.ACTIONS}
                     render={() => (
