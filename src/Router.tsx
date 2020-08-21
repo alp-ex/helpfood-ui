@@ -16,19 +16,7 @@ const Router = () => {
     return (
         <>
             <Switch>
-                <Route
-                    exact
-                    path={Routes.ROOT}
-                    render={() => (
-                        <CalendarProvider>
-                            <DishesProvider>
-                                <DishPlanProvider>
-                                    <DailyMenu />
-                                </DishPlanProvider>
-                            </DishesProvider>
-                        </CalendarProvider>
-                    )}
-                />
+                <Route exact path={Routes.ROOT} render={() => <DailyMenu />} />
 
                 <Route
                     path={Routes.ACTIONS}

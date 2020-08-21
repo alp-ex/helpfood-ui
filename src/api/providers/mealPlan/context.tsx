@@ -1,9 +1,4 @@
 import React, { createContext, useReducer, useContext, ReactNode } from 'react'
-import {
-    addDishToPlan as addDishToPlanAPI,
-    removeDishToPlan as removeDishToPlanAPI,
-} from 'api/services/mealPlan/actions'
-import dishPlanFixtures from 'api/fixtures/dishPlan.json'
 
 type Category = {
     id: string
@@ -165,7 +160,7 @@ function DishPlanReducer(prevState, { type, payload }) {
 
 export function DishPlanProvider({ children }: DishPlanProviderProps) {
     const [state, dispatch] = useReducer(DishPlanReducer, {
-        dishesWeekPlan: dishPlanFixtures,
+        dishesWeekPlan: null,
     })
 
     return (

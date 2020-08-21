@@ -1,12 +1,5 @@
 import React, { createContext, useReducer, useContext, ReactNode } from 'react'
 
-import {
-    searchDishesAPI,
-    searchCategoriesAPI,
-    searchIngredientsAPI,
-    addDishAPI,
-    editDishAPI,
-} from '../../services/dish/actions'
 import { Dish, Category, Ingredient } from './types'
 
 type Action = { type: string; payload?: {} }

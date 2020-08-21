@@ -6,80 +6,26 @@ import {
     useCalendarState,
     useCalendarDispatch,
     setCurrentDay,
+    CalendarProvider,
 } from 'api/providers/calendar/context'
 import { Link } from 'react-router-dom'
 import { Routes } from 'Router'
 import { useDishPlanState } from 'api/providers/mealPlan/context'
 import Label from '@ui-components/atoms/Label'
 import LabelledList from '@ui-components/molecules/LabelledList'
+import MealPlan from './ui-components/MealPlan'
+import NavBar from './ui-components/NavBar'
 
 const msg = new Map([['actions', 'Actions']])
 
 export default function DailyMenu(): ReactElement {
-    const { currentDay, weekDays } = useCalendarState()
-    const calendarDispatch = useCalendarDispatch()
-    const { dishesWeekPlan } = useDishPlanState()
-
     return (
         <>
-            <ToolBar
-                style={{
-                    root: {
-                        top: 0,
-                        width: '100%',
-                        boxSizing: 'border-box',
-                    },
-                }}
-            >
-                <WeekDayPicker
-                    weekDays={weekDays}
-                    pickDay={(day) =>
-                        setCurrentDay({
-                            dispatch: calendarDispatch,
-                            day,
-                        })
-                    }
-                    pickedDay={currentDay}
-                />
+            <CalendarProvider>
+                <NavBar />
 
-                <Link to={Routes.ACTIONS}>
-                    <Button noBorders>{msg.get('actions')}</Button>
-                </Link>
-            </ToolBar>
-
-            {dishesWeekPlan[currentDay.toLowerCase()].map(
-                ({ category, dishes, id }) => (
-                    <LabelledList
-                        key={id}
-                        renderLabel={() => <Label>{category}</Label>}
-                        items={dishes.map(
-                            ({ id: dishId, ingredients, name }) => ({
-                                id: dishId,
-                                render: () => (
-                                    <LabelledList
-                                        renderLabel={() => (
-                                            <Label>{name}</Label>
-                                        )}
-                                        items={ingredients.map(
-                                            ({
-                                                name: ingredientName,
-                                                id: ingredientId,
-                                            }) => ({
-                                                id: ingredientId,
-                                                render: () => (
-                                                    <Label>
-                                                        {ingredientName}
-                                                    </Label>
-                                                ),
-                                            })
-                                        )}
-                                    />
-                                ),
-                            })
-                        )}
-                    />
-                )
-            )}
+                <MealPlan />
+            </CalendarProvider>
         </>
     )
 }
