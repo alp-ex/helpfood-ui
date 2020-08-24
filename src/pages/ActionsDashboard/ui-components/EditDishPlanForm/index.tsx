@@ -81,13 +81,13 @@ const EditDishPlanForm = ({
                         ({ id, name, ingredients, category }) => (
                             <MenuList.Item
                                 key={id}
-                                onClick={() =>
+                                onMouseDown={() => {
                                     onSearchDishOptionClick({
                                         id,
                                         ingredients,
                                         category,
                                     })
-                                }
+                                }}
                             >
                                 {name}
                             </MenuList.Item>

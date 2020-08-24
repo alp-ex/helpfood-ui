@@ -4,24 +4,24 @@ import { getWeekDaysFromNow } from '@utils/Dates'
 type Action = { type: string; payload?: {} }
 type Dispatch = (action: Action) => void
 type State = {
-    currentDay: string
     weekDays: ReadonlyArray<string>
+    selectedDay: string
 }
 type CalendarProviderProps = { children: ReactNode }
 
 const CalendarStateContext = createContext<State | undefined>(undefined)
 const CalendarDispatchContext = createContext<Dispatch | undefined>(undefined)
 
-const { SET_CURRENT_DAY } = Object.freeze({
-    SET_CURRENT_DAY: 'set the current day to show',
+const { SET_SELECTED_DAY } = Object.freeze({
+    SET_SELECTED_DAY: 'set the value of the day who was selected',
 })
 
 const calendarReducer = (prevState, { type, payload }) => {
     switch (type) {
-        case SET_CURRENT_DAY: {
+        case SET_SELECTED_DAY: {
             return {
                 ...prevState,
-                currentDay: payload,
+                selectedDay: payload,
             }
         }
     }
@@ -31,8 +31,8 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
     const weekDays = getWeekDaysFromNow()
 
     const [state, dispatch] = useReducer(calendarReducer, {
-        currentDay: weekDays[0],
         weekDays,
+        selectedDay: weekDays[0],
     })
 
     return (
@@ -44,7 +44,7 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
     )
 }
 
-export function useCalendarState() {
+function useCalendarState() {
     const context = useContext(CalendarStateContext)
 
     if (context === undefined) {
@@ -56,7 +56,7 @@ export function useCalendarState() {
     return context
 }
 
-export function useCalendarDispatch() {
+function useCalendarDispatch() {
     const context = useContext(CalendarDispatchContext)
 
     if (context === undefined) {
@@ -68,6 +68,10 @@ export function useCalendarDispatch() {
     return context
 }
 
+export function useCalendar() {
+    return { state: useCalendarState(), dispatch: useCalendarDispatch() }
+}
+
 export function setCurrentDay({ dispatch, day }) {
-    dispatch({ type: SET_CURRENT_DAY, payload: day })
+    dispatch({ type: SET_SELECTED_DAY, payload: day })
 }

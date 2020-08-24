@@ -1,8 +1,23 @@
 import React, { ReactElement } from 'react'
+import ToolBar from '@ui-components/atoms/ToolBar'
+import WeekDayPicker from '@ui-components/molecules/WeekDayPicker'
+import { Link } from 'react-router-dom'
+import Button from '@ui-components/atoms/Button'
+import { Routes } from 'Router'
+import { useCalendar, setCurrentDay } from 'api/providers/calendar/context'
 
-interface Props {}
+interface Props {
+    labels?: { actionButton?: string }
+}
 
-export default function NavBar({}: Props): ReactElement {
+export default function NavBar({
+    labels: { actionButton: actionButtonLabel = 'Actions' } = {},
+}: Props): ReactElement {
+    const {
+        state: { weekDays, selectedDay },
+        dispatch: calendarDispatch,
+    } = useCalendar()
+
     return (
         <ToolBar
             style={{
@@ -21,11 +36,11 @@ export default function NavBar({}: Props): ReactElement {
                         day,
                     })
                 }
-                pickedDay={currentDay}
+                pickedDay={selectedDay}
             />
 
             <Link to={Routes.ACTIONS}>
-                <Button noBorders>{msg.get('actions')}</Button>
+                <Button noBorders>{actionButtonLabel}</Button>
             </Link>
         </ToolBar>
     )

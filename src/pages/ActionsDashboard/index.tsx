@@ -12,8 +12,6 @@ import {
 import {
     addDishToPlan,
     removeDishFromPlan,
-    useDishPlanState,
-    useDishPlanDispatch,
 } from 'api/providers/mealPlan/context'
 import debounce from '@utils/debounce'
 import Label from '@ui-components/atoms/Label'
@@ -84,9 +82,7 @@ export default function ActionsDashboard(): ReactElement {
         categories: fetchedDishesCategories,
         ingredients: fetchedDishesIngredients,
     } = useDishesState()
-    const { dishesWeekPlan } = useDishPlanState()
     const dishesDispatch = useDishesDispatch()
-    const dishesPlanDispatch = useDishPlanDispatch()
 
     return (
         <>
@@ -135,7 +131,8 @@ export default function ActionsDashboard(): ReactElement {
                                     }),
                             })
                         }}
-                        plan={dishesWeekPlan[currentDay.toLowerCase()]}
+                        // plan={dishesWeekPlan[currentDay.toLowerCase()]}
+                        plan={null}
                         onSubmit={() => {
                             setShouldDisplayEditPlanDialog(false)
                         }}
@@ -144,25 +141,25 @@ export default function ActionsDashboard(): ReactElement {
                             ingredients,
                             category,
                         }) => {
-                            addDishToPlan({
-                                dish: {
-                                    id,
-                                    name,
-                                    day: currentDay.toLowerCase(),
-                                    ingredients,
-                                    category,
-                                },
-                                dispatch: dishesPlanDispatch,
-                            })
+                            // addDishToPlan({
+                            //     dish: {
+                            //         id,
+                            //         name,
+                            //         day: currentDay.toLowerCase(),
+                            //         ingredients,
+                            //         category,
+                            //     },
+                            //     dispatch: dishesPlanDispatch,
+                            // })
                         }}
                         onCloseDishChips={({ id }) => {
-                            removeDishFromPlan({
-                                dish: {
-                                    id,
-                                    day: currentDay.toLowerCase(),
-                                },
-                                dispatch: dishesPlanDispatch,
-                            })
+                            // removeDishFromPlan({
+                            //     dish: {
+                            //         id,
+                            //         day: currentDay.toLowerCase(),
+                            //     },
+                            //     dispatch: dishesPlanDispatch,
+                            // })
                         }}
                         shouldDisplaySearchDishMenuList={
                             shouldDisplaySearchDishMenuList

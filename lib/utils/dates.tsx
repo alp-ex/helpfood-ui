@@ -6,7 +6,9 @@ export function getWeekDaysFromNow() {
         week.push(
             new Intl.DateTimeFormat('en-US', {
                 weekday: 'long',
-            }).format(new Date(currentDay))
+            })
+                .format(new Date(currentDay))
+                .toLowerCase()
         )
         currentDay.setDate(currentDay.getDate() + 1)
     }

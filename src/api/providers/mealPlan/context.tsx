@@ -1,63 +1,71 @@
 import React, { createContext, useReducer, useContext, ReactNode } from 'react'
+import {
+    getWeekPlan as fetchMealPlanAPI,
+    addMealToPlan as addMealToPlanAPI,
+    removeMealFromPlan as removeMealFromPlanAPI,
+} from 'api/services/MealPlanRequests'
 
-type Category = {
-    id: string
+type Meal = {
     name: string
+    ingredients: ReadonlyArray<string>
 }
-type Ingredient = {
-    id: string
-    name: string
-}
-type DishesDayPlan = ReadonlyArray<{
-    id: string
-    category: Category
-    dishes: ReadonlyArray<{ id: string; name: string; ingredients: Ingredient }>
-}>
 type Action = { type: string; payload?: {} }
 type Dispatch = (action: Action) => void
 type State = {
-    dishesWeekPlan: {
-        monday: DishesDayPlan
-        tuesday: DishesDayPlan
-        wednesday: DishesDayPlan
-        thursday: DishesDayPlan
-        friday: DishesDayPlan
-        saturday: DishesDayPlan
-        sunday: DishesDayPlan
-    }
+    // {
+    //     mealsPlan: {
+    //         monday: {
+    //             dessert: [
+    //                 { name: 'banana bread', ingredients: ['banana', 'bread'] },
+    //             ],
+    //         },
+    //     },
+    // }
+    mealsPlan: { [key: string]: { [key: string]: ReadonlyArray<Meal> } }
 }
-type DishPlanProviderProps = { children: ReactNode }
 
-const DishPlanStateContext = createContext<State | undefined>(undefined)
-const DishPlanDispatchContext = createContext<Dispatch | undefined>(undefined)
+type MealPlanProviderProps = { children: ReactNode }
+
+const MealPlanStateContext = createContext<State | undefined>(undefined)
+const MealPlanDispatchContext = createContext<Dispatch | undefined>(undefined)
 
 const {
-    ADD_DISH_TO_PLAN_START,
+    ADD_DISH_TO_PLAN_STARTED,
     ADD_DISH_TO_PLAN_SUCCEED,
     ADD_DISH_TO_PLAN_FAILED,
-    REMOVE_DISH_TO_PLAN_START,
+    REMOVE_DISH_TO_PLAN_STARTED,
     REMOVE_DISH_TO_PLAN_SUCCEED,
     REMOVE_DISH_TO_PLAN_FAILED,
+    GETTING_MEAL_PLAN_SUCCEED,
+    GETTING_MEAL_PLAN_FAILED,
 } = {
-    ADD_DISH_TO_PLAN_START: 'start adding dish to week plan',
-    ADD_DISH_TO_PLAN_SUCCEED: 'adding dish to week plan succeed',
-    ADD_DISH_TO_PLAN_FAILED: 'adding dish to week plan failed',
-    REMOVE_DISH_TO_PLAN_START: 'start removing dish to week plan',
-    REMOVE_DISH_TO_PLAN_SUCCEED: 'removing dish to week plan succeed',
-    REMOVE_DISH_TO_PLAN_FAILED: 'removing dish to week plan failed',
+    GETTING_MEAL_PLAN_SUCCEED: 'getting meal plan succeed',
+    GETTING_MEAL_PLAN_FAILED: 'getting meal plan failed',
+    ADD_DISH_TO_PLAN_STARTED: 'start adding dish to meal plan',
+    ADD_DISH_TO_PLAN_SUCCEED: 'adding dish to meal plan succeed',
+    ADD_DISH_TO_PLAN_FAILED: 'adding dish to meal plan failed',
+    REMOVE_DISH_TO_PLAN_STARTED: 'start removing dish to meal plan',
+    REMOVE_DISH_TO_PLAN_SUCCEED: 'removing dish to meal plan succeed',
+    REMOVE_DISH_TO_PLAN_FAILED: 'removing dish to meal plan failed',
 }
 
-function DishPlanReducer(prevState, { type, payload }) {
+function mealPlanReducer(prevState, { type, payload }) {
     switch (type) {
-        case REMOVE_DISH_TO_PLAN_START: {
+        case GETTING_MEAL_PLAN_SUCCEED: {
             return {
                 ...prevState,
-                dishesWeekPlan: {
-                    ...prevState.dishesWeekPlan,
+                mealsPlan: payload,
+            }
+        }
+        case REMOVE_DISH_TO_PLAN_STARTED: {
+            return {
+                ...prevState,
+                mealsPlan: {
+                    ...prevState.mealsPlan,
                     [payload.day]: [
-                        ...prevState.dishesWeekPlan[payload.day],
+                        ...prevState.mealsPlan[payload.day],
                         {
-                            ...prevState.dishesWeekPlan[payload.day].find(
+                            ...prevState.mealsPlan[payload.day].find(
                                 (dish) => dish.id === payload.id
                             ),
                             status: 'pending',
@@ -69,12 +77,12 @@ function DishPlanReducer(prevState, { type, payload }) {
         case REMOVE_DISH_TO_PLAN_SUCCEED: {
             return {
                 ...prevState,
-                dishesWeekPlan: {
-                    ...prevState.dishesWeekPlan,
+                mealsPlan: {
+                    ...prevState.mealsPlan,
                     [payload.day]: [
-                        ...prevState.dishesWeekPlan[payload.day],
+                        ...prevState.mealsPlan[payload.day],
                         {
-                            ...prevState.dishesWeekPlan[payload.day].find(
+                            ...prevState.mealsPlan[payload.day].find(
                                 (dish) => dish.id === payload.id
                             ),
                             status: 'deleted',
@@ -86,12 +94,12 @@ function DishPlanReducer(prevState, { type, payload }) {
         case REMOVE_DISH_TO_PLAN_FAILED: {
             return {
                 ...prevState,
-                dishesWeekPlan: {
-                    ...prevState.dishesWeekPlan,
+                mealsPlan: {
+                    ...prevState.mealsPlan,
                     [payload.day]: [
-                        ...prevState.dishesWeekPlan[payload.day],
+                        ...prevState.mealsPlan[payload.day],
                         {
-                            ...prevState.dishesWeekPlan[payload.day].find(
+                            ...prevState.mealsPlan[payload.day].find(
                                 (dish) => dish.id === payload.id
                             ),
                             status: 'error',
@@ -100,13 +108,13 @@ function DishPlanReducer(prevState, { type, payload }) {
                 },
             }
         }
-        case ADD_DISH_TO_PLAN_START: {
+        case ADD_DISH_TO_PLAN_STARTED: {
             return {
                 ...prevState,
-                dishesWeekPlan: {
-                    ...prevState.dishesWeekPlan,
+                mealsPlan: {
+                    ...prevState.mealsPlan,
                     [payload.day]: [
-                        ...prevState.dishesWeekPlan[payload.day],
+                        ...prevState.mealsPlan[payload.day],
                         {
                             id: payload.id,
                             name: payload.name,
@@ -121,12 +129,12 @@ function DishPlanReducer(prevState, { type, payload }) {
         case ADD_DISH_TO_PLAN_SUCCEED: {
             return {
                 ...prevState,
-                dishesWeekPlan: {
-                    ...prevState.dishesWeekPlan,
+                mealsPlan: {
+                    ...prevState.mealsPlan,
                     [payload.day]: [
-                        ...prevState.dishesWeekPlan[payload.day],
+                        ...prevState.mealsPlan[payload.day],
                         {
-                            ...prevState.dishesWeekPlan[payload.day].find(
+                            ...prevState.mealsPlan[payload.day].find(
                                 (dish) => dish.id === payload.id
                             ),
                             status: 'error',
@@ -138,12 +146,12 @@ function DishPlanReducer(prevState, { type, payload }) {
         case ADD_DISH_TO_PLAN_FAILED: {
             return {
                 ...prevState,
-                dishesWeekPlan: {
-                    ...prevState.dishesWeekPlan,
+                mealsPlan: {
+                    ...prevState.mealsPlan,
                     [payload.day]: [
-                        ...prevState.dishesWeekPlan[payload.day],
+                        ...prevState.mealsPlan[payload.day],
                         {
-                            ...prevState.dishesWeekPlan[payload.day].find(
+                            ...prevState.mealsPlan[payload.day].find(
                                 (dish) => dish.id === payload.id
                             ),
                             status: 'error',
@@ -158,65 +166,88 @@ function DishPlanReducer(prevState, { type, payload }) {
     }
 }
 
-export function DishPlanProvider({ children }: DishPlanProviderProps) {
-    const [state, dispatch] = useReducer(DishPlanReducer, {
-        dishesWeekPlan: null,
+export function MealPlanProvider({ children }: MealPlanProviderProps) {
+    const [state, dispatch] = useReducer(mealPlanReducer, {
+        mealsPlan: null,
     })
 
     return (
-        <DishPlanStateContext.Provider value={state}>
-            <DishPlanDispatchContext.Provider value={dispatch}>
+        <MealPlanStateContext.Provider value={state}>
+            <MealPlanDispatchContext.Provider value={dispatch}>
                 {children}
-            </DishPlanDispatchContext.Provider>
-        </DishPlanStateContext.Provider>
+            </MealPlanDispatchContext.Provider>
+        </MealPlanStateContext.Provider>
     )
 }
 
-export function useDishPlanState() {
-    const context = useContext(DishPlanStateContext)
+function useMealPlanState() {
+    const context = useContext(MealPlanStateContext)
 
     if (context === undefined) {
-        throw new Error('DishPlanState must be used within a DishPlanProvider')
+        throw new Error('MealPlanState must be used within a MealPlanProvider')
     }
 
     return context
 }
 
-export function useDishPlanDispatch() {
-    const context = useContext(DishPlanDispatchContext)
+function useMealPlanDispatch() {
+    const context = useContext(MealPlanDispatchContext)
 
     if (context === undefined) {
         throw new Error(
-            'DishPlanDispatch must be used within a DishPlanProvider'
+            'MealPlanDispatch must be used within a MealPlanProvider'
         )
     }
 
     return context
 }
 
+export function useMealPlan() {
+    return { state: useMealPlanState(), dispatch: useMealPlanDispatch() }
+}
+
+export async function fetchMealPlan({ dispatch }) {
+    try {
+        const mealsPlan = await fetchMealPlanAPI()
+
+        dispatch({
+            type: GETTING_MEAL_PLAN_SUCCEED,
+            payload: mealsPlan,
+        })
+    } catch (error) {
+        dispatch({
+            type: GETTING_MEAL_PLAN_FAILED,
+            payload: {
+                error,
+            },
+        })
+    }
+}
+
 export async function addDishToPlan({
     dispatch,
-    dish: { id, day, name, ingredients, category },
+    dish: { day, name, ingredients, category },
 }) {
     dispatch({
-        type: ADD_DISH_TO_PLAN_START,
-        payload: { id, name, ingredients, day, category },
+        type: ADD_DISH_TO_PLAN_STARTED,
+        payload: { day, name, ingredients, category },
     })
 
     try {
-        const response = await addDishToPlanAPI({
-            id,
+        await addMealToPlanAPI({
             day,
+            dish: {
+                name,
+                ingredients,
+                category,
+            },
         })
-        const {
-            data: { id: dishResultId, day: dishResultDay },
-        } = await response.json()
 
         dispatch({
             type: ADD_DISH_TO_PLAN_SUCCEED,
             payload: {
-                id: dishResultId,
-                day: dishResultDay,
+                name,
+                day,
             },
         })
     } catch (error) {
@@ -224,33 +255,30 @@ export async function addDishToPlan({
             type: ADD_DISH_TO_PLAN_FAILED,
             payload: {
                 error,
-                id,
+                name,
                 day,
             },
         })
     }
 }
 
-export async function removeDishFromPlan({ dispatch, dish: { id, day } }) {
+export async function removeDishFromPlan({ dispatch, name, day }) {
     dispatch({
-        type: REMOVE_DISH_TO_PLAN_START,
-        payload: { id, day },
+        type: REMOVE_DISH_TO_PLAN_STARTED,
+        payload: { name, day },
     })
 
     try {
-        const response = await removeDishToPlanAPI({
-            id,
+        await removeMealFromPlanAPI({
+            dishName: name,
             day,
         })
-        const {
-            data: { id: dishResultId, day: dishResultDay },
-        } = await response.json()
 
         dispatch({
             type: REMOVE_DISH_TO_PLAN_SUCCEED,
             payload: {
-                id: dishResultId,
-                day: dishResultDay,
+                name,
+                day,
             },
         })
     } catch (error) {
@@ -258,7 +286,7 @@ export async function removeDishFromPlan({ dispatch, dish: { id, day } }) {
             type: REMOVE_DISH_TO_PLAN_FAILED,
             payload: {
                 error,
-                id,
+                name,
                 day,
             },
         })
