@@ -6,20 +6,20 @@ import Button from '@ui-components/atoms/Button'
 interface Props {
     labels?: {
         mealPlanButton?: string
-        actionsButton?: string
+        cookButton?: string
     }
 }
 
-export default function NavBar({
+export default function RecipeNavBar({
     labels: {
         mealPlanButton: mealPlanButtonLabel = 'Menu',
-        actionsButton: actionsButtonLabel = 'Cook & Plan',
+        cookButton: cookButtonLabel = 'Cook',
     } = {},
 }: Props): ReactElement {
     return (
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Link to={Routes.ACTIONS}>
-                <Button noBorders>{actionsButtonLabel}</Button>
+            <Link to={Routes.COOK}>
+                <Button noBorders>{cookButtonLabel}</Button>
             </Link>
 
             <Link to={Routes.ROOT}>

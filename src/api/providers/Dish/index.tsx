@@ -1,5 +1,8 @@
 import React, { createContext, useReducer, useContext, ReactNode } from 'react'
-import { addRecipe as addRecipeAPI } from 'api/services/DishRequests'
+import {
+    addRecipe as addRecipeAPI,
+    getAllRecipes as getRecipesAPI,
+} from 'api/services/DishRequests'
 
 type Action = { type: string; payload?: {} }
 type Dispatch = (action: Action) => void
@@ -15,8 +18,9 @@ type DishesProviderProps = { children: ReactNode }
 const DishesStateContext = createContext<State | undefined>(undefined)
 const DishesDispatchContext = createContext<Dispatch | undefined>(undefined)
 
-const { ADDING_RECIPE_STARTED } = {
+const { ADDING_RECIPE_STARTED, GET_RECIPES_SUCCEED } = {
     ADDING_RECIPE_STARTED: 'start adding a recipe',
+    GET_RECIPES_SUCCEED: 'getting all recipes succeed',
 }
 
 function dishesReducer(prevState, { type, payload }) {
@@ -25,6 +29,12 @@ function dishesReducer(prevState, { type, payload }) {
             return {
                 ...payload,
                 recipes: [...prevState.recipes, payload],
+            }
+        }
+        case GET_RECIPES_SUCCEED: {
+            return {
+                ...payload,
+                recipes: payload,
             }
         }
         default: {
@@ -87,6 +97,19 @@ export async function addRecipe({
             name,
             category,
             ingredients,
+        })
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export async function getRecipes({ dispatch }) {
+    try {
+        const response = await getRecipesAPI()
+
+        dispatch({
+            type: GET_RECIPES_SUCCEED,
+            payload: response,
         })
     } catch (error) {
         console.error(error)

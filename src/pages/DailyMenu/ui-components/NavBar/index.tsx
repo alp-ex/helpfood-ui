@@ -7,11 +7,11 @@ import { Routes } from 'Router'
 import { useCalendar, setCurrentDay } from 'api/providers/Calendar'
 
 interface Props {
-    labels?: { actionButton?: string }
+    labels?: { cookButton?: string }
 }
 
 export default function NavBar({
-    labels: { actionButton: actionButtonLabel = 'Actions' } = {},
+    labels: { cookButton: cookButtonLabel = 'Cook' } = {},
 }: Props): ReactElement {
     const {
         state: { weekDays, selectedDay },
@@ -39,8 +39,8 @@ export default function NavBar({
                 pickedDay={selectedDay}
             />
 
-            <Link to={Routes.ACTIONS}>
-                <Button noBorders>{actionButtonLabel}</Button>
+            <Link to={Routes.COOK}>
+                <Button noBorders>{cookButtonLabel}</Button>
             </Link>
         </ToolBar>
     )

@@ -4,7 +4,7 @@ import Label from '@ui-components/atoms/Label'
 import Chips from '@ui-components/atoms/Chips'
 import ToolBar from '@ui-components/atoms/ToolBar'
 import Button from '@ui-components/atoms/Button'
-import Select from '../Select'
+import Select from '../../../../../lib/ui-components/atoms/Select'
 import useForm from '@utils/useForm'
 import {
     searchCategories as searchCategoriesAPI,

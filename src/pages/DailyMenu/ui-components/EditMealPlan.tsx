@@ -3,8 +3,8 @@ import Button from '@ui-components/atoms/Button'
 import FullScreenDialog from '@ui-components/molecules/FullScreenDialog'
 import Label from '@ui-components/atoms/Label'
 import { useCalendar, setCurrentDay } from 'api/providers/Calendar'
-import Select from '../Select'
-import MealPlanForm from '../MealPlanForm'
+import Select from '../../../../lib/ui-components/atoms/Select'
+import MealPlanForm from './MealPlanForm'
 import { editMealInPlan } from 'api/services/MealPlanRequests'
 
 interface Props {
