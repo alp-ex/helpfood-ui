@@ -1,18 +1,24 @@
 import React, { ReactElement } from 'react'
+
+import {
+    CalendarProvider,
+    useCalendar,
+    setCurrentDay,
+} from 'api/providers/Calendar'
+import { MealPlanProvider } from 'api/providers/MealPlan'
+import MealsList from './ui-components/MealsList'
 import ToolBar from '@ui-components/atoms/ToolBar'
 import WeekDayPicker from '@ui-components/molecules/WeekDayPicker'
-import { Link } from 'react-router-dom'
 import Button from '@ui-components/atoms/Button'
-import { Routes } from 'Router'
-import { useCalendar, setCurrentDay } from 'api/providers/Calendar'
 
-interface Props {
-    labels?: { cookButton?: string }
+interface ActionBarProps {
+    labels?: {
+        editPlanButton?: string
+    }
 }
-
-export default function NavBar({
-    labels: { cookButton: cookButtonLabel = 'Cook' } = {},
-}: Props): ReactElement {
+const ActionBar = ({
+    labels: { editPlanButton: editPlanButtonLabel = 'Edit Plan' } = {},
+}: ActionBarProps): ReactElement => {
     const {
         state: { weekDays, selectedDay },
         dispatch: calendarDispatch,
@@ -39,9 +45,21 @@ export default function NavBar({
                 pickedDay={selectedDay}
             />
 
-            <Link to={Routes.COOK}>
-                <Button noBorders>{cookButtonLabel}</Button>
-            </Link>
+            <Button>{editPlanButtonLabel}</Button>
         </ToolBar>
+    )
+}
+
+export default function MealPlan(): ReactElement {
+    return (
+        <>
+            <CalendarProvider>
+                <ActionBar />
+
+                <MealPlanProvider>
+                    <MealsList />
+                </MealPlanProvider>
+            </CalendarProvider>
+        </>
     )
 }

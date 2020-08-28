@@ -17,6 +17,7 @@ export default function WeekDayPicker({ pickDay, weekDays, pickedDay }: Props) {
     return (
         <>
             <Button
+                style={{ root: { textTransform: 'capitalize' } }}
                 onClick={(event) => {
                     event.preventDefault()
                     setShouldRenderDialog(true)

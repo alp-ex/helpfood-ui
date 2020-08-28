@@ -1,11 +1,11 @@
 import React, { ChangeEvent, FocusEvent, Fragment } from 'react'
-import Form from './node_modules/@ui-components/atoms/Form'
-import SearchInput from './node_modules/@ui-components/atoms/SearchInput'
-import MenuList from './node_modules/@ui-components/molecules/MenuList'
-import Chips from './node_modules/@ui-components/atoms/Chips'
-import ToolBar from './node_modules/@ui-components/atoms/ToolBar'
-import Button from './node_modules/@ui-components/atoms/Button'
-import Label from './node_modules/@ui-components/atoms/Label'
+import Form from '@ui-components/atoms/Form'
+import SearchInput from '@ui-components/atoms/SearchInput'
+import MenuList from '@ui-components/molecules/MenuList'
+import Chips from '@ui-components/atoms/Chips'
+import ToolBar from '@ui-components/atoms/ToolBar'
+import Button from '@ui-components/atoms/Button'
+import Label from '@ui-components/atoms/Label'
 
 type Dish = {
     id: string

@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect } from 'react'
 
-import NavBar from './ui-components/RecipeNavBar'
 import CreateRecipeSection from './ui-components/CreateRecipeSection'
 import RecipesList from './ui-components/RecipesList'
 import { useDish, DishesProvider, getRecipes } from 'api/providers/Dish'
@@ -20,11 +19,9 @@ const RecipesListContainer = ({ renderRecipesList }) => {
     return renderRecipesList({ recipes })
 }
 
-export default function Cook({}: Props): ReactElement {
+export default function Recipes({}: Props): ReactElement {
     return (
         <>
-            <NavBar />
-
             <DishesProvider>
                 <CreateRecipeSection />
                 <RecipesListContainer

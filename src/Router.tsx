@@ -1,21 +1,23 @@
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 
 import React from 'react'
-import DailyMenu from 'pages/DailyMenu'
-import Cook from 'pages/Cook'
+import MealPlan from 'pages/MealPlan'
+import Recipes from 'pages/Recipes'
 
 export const Routes = Object.freeze({
     ROOT: '/',
-    COOK: '/cook',
+    MEAL_PLAN: '/meal-plan',
+    RECIPES: '/recipes',
 })
 
 const Router = () => {
     return (
         <>
             <Switch>
-                <Route exact path={Routes.ROOT} render={() => <DailyMenu />} />
+                <Redirect exact from={Routes.ROOT} to={Routes.RECIPES} />
 
-                <Route path={Routes.COOK} render={() => <Cook />} />
+                <Route path={Routes.MEAL_PLAN} render={() => <MealPlan />} />
+                <Route path={Routes.RECIPES} render={() => <Recipes />} />
             </Switch>
         </>
     )

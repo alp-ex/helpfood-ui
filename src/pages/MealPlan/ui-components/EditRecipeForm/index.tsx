@@ -1,10 +1,10 @@
 import React, { ChangeEvent, useState } from 'react'
-import Form from './node_modules/@ui-components/atoms/Form'
-import Label from './node_modules/@ui-components/atoms/Label'
-import Chips from './node_modules/@ui-components/atoms/Chips'
-import ToolBar from './node_modules/@ui-components/atoms/ToolBar'
-import Button from './node_modules/@ui-components/atoms/Button'
-import Select from '../Select'
+import Form from '@ui-components/atoms/Form'
+import Label from '@ui-components/atoms/Label'
+import Chips from '@ui-components/atoms/Chips'
+import ToolBar from '@ui-components/atoms/ToolBar'
+import Button from '@ui-components/atoms/Button'
+import Select from '../../../ActionsDashboard/ui-components/Select'
 
 interface Props {
     labels?: {
