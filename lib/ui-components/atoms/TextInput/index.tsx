@@ -18,10 +18,9 @@ interface Props {
     onBlur?: (event: FocusEvent) => void
 }
 
-export default forwardRef(function SearchInput(
+export default forwardRef(function TextInput(
     {
         children,
-        // looks like a workaround right ? off value doesn't work
         autoComplete = 'nope',
         onFocus,
         onBlur,

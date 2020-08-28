@@ -12,15 +12,6 @@ type Meal = {
 type Action = { type: string; payload?: {} }
 type Dispatch = (action: Action) => void
 type State = {
-    // {
-    //     mealsPlan: {
-    //         monday: {
-    //             dessert: [
-    //                 { name: 'banana bread', ingredients: ['banana', 'bread'] },
-    //             ],
-    //         },
-    //     },
-    // }
     mealsPlan: { [key: string]: { [key: string]: ReadonlyArray<Meal> } }
 }
 
@@ -31,22 +22,12 @@ const MealPlanDispatchContext = createContext<Dispatch | undefined>(undefined)
 
 const {
     ADD_DISH_TO_PLAN_STARTED,
-    ADD_DISH_TO_PLAN_SUCCEED,
-    ADD_DISH_TO_PLAN_FAILED,
     REMOVE_DISH_TO_PLAN_STARTED,
-    REMOVE_DISH_TO_PLAN_SUCCEED,
-    REMOVE_DISH_TO_PLAN_FAILED,
     GETTING_MEAL_PLAN_SUCCEED,
-    GETTING_MEAL_PLAN_FAILED,
 } = {
     GETTING_MEAL_PLAN_SUCCEED: 'getting meal plan succeed',
-    GETTING_MEAL_PLAN_FAILED: 'getting meal plan failed',
     ADD_DISH_TO_PLAN_STARTED: 'start adding dish to meal plan',
-    ADD_DISH_TO_PLAN_SUCCEED: 'adding dish to meal plan succeed',
-    ADD_DISH_TO_PLAN_FAILED: 'adding dish to meal plan failed',
     REMOVE_DISH_TO_PLAN_STARTED: 'start removing dish to meal plan',
-    REMOVE_DISH_TO_PLAN_SUCCEED: 'removing dish to meal plan succeed',
-    REMOVE_DISH_TO_PLAN_FAILED: 'removing dish to meal plan failed',
 }
 
 function mealPlanReducer(prevState, { type, payload }) {
@@ -66,43 +47,8 @@ function mealPlanReducer(prevState, { type, payload }) {
                         ...prevState.mealsPlan[payload.day],
                         {
                             ...prevState.mealsPlan[payload.day].find(
-                                (dish) => dish.id === payload.id
+                                (dish) => dish.name === payload.name
                             ),
-                            status: 'pending',
-                        },
-                    ],
-                },
-            }
-        }
-        case REMOVE_DISH_TO_PLAN_SUCCEED: {
-            return {
-                ...prevState,
-                mealsPlan: {
-                    ...prevState.mealsPlan,
-                    [payload.day]: [
-                        ...prevState.mealsPlan[payload.day],
-                        {
-                            ...prevState.mealsPlan[payload.day].find(
-                                (dish) => dish.id === payload.id
-                            ),
-                            status: 'deleted',
-                        },
-                    ],
-                },
-            }
-        }
-        case REMOVE_DISH_TO_PLAN_FAILED: {
-            return {
-                ...prevState,
-                mealsPlan: {
-                    ...prevState.mealsPlan,
-                    [payload.day]: [
-                        ...prevState.mealsPlan[payload.day],
-                        {
-                            ...prevState.mealsPlan[payload.day].find(
-                                (dish) => dish.id === payload.id
-                            ),
-                            status: 'error',
                         },
                     ],
                 },
@@ -116,45 +62,9 @@ function mealPlanReducer(prevState, { type, payload }) {
                     [payload.day]: [
                         ...prevState.mealsPlan[payload.day],
                         {
-                            id: payload.id,
                             name: payload.name,
                             ingredients: payload.ingredients,
                             category: payload.category,
-                            status: 'pending',
-                        },
-                    ],
-                },
-            }
-        }
-        case ADD_DISH_TO_PLAN_SUCCEED: {
-            return {
-                ...prevState,
-                mealsPlan: {
-                    ...prevState.mealsPlan,
-                    [payload.day]: [
-                        ...prevState.mealsPlan[payload.day],
-                        {
-                            ...prevState.mealsPlan[payload.day].find(
-                                (dish) => dish.id === payload.id
-                            ),
-                            status: 'error',
-                        },
-                    ],
-                },
-            }
-        }
-        case ADD_DISH_TO_PLAN_FAILED: {
-            return {
-                ...prevState,
-                mealsPlan: {
-                    ...prevState.mealsPlan,
-                    [payload.day]: [
-                        ...prevState.mealsPlan[payload.day],
-                        {
-                            ...prevState.mealsPlan[payload.day].find(
-                                (dish) => dish.id === payload.id
-                            ),
-                            status: 'error',
                         },
                     ],
                 },
@@ -215,12 +125,7 @@ export async function fetchMealPlan({ dispatch }) {
             payload: mealsPlan,
         })
     } catch (error) {
-        dispatch({
-            type: GETTING_MEAL_PLAN_FAILED,
-            payload: {
-                error,
-            },
-        })
+        console.error(error)
     }
 }
 
@@ -242,23 +147,8 @@ export async function addDishToPlan({
                 category,
             },
         })
-
-        dispatch({
-            type: ADD_DISH_TO_PLAN_SUCCEED,
-            payload: {
-                name,
-                day,
-            },
-        })
     } catch (error) {
-        dispatch({
-            type: ADD_DISH_TO_PLAN_FAILED,
-            payload: {
-                error,
-                name,
-                day,
-            },
-        })
+        console.error(error)
     }
 }
 
@@ -273,22 +163,7 @@ export async function removeDishFromPlan({ dispatch, name, day }) {
             dishName: name,
             day,
         })
-
-        dispatch({
-            type: REMOVE_DISH_TO_PLAN_SUCCEED,
-            payload: {
-                name,
-                day,
-            },
-        })
     } catch (error) {
-        dispatch({
-            type: REMOVE_DISH_TO_PLAN_FAILED,
-            payload: {
-                error,
-                name,
-                day,
-            },
-        })
+        console.error(error)
     }
 }

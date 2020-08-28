@@ -4,18 +4,27 @@ const httpRequests = new HTTPCommon({
     baseUrl: `http://localhost:3000`,
 })
 
-export const getAllDishes = () => httpRequests.get(`/dishes`)
+export const getAllRecipes = () => httpRequests.get(`/recipes`)
 
-export const getDish = ({ name }) => httpRequests.get(`/dishes/${name}`)
+export const getRecipe = ({ name }) => httpRequests.get(`/recipes?name=${name}`)
 
-export const editDish = ({ name, ingredients, category }) =>
-    httpRequests.put(`/dishes/${name}`, {
+export const searchRecipes = ({ q }) => httpRequests.get(`/recipes?q=${q}`)
+
+export const searchCategories = ({ q }) =>
+    httpRequests.get(`/categories?q=${q}`)
+
+export const searchIngredients = ({ q }) =>
+    httpRequests.get(`/ingredients?q=${q}`)
+
+export const editRecipe = ({ name, ingredients, category }) =>
+    httpRequests.put(`/recipes?name=${name}`, {
         data: { name, ingredients, category },
     })
 
-export const addDish = ({ name, ingredients, category }) =>
-    httpRequests.post(`/dishes/${name}`, {
+export const addRecipe = ({ name, ingredients, category }) =>
+    httpRequests.post(`/recipes`, {
         data: { name, ingredients, category },
     })
 
-export const removeDish = ({ name }) => httpRequests.delete(`/dishes/${name}`)
+export const removeRecipe = ({ name }) =>
+    httpRequests.delete(`/recipes?name=${name}`)

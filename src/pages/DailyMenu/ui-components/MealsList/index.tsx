@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect } from 'react'
-import { useCalendar } from 'api/providers/calendar/context'
-import { useMealPlan, fetchMealPlan } from 'api/providers/mealPlan/context'
+import { useCalendar } from 'api/providers/Calendar'
+import { useMealPlan, fetchMealPlan } from 'api/providers/MealPlan'
 import LabelledList from '@ui-components/molecules/LabelledList'
 import Label from '@ui-components/atoms/Label'
 
@@ -25,11 +25,11 @@ export default function MealsList({}: Props): ReactElement {
                 ? null
                 : Object.keys(mealsPlan[selectedDay]).map((category) => (
                       <LabelledList
-                          key={name}
+                          key={`${name}${category}`}
                           renderLabel={() => <Label>{category}</Label>}
                           items={mealsPlan[selectedDay][category].map(
                               ({ ingredients, name }) => ({
-                                  id: name,
+                                  id: `${name}${category}`,
                                   render: () => (
                                       <LabelledList
                                           renderLabel={() => (

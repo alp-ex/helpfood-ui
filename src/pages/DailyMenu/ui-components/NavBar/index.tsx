@@ -4,7 +4,7 @@ import WeekDayPicker from '@ui-components/molecules/WeekDayPicker'
 import { Link } from 'react-router-dom'
 import Button from '@ui-components/atoms/Button'
 import { Routes } from 'Router'
-import { useCalendar, setCurrentDay } from 'api/providers/calendar/context'
+import { useCalendar, setCurrentDay } from 'api/providers/Calendar'
 
 interface Props {
     labels?: { actionButton?: string }

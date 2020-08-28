@@ -35,10 +35,16 @@ export class HTTPCommon implements HTTPCommonPropreties {
     }
 
     put(path, { data }) {
-        return this.httpFetch(path, { method: 'PUT', body: data })
+        return this.httpFetch(path, {
+            method: 'PUT',
+            body: JSON.stringify(data),
+        })
     }
 
     post(path, { data }) {
-        return this.httpFetch(path, { method: 'POST', body: data })
+        return this.httpFetch(path, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        })
     }
 }

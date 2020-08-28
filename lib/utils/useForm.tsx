@@ -1,9 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
-export default function useForm({ defaultValues }) {
-    const [values, setValues] = useState(defaultValues)
+export default function useForm({ defaultValue }) {
+    const [value, setValue] = useState(defaultValue)
 
-    // errors/helpers handling
-
-    return { values, setValues }
+    return { value, setValue }
 }

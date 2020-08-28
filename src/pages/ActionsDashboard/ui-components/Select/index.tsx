@@ -1,20 +1,20 @@
 import React, { ReactElement, ChangeEvent, ElementType, useState } from 'react'
 import MenuList from '@ui-components/molecules/MenuList'
-import SearchInput from '@ui-components/atoms/SearchInput'
+import TextInput from '@ui-components/atoms/TextInput'
 
 interface Props {
     component?: ElementType
-    onChange: (event: ChangeEvent) => void
+    onChange?: (event: ChangeEvent<HTMLInputElement>) => void
     value?: string
-    items: ReadonlyArray<{ id: string; name: string }>
-    onOptionClick: ({ id, name }: { id: string; name: string }) => void
+    options: ReadonlyArray<{ label: string; value: string }>
+    onOptionClick: (value: string) => void
 }
 
 export default function Select({
     component: Component = 'div',
     onChange,
     value,
-    items,
+    options,
     onOptionClick,
 }: Props): ReactElement {
     const [inputFocused, setInputFocused] = useState(false)
@@ -25,7 +25,7 @@ export default function Select({
                 position: 'relative',
             }}
         >
-            <SearchInput
+            <TextInput
                 onFocus={() => {
                     setInputFocused(true)
                 }}
@@ -36,7 +36,7 @@ export default function Select({
                 value={value}
             />
 
-            {inputFocused && items.length > 0 ? (
+            {inputFocused && options.length > 0 ? (
                 <MenuList
                     style={{
                         root: {
@@ -48,14 +48,14 @@ export default function Select({
                         },
                     }}
                 >
-                    {items.map(({ id, name }) => (
+                    {options.map(({ label, value }) => (
                         <MenuList.Item
-                            key={id}
+                            key={label}
                             onMouseDown={() => {
-                                onOptionClick({ id, name })
+                                onOptionClick(value)
                             }}
                         >
-                            {name}
+                            {label}
                         </MenuList.Item>
                     ))}
                 </MenuList>
