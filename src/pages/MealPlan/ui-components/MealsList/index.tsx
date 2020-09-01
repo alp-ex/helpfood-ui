@@ -1,8 +1,9 @@
 import React, { ReactElement, useEffect } from 'react'
 import { useCalendar } from 'api/providers/Calendar'
-import { useMealPlan, fetchMealPlan } from 'api/providers/MealPlan'
+import { useMealPlan, getMealPlan } from 'api/providers/MealPlan'
 import LabelledList from '@ui-components/molecules/LabelledList'
 import Label from '@ui-components/atoms/Label'
+import { useDish, getCategories } from 'api/providers/Dish'
 
 interface Props {}
 
@@ -11,25 +12,34 @@ export default function MealsList({}: Props): ReactElement {
         state: { selectedDay },
     } = useCalendar()
     const {
-        state: { mealsPlan },
+        state: { meals },
         dispatch: mealPlanDispatch,
     } = useMealPlan()
+    const {
+        state: { categories },
+        dispatch: dishDispatch,
+    } = useDish()
 
     useEffect(() => {
-        fetchMealPlan({ dispatch: mealPlanDispatch })
+        getCategories({ dispatch: dishDispatch })
+        getMealPlan({ dispatch: mealPlanDispatch, day: selectedDay })
     }, [])
 
     return (
         <>
-            {mealsPlan === null
+            {Math.min(meals.length, categories.length) === 0
                 ? null
-                : Object.keys(mealsPlan[selectedDay]).map((category) => (
+                : categories.map((categoryName) => (
                       <LabelledList
-                          key={`${name}${category}`}
-                          renderLabel={() => <Label>{category}</Label>}
-                          items={mealsPlan[selectedDay][category].map(
-                              ({ ingredients, name }) => ({
-                                  id: `${name}${category}`,
+                          key={`${categoryName}`}
+                          renderLabel={() => <Label>{categoryName}</Label>}
+                          items={meals
+                              .filter(
+                                  ({ category: mealCategory }) =>
+                                      categoryName === mealCategory
+                              )
+                              .map(({ ingredients, name }) => ({
+                                  id: `${name}${categoryName}`,
                                   render: () => (
                                       <LabelledList
                                           renderLabel={() => (
@@ -47,8 +57,7 @@ export default function MealsList({}: Props): ReactElement {
                                           )}
                                       />
                                   ),
-                              })
-                          )}
+                              }))}
                       />
                   ))}
         </>

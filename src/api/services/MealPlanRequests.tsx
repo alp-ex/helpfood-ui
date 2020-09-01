@@ -1,26 +1,25 @@
 import { HTTPCommon } from '@utils/http-common'
 
 const httpRequests = new HTTPCommon({
-    baseUrl: `http://localhost:3000/mealPlans`,
+    baseUrl: `http://localhost:3000/mealPlan`,
 })
 
-// dto ? schemas ? we might need a way to interface/convert to expected params and responses format
-export const getWeekPlan = () => httpRequests.get('')
+export const getMealPlan = ({ day }) => httpRequests.get(`?day=${day}`)
 
-export const getDayMealPlan = ({ day }) => httpRequests.get(`/${day}`)
-
-export const editMealInPlan = ({
-    day,
-    dish: { name, ingredients, category },
-}) =>
-    httpRequests.put(`/${day}`, {
-        data: { day, dish: { name, ingredients, category } },
+export const addMealToPlan = ({ meal: { name, category, ingredients, day } }) =>
+    httpRequests.post(`?day=${day}`, {
+        data: { name, category, ingredients, day },
     })
 
-export const addMealToPlan = ({ day, dish: { name, ingredients, category } }) =>
-    httpRequests.post(`/${day}`, {
-        data: { day, dish: { name, ingredients, category } },
-    })
+export const removeMealsFromPlan = async ({ day, meals }) => {
+    const mealsResponse = await getMealPlan({ day })
+    const mealsToDelete = mealsResponse.filter(({ name }) =>
+        meals.includes(name)
+    )
 
-export const removeMealFromPlan = ({ day, dishName }) =>
-    httpRequests.delete(`/${day}/${dishName}`)
+    Promise.all(
+        mealsToDelete.map(({ id }) => {
+            return httpRequests.delete(`/${id}`)
+        })
+    )
+}

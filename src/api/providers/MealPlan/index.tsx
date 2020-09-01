@@ -1,18 +1,20 @@
 import React, { createContext, useReducer, useContext, ReactNode } from 'react'
 import {
-    getWeekPlan as fetchMealPlanAPI,
     addMealToPlan as addMealToPlanAPI,
-    removeMealFromPlan as removeMealFromPlanAPI,
+    removeMealsFromPlan as removeMealsFromPlanAPI,
+    getMealPlan as getMealPlanAPI,
 } from 'api/services/MealPlanRequests'
 
 type Meal = {
     name: string
+    day: string
+    category: string
     ingredients: ReadonlyArray<string>
 }
 type Action = { type: string; payload?: {} }
 type Dispatch = (action: Action) => void
 type State = {
-    mealsPlan: { [key: string]: { [key: string]: ReadonlyArray<Meal> } }
+    meals: ReadonlyArray<Meal>
 }
 
 type MealPlanProviderProps = { children: ReactNode }
@@ -21,13 +23,13 @@ const MealPlanStateContext = createContext<State | undefined>(undefined)
 const MealPlanDispatchContext = createContext<Dispatch | undefined>(undefined)
 
 const {
-    ADD_DISH_TO_PLAN_STARTED,
-    REMOVE_DISH_TO_PLAN_STARTED,
+    ADD_MEAL_TO_PLAN_STARTED,
+    REMOVE_MEAL_FROM_PLAN_STARTED,
     GETTING_MEAL_PLAN_SUCCEED,
 } = {
     GETTING_MEAL_PLAN_SUCCEED: 'getting meal plan succeed',
-    ADD_DISH_TO_PLAN_STARTED: 'start adding dish to meal plan',
-    REMOVE_DISH_TO_PLAN_STARTED: 'start removing dish to meal plan',
+    ADD_MEAL_TO_PLAN_STARTED: 'start adding dish to meal plan',
+    REMOVE_MEAL_FROM_PLAN_STARTED: 'start removing dish to meal plan',
 }
 
 function mealPlanReducer(prevState, { type, payload }) {
@@ -35,39 +37,21 @@ function mealPlanReducer(prevState, { type, payload }) {
         case GETTING_MEAL_PLAN_SUCCEED: {
             return {
                 ...prevState,
-                mealsPlan: payload,
+                meals: payload,
             }
         }
-        case REMOVE_DISH_TO_PLAN_STARTED: {
+        case REMOVE_MEAL_FROM_PLAN_STARTED: {
             return {
                 ...prevState,
-                mealsPlan: {
-                    ...prevState.mealsPlan,
-                    [payload.day]: [
-                        ...prevState.mealsPlan[payload.day],
-                        {
-                            ...prevState.mealsPlan[payload.day].find(
-                                (dish) => dish.name === payload.name
-                            ),
-                        },
-                    ],
-                },
+                meals: prevState.meals.filter(
+                    ({ name, day }) => !payload[day].includes(name)
+                ),
             }
         }
-        case ADD_DISH_TO_PLAN_STARTED: {
+        case ADD_MEAL_TO_PLAN_STARTED: {
             return {
                 ...prevState,
-                mealsPlan: {
-                    ...prevState.mealsPlan,
-                    [payload.day]: [
-                        ...prevState.mealsPlan[payload.day],
-                        {
-                            name: payload.name,
-                            ingredients: payload.ingredients,
-                            category: payload.category,
-                        },
-                    ],
-                },
+                meals: [...prevState.meals, payload],
             }
         }
         default: {
@@ -78,7 +62,7 @@ function mealPlanReducer(prevState, { type, payload }) {
 
 export function MealPlanProvider({ children }: MealPlanProviderProps) {
     const [state, dispatch] = useReducer(mealPlanReducer, {
-        mealsPlan: null,
+        meals: [],
     })
 
     return (
@@ -116,51 +100,47 @@ export function useMealPlan() {
     return { state: useMealPlanState(), dispatch: useMealPlanDispatch() }
 }
 
-export async function fetchMealPlan({ dispatch }) {
+export async function getMealPlan({ dispatch, day }) {
     try {
-        const mealsPlan = await fetchMealPlanAPI()
+        const meals = await getMealPlanAPI({ day })
 
         dispatch({
             type: GETTING_MEAL_PLAN_SUCCEED,
-            payload: mealsPlan,
+            payload: meals,
         })
     } catch (error) {
         console.error(error)
     }
 }
 
-export async function addDishToPlan({
+export async function addMealToPlan({
     dispatch,
-    dish: { day, name, ingredients, category },
+    meal: { name, category, ingredients },
+    day,
 }) {
     dispatch({
-        type: ADD_DISH_TO_PLAN_STARTED,
-        payload: { day, name, ingredients, category },
+        type: ADD_MEAL_TO_PLAN_STARTED,
+        payload: { day, name, category, ingredients },
     })
 
     try {
         await addMealToPlanAPI({
-            day,
-            dish: {
-                name,
-                ingredients,
-                category,
-            },
+            meal: { day, name, category, ingredients },
         })
     } catch (error) {
         console.error(error)
     }
 }
 
-export async function removeDishFromPlan({ dispatch, name, day }) {
+export async function removeMealsFromPlan({ dispatch, meals, day }) {
     dispatch({
-        type: REMOVE_DISH_TO_PLAN_STARTED,
-        payload: { name, day },
+        type: REMOVE_MEAL_FROM_PLAN_STARTED,
+        payload: { [day]: meals },
     })
 
     try {
-        await removeMealFromPlanAPI({
-            dishName: name,
+        await removeMealsFromPlanAPI({
+            meals,
             day,
         })
     } catch (error) {

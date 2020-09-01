@@ -1,7 +1,8 @@
 import React, { createContext, useReducer, useContext, ReactNode } from 'react'
 import {
     addRecipe as addRecipeAPI,
-    getAllRecipes as getRecipesAPI,
+    getRecipes as getRecipesAPI,
+    getCategories as getCategoriesAPI,
 } from 'api/services/DishRequests'
 
 type Action = { type: string; payload?: {} }
@@ -12,14 +13,16 @@ type State = {
         category: string
         ingredients: ReadonlyArray<string>
     }>
+    categories: ReadonlyArray<string>
 }
 type DishesProviderProps = { children: ReactNode }
 
 const DishesStateContext = createContext<State | undefined>(undefined)
 const DishesDispatchContext = createContext<Dispatch | undefined>(undefined)
 
-const { ADDING_RECIPE_STARTED, GET_RECIPES_SUCCEED } = {
+const { ADDING_RECIPE_STARTED, GET_RECIPES_SUCCEED, GET_CATEGORIES_SUCCEED } = {
     ADDING_RECIPE_STARTED: 'start adding a recipe',
+    GET_CATEGORIES_SUCCEED: 'getting all categories succeed',
     GET_RECIPES_SUCCEED: 'getting all recipes succeed',
 }
 
@@ -37,6 +40,12 @@ function dishesReducer(prevState, { type, payload }) {
                 recipes: payload,
             }
         }
+        case GET_CATEGORIES_SUCCEED: {
+            return {
+                ...payload,
+                categories: payload,
+            }
+        }
         default: {
             throw new Error(`Unhandled action type: ${type}`)
         }
@@ -46,6 +55,7 @@ function dishesReducer(prevState, { type, payload }) {
 export function DishesProvider({ children }: DishesProviderProps) {
     const [state, dispatch] = useReducer(dishesReducer, {
         recipes: [],
+        categories: [],
     })
 
     return (
@@ -110,6 +120,19 @@ export async function getRecipes({ dispatch }) {
         dispatch({
             type: GET_RECIPES_SUCCEED,
             payload: response,
+        })
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export async function getCategories({ dispatch }) {
+    try {
+        const response = await getCategoriesAPI()
+
+        dispatch({
+            type: GET_CATEGORIES_SUCCEED,
+            payload: response.map(({ name }) => name),
         })
     } catch (error) {
         console.error(error)

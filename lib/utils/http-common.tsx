@@ -30,8 +30,11 @@ export class HTTPCommon implements HTTPCommonPropreties {
         return this.httpFetch(path)
     }
 
-    delete(path) {
-        return this.httpFetch(path, { method: 'DELETE' })
+    delete(path, { data = null } = {}) {
+        return this.httpFetch(path, {
+            method: 'DELETE',
+            body: data === null ? null : JSON.stringify(data),
+        })
     }
 
     put(path, { data }) {

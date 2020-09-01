@@ -4,7 +4,9 @@ const httpRequests = new HTTPCommon({
     baseUrl: `http://localhost:3000`,
 })
 
-export const getAllRecipes = () => httpRequests.get(`/recipes`)
+export const getCategories = () => httpRequests.get(`/categories`)
+
+export const getRecipes = () => httpRequests.get(`/recipes`)
 
 export const getRecipe = ({ name }) => httpRequests.get(`/recipes?name=${name}`)
 

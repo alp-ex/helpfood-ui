@@ -9,16 +9,15 @@ import { MealPlanProvider } from 'api/providers/MealPlan'
 import MealsList from './ui-components/MealsList'
 import ToolBar from '@ui-components/atoms/ToolBar'
 import WeekDayPicker from '@ui-components/molecules/WeekDayPicker'
-import Button from '@ui-components/atoms/Button'
+import MealPlanEditor from './ui-components/MealPlanEditor'
+import { DishesProvider } from 'api/providers/Dish'
 
-interface ActionBarProps {
+interface MealActionsProps {
     labels?: {
         editPlanButton?: string
     }
 }
-const ActionBar = ({
-    labels: { editPlanButton: editPlanButtonLabel = 'Edit Plan' } = {},
-}: ActionBarProps): ReactElement => {
+const MealActions = ({ labels: {} = {} }: MealActionsProps): ReactElement => {
     const {
         state: { weekDays, selectedDay },
         dispatch: calendarDispatch,
@@ -45,7 +44,7 @@ const ActionBar = ({
                 pickedDay={selectedDay}
             />
 
-            <Button>{editPlanButtonLabel}</Button>
+            <MealPlanEditor />
         </ToolBar>
     )
 }
@@ -54,10 +53,12 @@ export default function MealPlan(): ReactElement {
     return (
         <>
             <CalendarProvider>
-                <ActionBar />
-
                 <MealPlanProvider>
-                    <MealsList />
+                    <MealActions />
+
+                    <DishesProvider>
+                        <MealsList />
+                    </DishesProvider>
                 </MealPlanProvider>
             </CalendarProvider>
         </>

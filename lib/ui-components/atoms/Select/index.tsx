@@ -6,8 +6,8 @@ interface Props {
     component?: ElementType
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void
     value?: string
-    options: ReadonlyArray<{ label: string; value: string }>
-    onOptionClick: (value: string) => void
+    options: ReadonlyArray<{ label: string; value: any }>
+    onOptionClick: (value: any) => void
 }
 
 export default function Select({

@@ -7,6 +7,7 @@ import React, {
 
 interface Props {
     children: ReactNode
+    onClick: () => void
     onClose?: (event: MouseEvent) => void
     style?: { root?: CSSProperties; closeButton?: CSSProperties }
 }
@@ -37,10 +38,12 @@ const List = function List({
 export default function Chips({
     children,
     onClose,
+    onClick,
     style: { root: customRootStyle, closeButton: customCloseButtonStyle } = {},
 }: Props): ReactElement {
     return (
         <div
+            onClick={onClick}
             style={{
                 display: 'flex',
                 justifyContent: 'space-between',

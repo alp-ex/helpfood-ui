@@ -1,29 +1,34 @@
 import React, { useState } from 'react'
 import Form from '@ui-components/atoms/Form'
-import Chips from '@ui-components/atoms/Chips'
 import ToolBar from '@ui-components/atoms/ToolBar'
 import Button from '@ui-components/atoms/Button'
 import Select from '../../../../../lib/ui-components/atoms/Select'
 import useForm from '@utils/useForm'
-import { searchRecipes as searchRecipesAPI } from 'api/services/DishRequests'
-import { useCalendar } from 'api/providers/Calendar'
 
 interface Props {
     labels?: {
         validationButton?: string
         abortButton?: string
     }
-    defaultValues?: {
-        recipesName?: ReadonlyArray<string>
-    }
     onValidate: ({
-        recipes,
-        day,
+        name,
+        category,
+        ingredients,
     }: {
-        recipes: ReadonlyArray<string>
-        day: string
+        name: string
+        category: string
+        ingredients: ReadonlyArray<string>
     }) => void
     onAbort: () => void
+    getMealsOptions: ({
+        q: string,
+    }) => Promise<
+        ReadonlyArray<{
+            name: string
+            category: string
+            ingredients: ReadonlyArray<string>
+        }>
+    >
 }
 
 export default function MealPlanForm({
@@ -31,54 +36,49 @@ export default function MealPlanForm({
         validationButton: validationButtonLabel = 'Confirm',
         abortButton: abortButtonLabel = 'Abort',
     } = {},
-    defaultValues: { recipesName: defaultRecipesName = [] } = {},
     onValidate,
     onAbort,
+    getMealsOptions,
 }: Props) {
-    const [recipesOptions, setRecipesOptions] = useState([])
-
-    const { value: recipesNameValues, setValue: onRecipeNameChange } = useForm({
-        defaultValue: defaultRecipesName,
-    })
+    const [mealOptions, setMealsOptions] = useState([])
     const {
-        state: { selectedDay },
-    } = useCalendar()
+        value: {
+            name: mealNameValue,
+            category: mealCategoryValue,
+            ingredients: mealIngredientsValue,
+        },
+        setValue: onMealChange,
+    } = useForm({
+        defaultValue: {
+            name: '',
+            category: '',
+            ingredients: [],
+        },
+    })
 
     return (
         <Form>
             <Select
                 onChange={(event) => {
-                    searchRecipesAPI({ q: event.target.value }).then(
-                        (recipes) => {
-                            setRecipesOptions(recipes.map(({ name }) => ({
-                                label: name,
-                                value: name,
-                            }))
+                    getMealsOptions({ q: event.target.value }).then(
+                        (mealsOptions) => {
+                            setMealsOptions(
+                                mealsOptions.map(
+                                    ({ name, category, ingredients }) => ({
+                                        label: name,
+                                        value: { name, category, ingredients },
+                                    })
+                                )
+                            )
                         }
                     )
-                    onRecipeNameChange((prevState) => [
-                        ...prevState,
-                        event.target.value,
-                    ])
                 }}
-                onOptionClick={(name) => {
-                    onRecipeNameChange((prevState) => [...prevState, name])
+                onOptionClick={({ name, category, ingredients }) => {
+                    onMealChange({ name, category, ingredients })
                 }}
-                options={recipesOptions}
+                options={mealOptions}
+                value={mealNameValue}
             />
-
-            {recipesNameValues.map((recipeName) => (
-                <Chips
-                    key={recipeName}
-                    onClose={() =>
-                        onRecipeNameChange((prevState) =>
-                            prevState.filter((recipe) => recipe !== recipeName)
-                        )
-                    }
-                >
-                    {recipeName}
-                </Chips>
-            ))}
 
             <ToolBar
                 style={{
@@ -93,15 +93,17 @@ export default function MealPlanForm({
                 <Button onClick={onAbort}>{abortButtonLabel}</Button>
 
                 <Button
-                    style={{
-                        root: { position: 'fixed', bottom: '1em' },
-                    }}
-                    onClick={() =>
+                    onClick={() => {
+                        if (mealNameValue === '') {
+                            return
+                        }
+
                         onValidate({
-                            recipes: recipesNameValues,
-                            day: selectedDay,
+                            name: mealNameValue,
+                            category: mealCategoryValue,
+                            ingredients: mealIngredientsValue,
                         })
-                    }
+                    }}
                 >
                     {validationButtonLabel}
                 </Button>
