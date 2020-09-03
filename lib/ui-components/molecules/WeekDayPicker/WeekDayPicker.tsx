@@ -1,8 +1,7 @@
-import Button from '@ui-components/atoms/Button'
 import React, { useState, useRef, Dispatch } from 'react'
 import { createPortal } from 'react-dom'
-import FullScreenDialog from '../FullScreenDialog'
-import SelectListView from '../SelectListView'
+import { Button } from '@ui-components/atoms'
+import { FullScreenDialog, SelectListView } from '@ui-components/molecules'
 
 interface Props {
     pickDay: (pickedDay: string | Dispatch<any>) => void

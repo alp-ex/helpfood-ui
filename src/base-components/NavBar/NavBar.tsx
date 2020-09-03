@@ -1,8 +1,7 @@
 import React, { ReactElement } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Routes } from 'Router'
-import Button from '@ui-components/atoms/Button'
-import Label from '@ui-components/atoms/Label'
+import { Routes } from 'base-components/Router/Router'
+import { Label, Button } from '@ui-components/atoms'
 
 interface Props {
     labels?: {

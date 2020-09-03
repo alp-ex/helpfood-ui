@@ -1,5 +1,5 @@
 import React, { ReactElement, Fragment } from 'react'
-import Label from '@ui-components/atoms/Label'
+import { Label } from '@ui-components/atoms'
 
 interface Props {
     recipes: ReadonlyArray<{ name: string }>

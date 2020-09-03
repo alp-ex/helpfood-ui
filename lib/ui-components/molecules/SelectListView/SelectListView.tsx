@@ -1,4 +1,4 @@
-import React, { memo, ReactNode, CSSProperties, MouseEvent } from 'react'
+import React, { ReactNode, CSSProperties, MouseEvent } from 'react'
 
 interface Props {
     onOptionClick: (event: MouseEvent, { optionId: string }) => void

@@ -1,7 +1,5 @@
 import React, { ReactElement, useState } from 'react'
-import Chips from '@ui-components/atoms/Chips'
-import Button from '@ui-components/atoms/Button'
-import ToolBar from '@ui-components/atoms/ToolBar'
+import { Chips, Button, ToolBar } from '@ui-components/atoms'
 
 interface Props {
     labels?: { abortButton?: string; validationButton?: string }

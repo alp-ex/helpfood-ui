@@ -6,11 +6,10 @@ import {
     setCurrentDay,
 } from 'api/providers/Calendar'
 import { MealPlanProvider } from 'api/providers/MealPlan'
-import MealsList from './ui-components/MealsList'
-import ToolBar from '@ui-components/atoms/ToolBar'
-import WeekDayPicker from '@ui-components/molecules/WeekDayPicker'
-import MealPlanEditor from './ui-components/MealPlanEditor'
-import { DishesProvider } from 'api/providers/Dish'
+import { DishesProvider } from 'api/providers/Dishes'
+import { ToolBar } from '@ui-components/atoms'
+import { WeekDayPicker } from '@ui-components/molecules'
+import { MealsList, MealPlanEditor } from './ui-components'
 
 interface MealActionsProps {
     labels?: {

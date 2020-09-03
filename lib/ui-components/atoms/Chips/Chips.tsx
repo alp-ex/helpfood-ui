@@ -7,7 +7,7 @@ import React, {
 
 interface Props {
     children: ReactNode
-    onClick: () => void
+    onClick?: () => void
     onClose?: (event: MouseEvent) => void
     style?: { root?: CSSProperties; closeButton?: CSSProperties }
 }

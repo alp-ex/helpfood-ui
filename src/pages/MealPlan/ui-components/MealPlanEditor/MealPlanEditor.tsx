@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import Button from '@ui-components/atoms/Button'
-import FullScreenDialog from '@ui-components/molecules/FullScreenDialog'
+import { Button } from '@ui-components/atoms'
+import { FullScreenDialog } from '@ui-components/molecules'
 import { useCalendar } from 'api/providers/Calendar'
 import {
     useMealPlan,
@@ -8,10 +8,8 @@ import {
     removeMealsFromPlan,
     addMealToPlan,
 } from 'api/providers/MealPlan'
-import MealPlanForm from '../MealPlanForm'
-import Chips from '@ui-components/atoms/Chips'
 import { searchRecipes as searchRecipesAPI } from 'api/services/DishRequests'
-import RemoveMealPlanForm from '../RemoveMealPlanForm'
+import { MealPlanForm, RemoveMealPlanForm } from '../../ui-components'
 
 interface Props {
     labels?: {

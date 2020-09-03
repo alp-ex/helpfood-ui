@@ -1,9 +1,7 @@
-import App from './App'
+import { App } from './base-components'
 import { render } from 'react-dom'
 import React from 'react'
-import './app.css'
 
 const container = document.querySelector('#helpfood')
-// container.setAttribute('type', "module")
 
 render(<App />, container)

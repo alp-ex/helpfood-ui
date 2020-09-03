@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import Router from 'Router'
-import NavBar from 'ui-components/NavBar'
+import { NavBar, Router } from 'base-components'
 
 export default function App(): ReactElement {
     return (

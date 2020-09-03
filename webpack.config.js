@@ -1,6 +1,9 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+    .BundleAnalyzerPlugin
+const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = {
     mode: 'development',
@@ -41,7 +44,11 @@ module.exports = {
             },
         ],
     },
+    optimization: {
+        // minimizer: [new TerserPlugin()],
+    },
     plugins: [
+        new BundleAnalyzerPlugin(),
         new HtmlWebpackPlugin({
             title: 'Helpfood',
             filename: 'assets/index.html',

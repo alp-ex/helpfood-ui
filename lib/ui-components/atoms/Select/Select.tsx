@@ -1,6 +1,6 @@
 import React, { ReactElement, ChangeEvent, ElementType, useState } from 'react'
-import MenuList from '@ui-components/molecules/MenuList'
-import TextInput from '@ui-components/atoms/TextInput'
+import { TextInput } from '@ui-components/atoms'
+import { MenuList } from '@ui-components/molecules'
 
 interface Props {
     component?: ElementType

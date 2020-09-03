@@ -1,9 +1,8 @@
 import React, { ReactElement, useState } from 'react'
-import Label from '@ui-components/atoms/Label'
-import Button from '@ui-components/atoms/Button'
-import FullScreenDialog from '@ui-components/molecules/FullScreenDialog'
-import RecipeForm from '../RecipeForm'
-import { useDish, addRecipe } from 'api/providers/Dish'
+import { RecipeForm } from '../../ui-components'
+import { useDish, addRecipe } from 'api/providers/Dishes'
+import { Label, Button } from '@ui-components/atoms'
+import { FullScreenDialog } from '@ui-components/molecules'
 
 interface Props {
     labels?: { action?: string; actionButton?: string }

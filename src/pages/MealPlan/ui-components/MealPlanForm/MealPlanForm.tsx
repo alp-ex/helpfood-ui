@@ -1,9 +1,6 @@
 import React, { useState } from 'react'
-import Form from '@ui-components/atoms/Form'
-import ToolBar from '@ui-components/atoms/ToolBar'
-import Button from '@ui-components/atoms/Button'
-import Select from '../../../../../lib/ui-components/atoms/Select'
 import useForm from '@utils/useForm'
+import { Form, Select, ToolBar, Button } from '@ui-components/atoms'
 
 interface Props {
     labels?: {

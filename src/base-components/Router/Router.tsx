@@ -1,8 +1,7 @@
 import { Route, Switch, Redirect } from 'react-router-dom'
 
 import React from 'react'
-import MealPlan from 'pages/MealPlan'
-import Recipes from 'pages/Recipes'
+import { MealPlan, Recipes } from 'pages'
 
 export const Routes = Object.freeze({
     ROOT: '/',

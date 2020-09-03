@@ -1,8 +1,7 @@
 import React, { ReactElement, useEffect } from 'react'
 
-import CreateRecipeSection from './ui-components/CreateRecipeSection'
-import RecipesList from './ui-components/RecipesList'
-import { useDish, DishesProvider, getRecipes } from 'api/providers/Dish'
+import { CreateRecipeSection, RecipesList } from './ui-components/'
+import { useDish, DishesProvider, getRecipes } from 'api/providers/Dishes'
 
 interface Props {}
 

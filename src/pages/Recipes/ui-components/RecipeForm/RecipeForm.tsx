@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import Form from '@ui-components/atoms/Form'
-import Label from '@ui-components/atoms/Label'
-import Chips from '@ui-components/atoms/Chips'
-import ToolBar from '@ui-components/atoms/ToolBar'
-import Button from '@ui-components/atoms/Button'
-import Select from '../../../../../lib/ui-components/atoms/Select'
+import React, { useState } from 'react'
 import useForm from '@utils/useForm'
 import {
     searchCategories as searchCategoriesAPI,
     searchIngredients as searchIngredientsAPI,
 } from 'api/services/DishRequests'
-import TextInput from '@ui-components/atoms/TextInput'
+import {
+    Form,
+    Label,
+    TextInput,
+    Select,
+    Chips,
+    ToolBar,
+    Button,
+} from '@ui-components/atoms'
 
 interface Props {
     labels?: {

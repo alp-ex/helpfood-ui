@@ -1,11 +1,4 @@
-import React, {
-    memo,
-    ReactNode,
-    CSSProperties,
-    useRef,
-    useEffect,
-    ElementType,
-} from 'react'
+import React, { memo, ReactNode, CSSProperties, ElementType } from 'react'
 
 interface Props {
     component?: ElementType

@@ -1,9 +1,9 @@
 import React, { ReactElement, useEffect } from 'react'
 import { useCalendar } from 'api/providers/Calendar'
 import { useMealPlan, getMealPlan } from 'api/providers/MealPlan'
-import LabelledList from '@ui-components/molecules/LabelledList'
-import Label from '@ui-components/atoms/Label'
-import { useDish, getCategories } from 'api/providers/Dish'
+import { useDish, getCategories } from 'api/providers/Dishes'
+import { LabelledList } from '@ui-components/molecules'
+import { Label } from '@ui-components/atoms'
 
 interface Props {}
 
