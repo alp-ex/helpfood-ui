@@ -11,3 +11,4 @@ bundle.stats.json
 
 # dev
 .prettierrc.yaml
+.env
