@@ -1,7 +1,10 @@
 import { Route, Switch, Redirect } from 'react-router-dom'
 
-import React from 'react'
-import { MealPlan, Recipes } from 'pages'
+import React, { lazy, Suspense } from 'react'
+// import { MealPlan, Recipes } from 'pages'
+
+const MealPlan = lazy(() => import('../../pages/MealPlan/MealPlan'))
+const Recipes = lazy(() => import('../../pages/Recipes/Recipes'))
 
 export const Routes = Object.freeze({
     ROOT: '/',
@@ -11,14 +14,20 @@ export const Routes = Object.freeze({
 
 const Router = () => {
     return (
-        <>
+        <Suspense
+            fallback={
+                <div>
+                    COUCOUCOUCOUCOUCOUCOUCOU COUCOUCOUCOUCOUCOUC COUCOUCOU
+                </div>
+            }
+        >
             <Switch>
                 <Redirect exact from={Routes.ROOT} to={Routes.RECIPES} />
 
                 <Route path={Routes.MEAL_PLAN} render={() => <MealPlan />} />
                 <Route path={Routes.RECIPES} render={() => <Recipes />} />
             </Switch>
-        </>
+        </Suspense>
     )
 }
 

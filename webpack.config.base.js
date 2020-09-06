@@ -2,17 +2,15 @@ const path = require('path')
 const TSConfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-    
+
 module.exports = {
-    entry: './src/index.tsx',
-    // entry: {
-    //     index: {import: './src/index.tsx', dependOn: 'react-vendors'},
-    //     atoms: {import: './lib/ui-components/atoms/index.tsx', dependOn: 'react-vendors'},
-    //     molecules: {import: './lib/ui-components/molecules/index.tsx', dependOn: 'react-vendors'},
-    //     'react-vendors': ['react', 'react-dom']
-    // },
+    entry: {
+        app: './src/index.tsx',
+    },
     output: {
+        filename: '[name].[contenthash].bundle.js',
         publicPath: '/',
+        path: path.resolve(__dirname, 'dist'),
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
@@ -42,18 +40,19 @@ module.exports = {
             },
         ],
     },
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        inline: true,
+        compress: true,
+        historyApiFallback: true,
+    },
     plugins: [
         new HtmlWebpackPlugin({
-            title: 'Helpfood',
-            filename: 'assets/index.html',
-            inject: true,
-            templateContent: '<main id="helpfood"></main>',
+            title: 'Shall we plan ?',
+            filename: 'index.html',
+            inject: 'body',
+            minify: true,
+            template: './index.template.html',
         }),
     ],
-    devServer: {
-        contentBase: './dist/assets',
-        historyApiFallback: true,
-        inline: true
-    }
 }
-

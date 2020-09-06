@@ -1,5 +1,4 @@
 import React, { memo, ReactNode, CSSProperties } from 'react'
-import { render } from 'react-dom'
 
 interface Props {
     renderLabel: () => ReactNode | null

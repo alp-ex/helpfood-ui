@@ -8,6 +8,7 @@ styleguide
 .cache
 yarn-error.log
 bundle.stats.json
+stats.json
 
 # dev
 .prettierrc.yaml
