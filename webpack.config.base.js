@@ -48,7 +48,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: 'Shall we plan ?',
+            title: 'Planning | helpfood',
             filename: 'index.html',
             inject: 'body',
             minify: true,

@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import useForm from '@utils/useForm'
-import { Form, Select, ToolBar, Button } from '@ui-components/atoms'
+import { Form, Select, ToolBar, Button, Label } from '@ui-components/atoms'
 
 interface Props {
     labels?: {
         validationButton?: string
         abortButton?: string
+        selectMeal?: string
     }
     onValidate: ({
         name,
@@ -32,6 +33,7 @@ export default function MealPlanForm({
     labels: {
         validationButton: validationButtonLabel = 'Confirm',
         abortButton: abortButtonLabel = 'Abort',
+        selectMeal: selectMealLabel = 'Choose a meal to add to plan',
     } = {},
     onValidate,
     onAbort,
@@ -55,6 +57,8 @@ export default function MealPlanForm({
 
     return (
         <Form>
+            <Label>{selectMealLabel}</Label>
+
             <Select
                 onChange={(event) => {
                     getMealsOptions({ q: event.target.value }).then(

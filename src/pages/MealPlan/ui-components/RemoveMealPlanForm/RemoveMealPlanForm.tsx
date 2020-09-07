@@ -17,7 +17,7 @@ export default function RemoveMealPlanForm({
         validationButton: validationButtonLabel = 'Confirm',
     } = {},
 }: Props): ReactElement {
-    const [mealsToDelete, setMealsToDelete] = useState([])
+    const [mealsToDelete, setMealsToDelete] = useState(new Map())
 
     return (
         <>
@@ -26,21 +26,19 @@ export default function RemoveMealPlanForm({
                     <Chips
                         style={{
                             root: {
-                                borderColor: mealsToDelete.includes(meal)
+                                borderColor: mealsToDelete[meal]
                                     ? 'red'
                                     : 'inherit',
-                                color: mealsToDelete.includes(meal)
-                                    ? 'red'
-                                    : 'inherit',
+                                color: mealsToDelete[meal] ? 'red' : 'inherit',
                             },
                         }}
                         key={meal}
-                        onClick={() =>
-                            setMealsToDelete((prevState) => [
+                        onClick={() => {
+                            setMealsToDelete((prevState) => ({
                                 ...prevState,
-                                meal,
-                            ])
-                        }
+                                [meal]: !prevState[meal],
+                            }))
+                        }}
                     >
                         {meal}
                     </Chips>
@@ -49,7 +47,15 @@ export default function RemoveMealPlanForm({
 
             <ToolBar>
                 <Button onClick={onAbort}>{abortButtonLabel}</Button>
-                <Button onClick={() => onValidate(mealsToDelete)}>
+                <Button
+                    onClick={() => {
+                        onValidate(
+                            Object.keys(mealsToDelete).filter(
+                                (meal) => mealsToDelete[meal]
+                            )
+                        )
+                    }}
+                >
                     {validationButtonLabel}
                 </Button>
             </ToolBar>
