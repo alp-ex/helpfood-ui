@@ -41,10 +41,15 @@ module.exports = {
         ],
     },
     devServer: {
+        host: '0.0.0.0',
         contentBase: path.join(__dirname, 'dist'),
         inline: true,
         compress: true,
         historyApiFallback: true,
+        watchOptions: {
+            poll: true,
+            aggregateTimeout: 300,
+        }
     },
     plugins: [
         new HtmlWebpackPlugin({

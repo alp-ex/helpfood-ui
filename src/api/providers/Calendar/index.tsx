@@ -1,5 +1,5 @@
 import React, { useContext, createContext, ReactNode, useReducer } from 'react'
-import { getWeekDaysFromNow } from '@utils/Dates'
+import { getWeekDaysFromNow } from '@utils/dates'
 
 type Action = { type: string; payload?: {} }
 type Dispatch = (action: Action) => void
