@@ -3,6 +3,7 @@ node_modules
 dist
 fixtures
 styleguide
+food-apps-fixtures
 
 # reports
 .cache
@@ -13,3 +14,4 @@ stats.json
 # dev
 .prettierrc.yaml
 .env
+
