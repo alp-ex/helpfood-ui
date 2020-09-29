@@ -49,7 +49,7 @@ module.exports = {
         watchOptions: {
             poll: true,
             aggregateTimeout: 300,
-        }
+        },
     },
     plugins: [
         new HtmlWebpackPlugin({

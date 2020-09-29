@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Routes } from 'base-components/Router/Router'
+import { Routes } from 'app/components/Router/Router'
 import { Label, Button } from '@ui-components/atoms'
 
 interface Props {

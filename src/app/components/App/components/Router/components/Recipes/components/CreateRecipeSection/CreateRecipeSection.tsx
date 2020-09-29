@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react'
-import { RecipeForm } from '../../ui-components'
+import { RecipeForm } from '../../components'
 import { useDish, addRecipe } from 'api/providers/Dishes'
 import { Label, Button } from '@ui-components/atoms'
 import { FullScreenDialog } from '@ui-components/molecules'

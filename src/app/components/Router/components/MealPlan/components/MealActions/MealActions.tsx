@@ -1,22 +1,17 @@
-import React, { ReactElement } from 'react'
-
-import {
-    CalendarProvider,
-    useCalendar,
-    setCurrentDay,
-} from 'api/providers/Calendar'
-import { MealPlanProvider } from 'api/providers/MealPlan'
-import { DishesProvider } from 'api/providers/Dishes'
 import { ToolBar } from '@ui-components/atoms'
 import { WeekDayPicker } from '@ui-components/molecules'
-import { MealsList, MealPlanEditor } from './ui-components'
+import { setCurrentDay, useCalendar } from 'api/providers/Calendar'
+import React, { ReactElement } from 'react'
+import MealPlanEditor from '../MealPlanEditor/MealPlanEditor'
 
 interface MealActionsProps {
     labels?: {
         editPlanButton?: string
     }
 }
-const MealActions = ({ labels: {} = {} }: MealActionsProps): ReactElement => {
+export default function MealActions({
+    labels: {} = {},
+}: MealActionsProps): ReactElement {
     const {
         state: { weekDays, selectedDay },
         dispatch: calendarDispatch,
@@ -45,21 +40,5 @@ const MealActions = ({ labels: {} = {} }: MealActionsProps): ReactElement => {
 
             <MealPlanEditor />
         </ToolBar>
-    )
-}
-
-export default function MealPlan(): ReactElement {
-    return (
-        <>
-            <CalendarProvider>
-                <MealPlanProvider>
-                    <MealActions />
-
-                    <DishesProvider>
-                        <MealsList />
-                    </DishesProvider>
-                </MealPlanProvider>
-            </CalendarProvider>
-        </>
     )
 }

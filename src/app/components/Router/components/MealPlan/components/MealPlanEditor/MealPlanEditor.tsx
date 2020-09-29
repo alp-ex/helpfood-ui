@@ -9,7 +9,7 @@ import {
     addMealToPlan,
 } from 'api/providers/MealPlan'
 import { searchRecipes as searchRecipesAPI } from 'api/services/DishRequests'
-import { MealPlanForm, RemoveMealPlanForm } from '../../ui-components'
+import { MealPlanForm, RemoveMealPlanForm } from '..'
 
 interface Props {
     labels?: {

@@ -2,8 +2,8 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 
 import React, { lazy, Suspense } from 'react'
 
-const MealPlan = lazy(() => import('../../pages/MealPlan/MealPlan'))
-const Recipes = lazy(() => import('../../pages/Recipes/Recipes'))
+const MealPlan = lazy(() => import('./components/MealPlan/MealPlan'))
+const Recipes = lazy(() => import('./components/Recipes/Recipes'))
 
 export const Routes = Object.freeze({
     ROOT: '/',
