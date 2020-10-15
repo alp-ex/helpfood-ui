@@ -1,6 +1,14 @@
 {
     "compilerOptions": {
+        "lib": ["es6", "dom"],
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
         "jsx": "react",
+        "allowJs": true,
+        "skipLibCheck": true,
+        "allowSyntheticDefaultImports": true,
+        "isolatedModules": true,
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "downlevelIteration": true,
@@ -9,6 +17,8 @@
             "@ui-components/*": ["../lib/ui-components/*"],
             "@providers/*": ["providers/*"],
             "@utils/*": ["../lib/utils/*"]
-        }
+        },
+        "include": ["src/**/*", "lib/**/*"],
+        "exclude": ["node_modules"]
     }
 }

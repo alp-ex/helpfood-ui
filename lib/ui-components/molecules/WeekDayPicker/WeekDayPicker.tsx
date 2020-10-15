@@ -21,7 +21,6 @@ export default function WeekDayPicker({ pickDay, weekDays, pickedDay }: Props) {
                     event.preventDefault()
                     setShouldRenderDialog(true)
                 }}
-                noBorders
                 onMouseDown={() => {
                     setShouldRenderDialog(true)
                 }}

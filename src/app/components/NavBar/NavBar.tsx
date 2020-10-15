@@ -1,40 +1,50 @@
-import React, { ReactElement } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { Routes } from 'app/components/Router/Router'
-import { Label, Button } from '@ui-components/atoms'
+import React, { ReactElement, ReactNode } from 'react'
+import {
+    PagesNavigationButton,
+    IconWrapper,
+    RoundedBackground,
+    RightLabel,
+    FixedBar,
+} from '@ui-components/atoms'
+import { Link as ReactRouterLink, useLocation } from 'react-router-dom'
 
 interface Props {
-    labels?: {
-        appName?: string
-        mealPlanButton?: string
-        cookButton?: string
-    }
+    pages: ReadonlyArray<{
+        route: string
+        label: string
+        renderIcon: () => ReactNode
+    }>
 }
 
-export default function NavBar({
-    labels: {
-        mealPlanButton: mealPlanButtonLabel = 'Menu',
-        cookButton: cookButtonLabel = 'Recipes',
-        appName: appNameLabel = 'HelpFood',
-    } = {},
-}: Props): ReactElement {
+export default function NavBar({ pages }: Props): ReactElement {
     const { pathname } = useLocation()
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Label>{appNameLabel}</Label>
+        <FixedBar location="bottom">
+            <RoundedBackground bgcolorOption="main">
+                {pages.map(({ route, label, renderIcon }) => (
+                    <PagesNavigationButton
+                        key={route}
+                        routerLink={ReactRouterLink}
+                        render={() =>
+                            pathname === route ? (
+                                <RoundedBackground bgcolorOption="light">
+                                    <IconWrapper colorOption="main">
+                                        {renderIcon()}
+                                    </IconWrapper>
 
-            {pathname !== Routes.RECIPES ? (
-                <Link to={Routes.RECIPES}>
-                    <Button noBorders>{cookButtonLabel}</Button>
-                </Link>
-            ) : null}
-
-            {pathname !== Routes.MEAL_PLAN ? (
-                <Link to={Routes.MEAL_PLAN}>
-                    <Button noBorders>{mealPlanButtonLabel}</Button>
-                </Link>
-            ) : null}
-        </div>
+                                    <RightLabel label={label} />
+                                </RoundedBackground>
+                            ) : (
+                                <IconWrapper colorOption="light">
+                                    {renderIcon()}
+                                </IconWrapper>
+                            )
+                        }
+                        to={route}
+                    />
+                ))}
+            </RoundedBackground>
+        </FixedBar>
     )
 }
