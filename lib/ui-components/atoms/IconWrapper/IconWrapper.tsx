@@ -4,7 +4,7 @@ import { theme } from '@ui-components/themes/main'
 
 interface Props {
     children: ReactNode
-    colorOption: 'light' | 'main'
+    colorOption: 'light' | 'main' | 'dark'
 }
 
 export default function IconWrapper({

@@ -7,9 +7,12 @@ import ToolBar from './ToolBar/ToolBar'
 import Label from './Label/Label'
 import Button from './Button/Button'
 import RoundedBackground from './RoundedBackground/RoundedBackground'
+import AngularBackground from './AngularBackground/AngularBackground'
 import IconWrapper from './IconWrapper/IconWrapper'
 import RightLabel from './RightLabel/RightLabel'
 import FixedBar from './FixedBar/FixedBar'
+import Group from './Group/Group'
+import ButtonIcon from './ButtonIcon/ButtonIcon'
 
 export {
     Button,
@@ -20,8 +23,11 @@ export {
     TextInput,
     ToolBar,
     Label,
+    AngularBackground,
     RoundedBackground,
     IconWrapper,
-    FixedBar,
     RightLabel,
+    FixedBar,
+    Group,
+    ButtonIcon,
 }
