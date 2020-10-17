@@ -1,5 +1,5 @@
 import FullScreenDialog from './FullScreenDialog/FullScreenDialog'
-import LabelledList from './LabelledList/LabelledList'
+import LabelledInlineList from './LabelledInlineList/LabelledInlineList'
 import MenuList from './MenuList/MenuList'
 import SelectListView from './SelectListView/SelectListView'
 import FullScreenListSelect from './FullScreenListSelect/FullScreenListSelect'
@@ -7,7 +7,7 @@ import FullScreenButtonList from './FullScreenButtonList/FullScreenButtonList'
 
 export {
     FullScreenDialog,
-    LabelledList,
+    LabelledInlineList,
     MenuList,
     SelectListView,
     FullScreenListSelect,

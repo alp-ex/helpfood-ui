@@ -34,12 +34,12 @@ export default function MealPlanHeader({
                     label: dayName,
                     value: dayName,
                 }))}
-                onSelect={(day) =>
+                onSelect={(day) => {
                     setCurrentDay({
                         dispatch: calendarDispatch,
                         day,
                     })
-                }
+                }}
                 selected={{ label: selectedDay, value: selectedDay }}
             />
 

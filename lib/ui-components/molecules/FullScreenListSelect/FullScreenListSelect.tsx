@@ -29,6 +29,7 @@ const useStyles = makeStyles(() =>
             textTransform: 'capitalize',
             color: theme.palette.primary.main,
             cursor: 'pointer',
+            fontSize: '1em',
         },
         option: {
             color: theme.palette.primary.main,

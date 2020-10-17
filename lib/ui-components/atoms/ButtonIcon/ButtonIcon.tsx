@@ -9,7 +9,9 @@ interface Props {
 
 const useStyles = makeStyles(() =>
     createStyles({
-        root: {},
+        root: {
+            fontSize: '1em',
+        },
     })
 )
 

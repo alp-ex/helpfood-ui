@@ -18,6 +18,7 @@ const useStyles = makeStyles(() =>
         root: ({ direction }: StyleProps) => ({
             display: 'flex',
             flexDirection: direction,
+            padding: '2%',
         }),
     })
 )

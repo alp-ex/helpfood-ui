@@ -1,6 +1,13 @@
 import MealPlanEditor from './MealPlanEditor/MealPlanEditor'
 import MealPlanForm from './MealPlanForm/MealPlanForm'
-import MealsList from './MealsList/MealsList'
+import MealPlanMain from './MealPlanMain/MealPlanMain'
 import RemoveMealPlanForm from './RemoveMealPlanForm/RemoveMealPlanForm'
+import MealPlanHeader from './MealPlanHeader/MealPlanHeader'
 
-export { MealPlanEditor, MealPlanForm, MealsList, RemoveMealPlanForm }
+export {
+    MealPlanEditor,
+    MealPlanForm,
+    MealPlanHeader,
+    MealPlanMain,
+    RemoveMealPlanForm,
+}

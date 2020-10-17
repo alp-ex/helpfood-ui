@@ -3,21 +3,21 @@ import React, { ReactElement } from 'react'
 import { CalendarProvider } from 'api/providers/Calendar'
 import { MealPlanProvider } from 'api/providers/MealPlan'
 import { DishesProvider } from 'api/providers/Dishes'
-import { MealsList } from './components'
-import MealPlanHeader from './components/MealPlanHeader/MealPlanHeader'
+import { MealPlanHeader, MealPlanMain } from './components'
+import { ContentBackground } from '@ui-components/atoms'
 
 export default function MealPlan(): ReactElement {
     return (
-        <>
+        <ContentBackground>
             <CalendarProvider>
                 <MealPlanProvider>
                     <MealPlanHeader />
 
                     <DishesProvider>
-                        <MealsList />
+                        <MealPlanMain />
                     </DishesProvider>
                 </MealPlanProvider>
             </CalendarProvider>
-        </>
+        </ContentBackground>
     )
 }

@@ -13,6 +13,8 @@ import RightLabel from './RightLabel/RightLabel'
 import FixedBar from './FixedBar/FixedBar'
 import Group from './Group/Group'
 import ButtonIcon from './ButtonIcon/ButtonIcon'
+import ContentBackground from './ContentBackground/ContentBackground'
+import StrokedTitle from './StrokedTitle/StrokedTitle'
 
 export {
     Button,
@@ -30,4 +32,6 @@ export {
     FixedBar,
     Group,
     ButtonIcon,
+    ContentBackground,
+    StrokedTitle,
 }
