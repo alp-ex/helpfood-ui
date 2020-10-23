@@ -10,9 +10,6 @@ module.exports = merge(baseConfig, {
     mode: 'production',
     optimization: {
         minimizer: [new TerserPlugin()],
-        splitChunks: {
-            chunks: 'all',
-        },
     },
     performance: {
         hints: 'error',

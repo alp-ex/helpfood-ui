@@ -10,13 +10,13 @@ export default function MealPlan(): ReactElement {
     return (
         <ContentBackground>
             <CalendarProvider>
-                <MealPlanProvider>
-                    <MealPlanHeader />
+                <DishesProvider>
+                    <MealPlanProvider>
+                        <MealPlanHeader />
 
-                    <DishesProvider>
                         <MealPlanMain />
-                    </DishesProvider>
-                </MealPlanProvider>
+                    </MealPlanProvider>
+                </DishesProvider>
             </CalendarProvider>
         </ContentBackground>
     )

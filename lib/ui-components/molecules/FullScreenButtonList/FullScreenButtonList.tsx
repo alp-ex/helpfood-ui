@@ -10,7 +10,7 @@ interface Props {
         label: string
         onClick: (event: MouseEvent) => void
     }>
-    onClose: () => void
+    onClose: (event: MouseEvent) => void
 }
 
 const useStyles = makeStyles(() =>
@@ -30,6 +30,9 @@ const useStyles = makeStyles(() =>
         rootButton: {
             background: theme.palette.primary.main,
             color: theme.palette.primary.light,
+            flex: '1',
+            width: '100%',
+            margin: '3%',
         },
         rootCloseButton: {
             fontSize: '1em',

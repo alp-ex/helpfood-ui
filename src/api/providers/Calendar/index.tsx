@@ -24,6 +24,11 @@ const calendarReducer = (prevState, { type, payload }) => {
                 selectedDay: payload,
             }
         }
+        default: {
+            throw new Error(
+                `Unhandled action type: ${type} under CalendarProvider`
+            )
+        }
     }
 }
 

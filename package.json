@@ -1,7 +1,6 @@
 {
     "name": "helpfood",
     "version": "0.1.0",
-    "description": "this app aim to help users to manage their food for the week",
     "main": "index.tsx",
     "license": "MIT",
     "devDependencies": {

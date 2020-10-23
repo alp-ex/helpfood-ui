@@ -1,17 +1,24 @@
 import React, { createContext, useReducer, useContext, ReactNode } from 'react'
 import {
-    addMealToPlan as addMealToPlanAPI,
+    addMealsToPlan as addMealsToPlanAPI,
     removeMealsFromPlan as removeMealsFromPlanAPI,
     getMealPlan as getMealPlanAPI,
 } from 'api/services/MealPlanRequests'
 
 type Meal = {
+    id: string
     name: string
     day: string
     category: string
     ingredients: ReadonlyArray<string>
 }
-type Action = { type: string; payload?: {} }
+type Action = {
+    type: string
+    payload?: {
+        mealsIds?: ReadonlyArray<string>
+        meals?: ReadonlyArray<Meal>
+    }
+}
 type Dispatch = (action: Action) => void
 type State = {
     meals: ReadonlyArray<Meal>
@@ -19,7 +26,7 @@ type State = {
 
 type MealPlanProviderProps = { children: ReactNode }
 
-const MealPlanStateContext = createContext<State | undefined>(undefined)
+const MealPlanStateContext = createContext<State>({ meals: [] })
 const MealPlanDispatchContext = createContext<Dispatch | undefined>(undefined)
 
 const {
@@ -32,30 +39,32 @@ const {
     REMOVE_MEAL_FROM_PLAN_STARTED: 'start removing dish to meal plan',
 }
 
-function mealPlanReducer(prevState, { type, payload }) {
+function mealPlanReducer(prevState: State, { type, payload }: Action): State {
     switch (type) {
         case GETTING_MEAL_PLAN_SUCCEED: {
             return {
                 ...prevState,
-                meals: payload,
+                meals: payload?.meals || prevState.meals,
             }
         }
         case REMOVE_MEAL_FROM_PLAN_STARTED: {
             return {
                 ...prevState,
-                meals: prevState.meals.filter(
-                    ({ name, day }) => !payload[day].includes(name)
+                meals: prevState.meals.filter(({ id }) =>
+                    payload?.mealsIds?.includes(id)
                 ),
             }
         }
         case ADD_MEAL_TO_PLAN_STARTED: {
             return {
                 ...prevState,
-                meals: [...prevState.meals, payload],
+                meals: [...prevState.meals, ...(payload?.meals || [])],
             }
         }
         default: {
-            throw new Error(`Unhandled action type: ${type}`)
+            throw new Error(
+                `Unhandled action type: ${type} under MealPlan provider`
+            )
         }
     }
 }
@@ -100,48 +109,64 @@ export function useMealPlan() {
     return { state: useMealPlanState(), dispatch: useMealPlanDispatch() }
 }
 
-export async function getMealPlan({ dispatch, day }) {
+export async function getMealPlan({
+    dispatch,
+    day,
+}: {
+    dispatch: Dispatch
+    day: string
+}) {
     try {
         const meals = await getMealPlanAPI({ day })
 
         dispatch({
             type: GETTING_MEAL_PLAN_SUCCEED,
-            payload: meals,
+            payload: { meals },
         })
     } catch (error) {
         console.error(error)
     }
 }
 
-export async function addMealToPlan({
+export async function addMealsToPlan({
     dispatch,
-    meal: { name, category, ingredients },
+    meals,
     day,
+}: {
+    dispatch: Dispatch
+    meals: ReadonlyArray<Omit<Meal, 'id'>>
+    day: string
+}) {
+    try {
+        const mealsResponse = await addMealsToPlanAPI({
+            meals,
+            day,
+        })
+
+        dispatch({
+            type: ADD_MEAL_TO_PLAN_STARTED,
+            payload: { meals: mealsResponse },
+        })
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export async function removeMealsFromPlan({
+    dispatch,
+    mealsIds,
+}: {
+    dispatch: Dispatch
+    mealsIds: ReadonlyArray<string>
 }) {
     dispatch({
-        type: ADD_MEAL_TO_PLAN_STARTED,
-        payload: { day, name, category, ingredients },
-    })
-
-    try {
-        await addMealToPlanAPI({
-            meal: { day, name, category, ingredients },
-        })
-    } catch (error) {
-        console.error(error)
-    }
-}
-
-export async function removeMealsFromPlan({ dispatch, meals, day }) {
-    dispatch({
         type: REMOVE_MEAL_FROM_PLAN_STARTED,
-        payload: { [day]: meals },
+        payload: { mealsIds },
     })
 
     try {
         await removeMealsFromPlanAPI({
-            meals,
-            day,
+            mealsIds,
         })
     } catch (error) {
         console.error(error)

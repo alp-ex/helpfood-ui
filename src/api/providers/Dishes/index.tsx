@@ -1,18 +1,25 @@
 import React, { createContext, useReducer, useContext, ReactNode } from 'react'
 import {
-    addRecipe as addRecipeAPI,
     getRecipes as getRecipesAPI,
     getCategories as getCategoriesAPI,
+    searchRecipes as searchRecipesAPI,
 } from 'api/services/DishRequests'
 
-type Action = { type: string; payload?: {} }
+type Recipe = {
+    name: string
+    category: string
+    ingredients: ReadonlyArray<string>
+}
+type Action = {
+    type: string
+    payload?: {
+        recipes?: ReadonlyArray<Recipe>
+        categories?: ReadonlyArray<string>
+    }
+}
 type Dispatch = (action: Action) => void
 type State = {
-    recipes: ReadonlyArray<{
-        name: string
-        category: string
-        ingredients: ReadonlyArray<string>
-    }>
+    recipes: ReadonlyArray<Recipe>
     categories: ReadonlyArray<string>
 }
 type DishesProviderProps = { children: ReactNode }
@@ -20,34 +27,38 @@ type DishesProviderProps = { children: ReactNode }
 const DishesStateContext = createContext<State | undefined>(undefined)
 const DishesDispatchContext = createContext<Dispatch | undefined>(undefined)
 
-const { ADDING_RECIPE_STARTED, GET_RECIPES_SUCCEED, GET_CATEGORIES_SUCCEED } = {
-    ADDING_RECIPE_STARTED: 'start adding a recipe',
+const {
+    SEARCH_RECIPES_SUCCEED,
+    GET_RECIPES_SUCCEED,
+    GET_CATEGORIES_SUCCEED,
+} = {
     GET_CATEGORIES_SUCCEED: 'getting all categories succeed',
     GET_RECIPES_SUCCEED: 'getting all recipes succeed',
+    SEARCH_RECIPES_SUCCEED: 'searching recipes succeed',
 }
 
-function dishesReducer(prevState, { type, payload }) {
+function dishesReducer(prevState: State, { type, payload }: Action): State {
     switch (type) {
-        case ADDING_RECIPE_STARTED: {
-            return {
-                ...payload,
-                recipes: [...prevState.recipes, payload],
-            }
-        }
         case GET_RECIPES_SUCCEED: {
             return {
-                ...payload,
-                recipes: payload,
+                ...prevState,
+                recipes: payload?.recipes || prevState.recipes,
             }
         }
         case GET_CATEGORIES_SUCCEED: {
             return {
-                ...payload,
-                categories: payload,
+                ...prevState,
+                categories: payload?.categories || prevState.categories,
+            }
+        }
+        case SEARCH_RECIPES_SUCCEED: {
+            return {
+                ...prevState,
+                recipes: payload?.recipes || [],
             }
         }
         default: {
-            throw new Error(`Unhandled action type: ${type}`)
+            throw new Error(`Unhandled action type: ${type} under DishProvider`)
         }
     }
 }
@@ -93,46 +104,64 @@ export function useDish() {
     return { state: useDishesState(), dispatch: useDishesDispatch() }
 }
 
-export async function addRecipe({
-    dispatch,
-    recipe: { name, category, ingredients },
-}) {
-    dispatch({
-        type: ADDING_RECIPE_STARTED,
-        payload: { name, category, ingredients },
-    })
-
+export async function getRecipes({ dispatch }: { dispatch: Dispatch }) {
     try {
-        await addRecipeAPI({
-            name,
-            category,
-            ingredients,
-        })
-    } catch (error) {
-        console.error(error)
-    }
-}
-
-export async function getRecipes({ dispatch }) {
-    try {
+        //  dto ?
         const response = await getRecipesAPI()
-
+        console.log(response)
         dispatch({
             type: GET_RECIPES_SUCCEED,
-            payload: response,
+            payload: {
+                recipes: response.map(
+                    ({ name, category, ingredients }: Recipe) => ({
+                        name,
+                        category,
+                        ingredients,
+                    })
+                ),
+            },
         })
     } catch (error) {
         console.error(error)
     }
 }
 
-export async function getCategories({ dispatch }) {
+export async function getCategories({ dispatch }: { dispatch: Dispatch }) {
     try {
         const response = await getCategoriesAPI()
 
         dispatch({
             type: GET_CATEGORIES_SUCCEED,
-            payload: response.map(({ name }) => name),
+            payload: {
+                categories: response.map(({ name }: { name: string }) => name),
+            },
+        })
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export async function searchRecipes({
+    params: { q, category },
+    dispatch,
+}: {
+    params: { q: string; category: string }
+    dispatch: Dispatch
+}) {
+    try {
+        const response = await searchRecipesAPI({ q, category })
+
+        dispatch({
+            type: SEARCH_RECIPES_SUCCEED,
+            payload: {
+                recipes: response.map(
+                    ({ name, category, ingredients }: Recipe) => ({
+                        name,
+                        category,
+                        ingredients,
+                    })
+                ),
+            },
         })
     } catch (error) {
         console.error(error)
