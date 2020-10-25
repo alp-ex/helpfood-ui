@@ -34,9 +34,14 @@ export default function TableList({
 
             <TableBody>
                 {rows.map((row) => (
-                    <TableRow onClick={() => onItemClick(row)}>
+                    <TableRow
+                        onClick={() => onItemClick(row)}
+                        key={JSON.stringify(row)}
+                    >
                         {Object.values(row).map((value) => (
-                            <TableCell variant="body">{value}</TableCell>
+                            <TableCell variant="body" key={value}>
+                                {value}
+                            </TableCell>
                         ))}
                     </TableRow>
                 ))}

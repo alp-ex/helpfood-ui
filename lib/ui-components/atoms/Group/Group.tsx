@@ -5,7 +5,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 type Direction = 'row' | 'column'
 
 interface Props {
-    children: ReactNode
+    children: NonNullable<ReactNode>
     direction?: Direction
 }
 
@@ -18,6 +18,7 @@ const useStyles = makeStyles(() =>
         root: ({ direction }: StyleProps) => ({
             display: 'flex',
             flexDirection: direction,
+            flexWrap: 'wrap',
             padding: '2%',
         }),
     })

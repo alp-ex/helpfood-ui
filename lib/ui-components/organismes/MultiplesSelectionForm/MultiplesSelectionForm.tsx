@@ -9,6 +9,7 @@ import {
     FilterableSearchBar,
     TableList,
 } from '@ui-components/molecules'
+import { AngularBackground, FixedBar } from '@ui-components/atoms'
 
 type OptionValue = { [key: string]: string }
 
@@ -34,16 +35,14 @@ interface Props {
 const useStyles = makeStyles(() =>
     createStyles({
         title: {
-            color: theme.palette.primary.main,
             fontSize: '1em',
+            textTransform: 'capitalize',
         },
         root: {
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-evenly',
             height: '100%',
-            alignItems: 'center',
             position: 'fixed',
             top: '0',
             left: '0',
@@ -51,12 +50,16 @@ const useStyles = makeStyles(() =>
         },
         rootCloseButton: {
             fontSize: '1em',
-            position: 'absolute',
-            top: '15px',
-            right: '10px',
+            color: theme.palette.primary.main,
         },
         rootValidationButton: {
-            textTransform: 'capitalize',
+            fontSize: '1.1em',
+            textTransform: 'uppercase',
+            background: theme.palette.primary.main,
+            color: theme.palette.primary.light,
+            width: '60%',
+            margin: '3%',
+            padding: '6%',
         },
     })
 )
@@ -83,15 +86,29 @@ export default function MultiplesSelectionForm({
 
     return createPortal(
         <Container classes={{ root: classes.root }}>
-            <Typography
-                classes={{ root: classes.title }}
-                gutterBottom
-                variant="h3"
-            >
-                {title}
-            </Typography>
+            <AngularBackground bgcolorOption="light">
+                <Typography classes={{ root: classes.title }} variant="h3">
+                    {title}
+                </Typography>
 
-            <ChipsList onClose={onUnSelectOption} items={selectedOptions} />
+                <Button
+                    classes={{ root: classes.rootCloseButton }}
+                    onClick={onClose}
+                >
+                    <CloseIcon />
+                </Button>
+            </AngularBackground>
+
+            <ChipsList
+                onClose={onUnSelectOption}
+                items={[
+                    { label: 'prout', value: 'cacoune' },
+                    { label: 'prout 1', value: 'cacoune' },
+                    { label: 'cacoooo', value: 'cacoune' },
+                    { label: 'aazpoazpoazpo', value: 'cacoune' },
+                ]}
+            />
+            {/* <ChipsList onClose={onUnSelectOption} items={selectedOptions} /> */}
 
             <FilterableSearchBar
                 searchText={searchText}
@@ -99,34 +116,34 @@ export default function MultiplesSelectionForm({
                 onType={(event) => {
                     setSearchText(event.target.value)
                 }}
+                onClearSearchText={() => {
+                    setSearchText('')
+                }}
                 onSelect={(filter) => {
                     setSelectedFilter(filter)
                 }}
                 filters={filters}
+                onSearch={() =>
+                    onGetOptions({ q: searchText, filter: selectedFilter })
+                }
             />
 
-            <TableList
+            {/* <TableList
                 headers={options.labels}
                 rows={options.values}
                 onItemClick={onSelectOption}
-            />
-
-            <Button
-                classes={{ root: classes.rootValidationButton }}
-                onClick={() => {
-                    onSubmit()
-                    onClose()
-                }}
-            >
-                {'Validate'}
-            </Button>
-
-            <Button
-                classes={{ root: classes.rootCloseButton }}
-                onClick={onClose}
-            >
-                <CloseIcon />
-            </Button>
+            /> */}
+            <FixedBar location="bottom">
+                <Button
+                    classes={{ root: classes.rootValidationButton }}
+                    onClick={() => {
+                        onSubmit()
+                        onClose()
+                    }}
+                >
+                    {'add'}
+                </Button>
+            </FixedBar>
         </Container>,
         document.body
     )

@@ -106,9 +106,8 @@ export function useDish() {
 
 export async function getRecipes({ dispatch }: { dispatch: Dispatch }) {
     try {
-        //  dto ?
         const response = await getRecipesAPI()
-        console.log(response)
+
         dispatch({
             type: GET_RECIPES_SUCCEED,
             payload: {

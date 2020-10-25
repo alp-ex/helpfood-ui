@@ -132,15 +132,14 @@ export default function MealPlanHeader({
                 />
 
                 <ButtonIcon
-                    renderIcon={() => (
-                        <IconWrapper colorOption="main">
-                            <MenuIcon />
-                        </IconWrapper>
-                    )}
                     onClick={() => {
                         dispatch({ type: OPEN_BUTTON_LIST })
                     }}
-                />
+                >
+                    <IconWrapper colorOption="main">
+                        <MenuIcon />
+                    </IconWrapper>
+                </ButtonIcon>
 
                 {isFullScreenButtonVisible ? (
                     <FullScreenButtonList

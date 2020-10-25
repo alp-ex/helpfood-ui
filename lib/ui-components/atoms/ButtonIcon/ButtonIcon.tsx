@@ -4,7 +4,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 
 interface Props {
     onClick: () => void
-    renderIcon: () => ReactNode
+    children: ReactNode
 }
 
 const useStyles = makeStyles(() =>
@@ -15,15 +15,12 @@ const useStyles = makeStyles(() =>
     })
 )
 
-export default function ButtonIcon({
-    onClick,
-    renderIcon,
-}: Props): ReactElement {
+export default function ButtonIcon({ onClick, children }: Props): ReactElement {
     const classes = useStyles()
 
     return (
         <Button classes={{ root: classes.root }} onClick={onClick}>
-            {renderIcon()}
+            {children}
         </Button>
     )
 }

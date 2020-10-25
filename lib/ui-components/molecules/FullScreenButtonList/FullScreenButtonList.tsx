@@ -30,9 +30,9 @@ const useStyles = makeStyles(() =>
         rootButton: {
             background: theme.palette.primary.main,
             color: theme.palette.primary.light,
-            flex: '1',
-            width: '100%',
+            width: '60%',
             margin: '3%',
+            padding: '6%',
         },
         rootCloseButton: {
             fontSize: '1em',
