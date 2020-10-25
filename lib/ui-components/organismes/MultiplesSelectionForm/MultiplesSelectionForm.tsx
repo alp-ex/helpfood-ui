@@ -99,16 +99,7 @@ export default function MultiplesSelectionForm({
                 </Button>
             </AngularBackground>
 
-            <ChipsList
-                onClose={onUnSelectOption}
-                items={[
-                    { label: 'prout', value: 'cacoune' },
-                    { label: 'prout 1', value: 'cacoune' },
-                    { label: 'cacoooo', value: 'cacoune' },
-                    { label: 'aazpoazpoazpo', value: 'cacoune' },
-                ]}
-            />
-            {/* <ChipsList onClose={onUnSelectOption} items={selectedOptions} /> */}
+            <ChipsList onClose={onUnSelectOption} items={selectedOptions} />
 
             <FilterableSearchBar
                 searchText={searchText}
