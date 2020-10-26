@@ -6,6 +6,7 @@ import {
 } from 'api/services/DishRequests'
 
 type Recipe = {
+    id: string
     name: string
     category: string
     ingredients: ReadonlyArray<string>
@@ -112,7 +113,8 @@ export async function getRecipes({ dispatch }: { dispatch: Dispatch }) {
             type: GET_RECIPES_SUCCEED,
             payload: {
                 recipes: response.map(
-                    ({ name, category, ingredients }: Recipe) => ({
+                    ({ id, name, category, ingredients }: Recipe) => ({
+                        id,
                         name,
                         category,
                         ingredients,
@@ -154,7 +156,8 @@ export async function searchRecipes({
             type: SEARCH_RECIPES_SUCCEED,
             payload: {
                 recipes: response.map(
-                    ({ name, category, ingredients }: Recipe) => ({
+                    ({ id, name, category, ingredients }: Recipe) => ({
+                        id,
                         name,
                         category,
                         ingredients,

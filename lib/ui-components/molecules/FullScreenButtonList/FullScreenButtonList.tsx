@@ -35,7 +35,8 @@ const useStyles = makeStyles(() =>
             padding: '6%',
         },
         rootCloseButton: {
-            fontSize: '1em',
+            color: theme.palette.primary.main,
+            fontSize: '1.5em',
             position: 'absolute',
             top: '15px',
             right: '10px',

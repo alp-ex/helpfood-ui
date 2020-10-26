@@ -8,6 +8,7 @@ import Group from './Group/Group'
 import ButtonIcon from './ButtonIcon/ButtonIcon'
 import ContentBackground from './ContentBackground/ContentBackground'
 import StrokedTitle from './StrokedTitle/StrokedTitle'
+import FixedActionBar from './FixedActionBar/FixedActionBar'
 
 export {
     PagesNavigationButton,
@@ -20,4 +21,5 @@ export {
     ButtonIcon,
     ContentBackground,
     StrokedTitle,
+    FixedActionBar,
 }

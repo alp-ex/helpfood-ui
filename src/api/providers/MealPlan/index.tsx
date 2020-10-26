@@ -4,6 +4,7 @@ import {
     removeMealsFromPlan as removeMealsFromPlanAPI,
     getMealPlan as getMealPlanAPI,
 } from 'api/services/MealPlanRequests'
+import { getRecipes } from 'api/services/DishRequests'
 
 type Meal = {
     id: string
@@ -15,7 +16,7 @@ type Meal = {
 type Action = {
     type: string
     payload?: {
-        mealsIds?: ReadonlyArray<string>
+        mealsToDelete?: ReadonlyArray<string>
         meals?: ReadonlyArray<Meal>
     }
 }
@@ -29,14 +30,10 @@ type MealPlanProviderProps = { children: ReactNode }
 const MealPlanStateContext = createContext<State>({ meals: [] })
 const MealPlanDispatchContext = createContext<Dispatch | undefined>(undefined)
 
-const {
-    ADD_MEAL_TO_PLAN_STARTED,
-    REMOVE_MEAL_FROM_PLAN_STARTED,
-    GETTING_MEAL_PLAN_SUCCEED,
-} = {
+const { MEAL_PLAN_SUCCESSFULLY_UPDATED, GETTING_MEAL_PLAN_SUCCEED } = {
     GETTING_MEAL_PLAN_SUCCEED: 'getting meal plan succeed',
-    ADD_MEAL_TO_PLAN_STARTED: 'start adding dish to meal plan',
-    REMOVE_MEAL_FROM_PLAN_STARTED: 'start removing dish to meal plan',
+    MEAL_PLAN_SUCCESSFULLY_UPDATED:
+        'we both remove and add meals from plan successfully',
 }
 
 function mealPlanReducer(prevState: State, { type, payload }: Action): State {
@@ -47,18 +44,10 @@ function mealPlanReducer(prevState: State, { type, payload }: Action): State {
                 meals: payload?.meals || prevState.meals,
             }
         }
-        case REMOVE_MEAL_FROM_PLAN_STARTED: {
+        case MEAL_PLAN_SUCCESSFULLY_UPDATED: {
             return {
                 ...prevState,
-                meals: prevState.meals.filter(({ id }) =>
-                    payload?.mealsIds?.includes(id)
-                ),
-            }
-        }
-        case ADD_MEAL_TO_PLAN_STARTED: {
-            return {
-                ...prevState,
-                meals: [...prevState.meals, ...(payload?.meals || [])],
+                meals: payload?.meals || prevState.meals,
             }
         }
         default: {
@@ -128,45 +117,27 @@ export async function getMealPlan({
     }
 }
 
-export async function addMealsToPlan({
+export async function updateMealPlan({
     dispatch,
-    meals,
-    day,
+    mealsToDelete,
+    mealsToAdd,
 }: {
     dispatch: Dispatch
-    meals: ReadonlyArray<Omit<Meal, 'id'>>
-    day: string
+    mealsToDelete: ReadonlyArray<{ id: string }>
+    mealsToAdd: ReadonlyArray<{ id: string; day: string }>
 }) {
     try {
-        const mealsResponse = await addMealsToPlanAPI({
-            meals,
-            day,
+        const addedMeals = await addMealsToPlanAPI({
+            meals: mealsToAdd,
+        })
+
+        await removeMealsFromPlanAPI({
+            meals: mealsToDelete,
         })
 
         dispatch({
-            type: ADD_MEAL_TO_PLAN_STARTED,
-            payload: { meals: mealsResponse },
-        })
-    } catch (error) {
-        console.error(error)
-    }
-}
-
-export async function removeMealsFromPlan({
-    dispatch,
-    mealsIds,
-}: {
-    dispatch: Dispatch
-    mealsIds: ReadonlyArray<string>
-}) {
-    dispatch({
-        type: REMOVE_MEAL_FROM_PLAN_STARTED,
-        payload: { mealsIds },
-    })
-
-    try {
-        await removeMealsFromPlanAPI({
-            mealsIds,
+            type: MEAL_PLAN_SUCCESSFULLY_UPDATED,
+            payload: { meals: addedMeals },
         })
     } catch (error) {
         console.error(error)

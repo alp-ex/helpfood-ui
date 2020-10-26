@@ -9,23 +9,26 @@ import {
     FilterableSearchBar,
     TableList,
 } from '@ui-components/molecules'
-import { AngularBackground, FixedBar } from '@ui-components/atoms'
+import { AngularBackground, FixedActionBar } from '@ui-components/atoms'
 
-type OptionValue = { [key: string]: string }
+type OptionValue = { label: string; value: string }
 
 interface Props {
     title: string
     options: {
         labels: ReadonlyArray<string>
-        values: ReadonlyArray<OptionValue>
+        values: ReadonlyArray<{
+            labels: { [key: string]: string }
+            values: { [key: string]: string }
+        }>
     }
     selectedOptions: ReadonlyArray<{
         label: string
-        value: OptionValue
+        value: string
     }>
     onGetOptions: ({ q, filter }: { q: string; filter: string }) => void
     onUnSelectOption: (option: OptionValue) => void
-    onSelectOption: (option: OptionValue) => void
+    onSelectOption: (option: { [key: string]: string }) => void
     onSubmit: () => void
     onClose: () => void
     filters: ReadonlyArray<string>
@@ -34,10 +37,6 @@ interface Props {
 
 const useStyles = makeStyles(() =>
     createStyles({
-        title: {
-            fontSize: '1em',
-            textTransform: 'capitalize',
-        },
         root: {
             width: '100%',
             display: 'flex',
@@ -47,19 +46,20 @@ const useStyles = makeStyles(() =>
             top: '0',
             left: '0',
             background: theme.palette.primary.light,
+            overflow: 'auto',
+        },
+        title: {
+            fontSize: '1em',
+            textTransform: 'capitalize',
         },
         rootCloseButton: {
             fontSize: '1em',
             color: theme.palette.primary.main,
         },
         rootValidationButton: {
-            fontSize: '1.1em',
-            textTransform: 'uppercase',
-            background: theme.palette.primary.main,
-            color: theme.palette.primary.light,
-            width: '60%',
-            margin: '3%',
-            padding: '6%',
+            fontSize: '1em',
+            textTransform: 'capitalize',
+            color: theme.palette.primary.main,
         },
     })
 )
@@ -119,22 +119,21 @@ export default function MultiplesSelectionForm({
                 }
             />
 
-            {/* <TableList
+            <TableList
                 headers={options.labels}
                 rows={options.values}
                 onItemClick={onSelectOption}
-            /> */}
-            <FixedBar location="bottom">
-                <Button
-                    classes={{ root: classes.rootValidationButton }}
-                    onClick={() => {
-                        onSubmit()
-                        onClose()
-                    }}
-                >
-                    {'add'}
-                </Button>
-            </FixedBar>
+            />
+
+            <FixedActionBar
+                location="bottom"
+                bgcolorOption="light"
+                label={'done'}
+                action={() => {
+                    onSubmit()
+                    onClose()
+                }}
+            />
         </Container>,
         document.body
     )

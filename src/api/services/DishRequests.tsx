@@ -15,8 +15,8 @@ export const getCategories = () => httpRequests.get(`/categories`)
 
 export const getRecipes = () => httpRequests.get(`/recipes`)
 
-export const getRecipe = ({ name }: Recipe) =>
-    httpRequests.get(`/recipes?name=${name}`)
+export const getRecipe = ({ id }: Recipe) =>
+    httpRequests.get(`/recipes?id=${id}`)
 
 export const searchRecipes = ({
     q,

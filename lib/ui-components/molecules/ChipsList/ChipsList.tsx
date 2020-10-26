@@ -4,14 +4,11 @@ import { Group } from '@ui-components/atoms'
 import { theme } from '@ui-components/themes/main'
 import { MdClose as CloseIcon } from 'react-icons/md'
 
-type Item = { [key: string]: string | ReadonlyArray<string> } | string
+type Item = { label: string; value: string }
 
 interface Props {
     onClose: (item: Item) => void
-    items: ReadonlyArray<{
-        label: string
-        value: Item
-    }>
+    items: ReadonlyArray<Item>
 }
 
 const useStyles = makeStyles(() =>
@@ -50,7 +47,8 @@ export default function ChipsList({ onClose, items }: Props): ReactElement {
                         deletable: classes.MUIDeletableChipOverride,
                     }}
                     label={label}
-                    onDelete={() => onClose(value)}
+                    onDelete={() => onClose({ label, value })}
+                    key={label}
                 />
             ))}
         </Group>

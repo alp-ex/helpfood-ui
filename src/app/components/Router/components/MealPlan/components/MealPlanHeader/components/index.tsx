@@ -1,4 +1,3 @@
-import AddMealForm from './AddMealForm/AddMealForm'
-import RemoveMealForm from './RemoveMealForm/RemoveMealForm'
+import AddMealForm from './UpdateMealForm/UpdateMealForm'
 
-export { AddMealForm, RemoveMealForm }
+export { AddMealForm }

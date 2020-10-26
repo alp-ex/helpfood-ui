@@ -17,26 +17,26 @@ export const getMealPlan = ({ day }: { day: string }) =>
 
 export const addMealsToPlan = async ({
     meals,
-    day,
 }: {
-    meals: ReadonlyArray<Omit<Meal, 'id'>>
-    day: string
+    meals: ReadonlyArray<Omit<Meal, 'name' | 'category' | 'ingredients'>>
 }) =>
     Promise.all(
-        meals.map(({ name, category, ingredients }) =>
+        meals.map(({ id, day }) =>
             httpRequests.post(`?day=${day}`, {
-                data: { name, category, ingredients },
+                data: { meal_id: id },
             })
         )
     )
 
 export const removeMealsFromPlan = async ({
-    mealsIds,
+    meals,
 }: {
-    mealsIds: ReadonlyArray<string>
+    meals: ReadonlyArray<
+        Omit<Meal, 'day' | 'name' | 'category' | 'ingredients'>
+    >
 }) =>
     Promise.all(
-        mealsIds.map((id) => {
+        meals.map(({ id }) => {
             return httpRequests.delete(`/${id}`)
         })
     )
