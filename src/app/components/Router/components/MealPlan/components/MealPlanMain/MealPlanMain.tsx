@@ -9,7 +9,7 @@ interface Props {}
 
 export default function MealPlanMain({}: Props): ReactElement {
     const {
-        state: { selectedDay },
+        state: { selectedWeekDay },
     } = useCalendar()
     const {
         state: { meals },
@@ -22,8 +22,11 @@ export default function MealPlanMain({}: Props): ReactElement {
 
     useEffect(() => {
         getCategories({ dispatch: dishDispatch })
-        getMealPlan({ dispatch: mealPlanDispatch, day: selectedDay })
-    }, [selectedDay])
+        getMealPlan({
+            dispatch: mealPlanDispatch,
+            weekday: selectedWeekDay.value,
+        })
+    }, [selectedWeekDay])
 
     return (
         <>
@@ -35,10 +38,10 @@ export default function MealPlanMain({}: Props): ReactElement {
 
                           {meals
                               .filter(
-                                  ({ category: mealCategory }) =>
-                                      categoryName === mealCategory
+                                  ({ recipe }) =>
+                                      recipe && categoryName === recipe.category
                               )
-                              .map(({ ingredients, name }) => (
+                              .map(({ recipe: { ingredients, name } }) => (
                                   <LabelledInlineList
                                       key={`${name}${categoryName}`}
                                       label={name}

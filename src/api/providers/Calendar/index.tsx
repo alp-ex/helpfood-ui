@@ -1,27 +1,40 @@
 import React, { useContext, createContext, ReactNode, useReducer } from 'react'
-import { getWeekDaysFromNow } from '@utils/dates'
+import { getLocalesWeekDays } from '@utils/dates'
 
-type Action = { type: string; payload?: {} }
+type WeekDay = {
+    label: string
+    value: number
+}
+type Action = {
+    type: string
+    payload?: {
+        selectedWeekDay?: WeekDay
+    }
+}
 type Dispatch = (action: Action) => void
 type State = {
-    weekDays: ReadonlyArray<string>
-    selectedDay: string
+    weekDays: ReadonlyArray<WeekDay>
+    selectedWeekDay: WeekDay
 }
 type CalendarProviderProps = { children: ReactNode }
 
 const CalendarStateContext = createContext<State | undefined>(undefined)
 const CalendarDispatchContext = createContext<Dispatch | undefined>(undefined)
 
-const { SET_SELECTED_DAY } = Object.freeze({
-    SET_SELECTED_DAY: 'set the value of the day who was selected',
+const { SET_SELECTED_WEEKDAY } = Object.freeze({
+    SET_SELECTED_WEEKDAY: 'set the value of the weekday who was selected',
 })
 
-const calendarReducer = (prevState, { type, payload }) => {
+const calendarReducer = (
+    prevState: State,
+    { type, payload }: Action
+): State => {
     switch (type) {
-        case SET_SELECTED_DAY: {
+        case SET_SELECTED_WEEKDAY: {
             return {
                 ...prevState,
-                selectedDay: payload,
+                selectedWeekDay:
+                    payload?.selectedWeekDay || prevState.selectedWeekDay,
             }
         }
         default: {
@@ -33,11 +46,13 @@ const calendarReducer = (prevState, { type, payload }) => {
 }
 
 export function CalendarProvider({ children }: CalendarProviderProps) {
-    const weekDays = getWeekDaysFromNow()
-
+    const weekDays = getLocalesWeekDays()
     const [state, dispatch] = useReducer(calendarReducer, {
-        weekDays,
-        selectedDay: weekDays[0],
+        weekDays: Object.values(weekDays).map((value, index) => ({
+            label: value,
+            value: index,
+        })),
+        selectedWeekDay: { label: weekDays[0], value: 0 },
     })
 
     return (
@@ -77,6 +92,15 @@ export function useCalendar() {
     return { state: useCalendarState(), dispatch: useCalendarDispatch() }
 }
 
-export function setCurrentDay({ dispatch, day }) {
-    dispatch({ type: SET_SELECTED_DAY, payload: day })
+export function setCurrentDay({
+    dispatch,
+    weekday,
+}: {
+    dispatch: Dispatch
+    weekday: WeekDay
+}) {
+    dispatch({
+        type: SET_SELECTED_WEEKDAY,
+        payload: { selectedWeekDay: weekday },
+    })
 }

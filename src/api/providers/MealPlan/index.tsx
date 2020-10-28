@@ -4,19 +4,22 @@ import {
     removeMealsFromPlan as removeMealsFromPlanAPI,
     getMealPlan as getMealPlanAPI,
 } from 'api/services/MealPlanRequests'
-import { getRecipes } from 'api/services/DishRequests'
 
+type WeekDay = number
 type Meal = {
     id: string
-    name: string
-    day: string
-    category: string
-    ingredients: ReadonlyArray<string>
+    weekday: WeekDay
+    recipe: {
+        id: string
+        name: string
+        category: string
+        ingredients: ReadonlyArray<string>
+    }
 }
+
 type Action = {
     type: string
     payload?: {
-        mealsToDelete?: ReadonlyArray<string>
         meals?: ReadonlyArray<Meal>
     }
 }
@@ -100,13 +103,13 @@ export function useMealPlan() {
 
 export async function getMealPlan({
     dispatch,
-    day,
+    weekday,
 }: {
     dispatch: Dispatch
-    day: string
+    weekday: WeekDay
 }) {
     try {
-        const meals = await getMealPlanAPI({ day })
+        const meals = await getMealPlanAPI({ weekday })
 
         dispatch({
             type: GETTING_MEAL_PLAN_SUCCEED,
@@ -121,14 +124,17 @@ export async function updateMealPlan({
     dispatch,
     mealsToDelete,
     mealsToAdd,
+    weekday,
 }: {
     dispatch: Dispatch
     mealsToDelete: ReadonlyArray<{ id: string }>
-    mealsToAdd: ReadonlyArray<{ id: string; day: string }>
+    mealsToAdd: ReadonlyArray<{ recipeId: string }>
+    weekday: WeekDay
 }) {
     try {
         const addedMeals = await addMealsToPlanAPI({
             meals: mealsToAdd,
+            weekday,
         })
 
         await removeMealsFromPlanAPI({

@@ -12,7 +12,7 @@ import { AddMealForm } from './components'
 
 export default function MealPlanHeader(): ReactElement {
     const {
-        state: { weekDays, selectedDay },
+        state: { weekDays, selectedWeekDay },
         dispatch: calendarDispatch,
     } = useCalendar()
     const [isAddMealFormVisible, setIsAddMealFormVisible] = useState(false)
@@ -21,17 +21,26 @@ export default function MealPlanHeader(): ReactElement {
         <>
             <AngularBackground bgcolorOption="light">
                 <FullScreenListSelect
-                    items={weekDays.map((dayName) => ({
-                        label: dayName,
-                        value: dayName,
+                    items={weekDays.map(({ label, value }) => ({
+                        label,
+                        value,
                     }))}
-                    onSelect={(day) => {
+                    onSelect={({
+                        label,
+                        value,
+                    }: {
+                        label: string
+                        value: number
+                    }) => {
                         setCurrentDay({
                             dispatch: calendarDispatch,
-                            day,
+                            weekday: { label, value },
                         })
                     }}
-                    selected={{ label: selectedDay, value: selectedDay }}
+                    selected={{
+                        label: selectedWeekDay.label,
+                        value: selectedWeekDay.value,
+                    }}
                 />
 
                 <ButtonIcon

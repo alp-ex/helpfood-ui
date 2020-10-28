@@ -1,42 +1,61 @@
 import { HTTPCommon } from '@utils/http-common'
 
+type WeekDay = number
 type Meal = {
     id: string
-    name: string
-    day: string
-    category: string
-    ingredients: ReadonlyArray<string>
+    weekday: WeekDay
+    recipes: {
+        id: string
+        name: string
+        category: string
+        ingredients: ReadonlyArray<string>
+    }
 }
 
 const httpRequests = new HTTPCommon({
     baseUrl: `http://localhost:3000/mealPlan`,
 })
 
-export const getMealPlan = ({ day }: { day: string }) =>
-    httpRequests.get(`?day=${day}`)
+export const getMealPlan = async ({ weekday }: { weekday: WeekDay }) => {
+    const meals = await httpRequests.get(`?_expand=recipes&weekday=${weekday}`)
+
+    return meals.map((meal: Meal) => ({
+        id: meal.id,
+        weekday: meal.weekday,
+        recipe: {
+            id: meal.recipes.id,
+            name: meal.recipes.name,
+            category: meal.recipes.category,
+            ingredients: meal.recipes.ingredients,
+        },
+    }))
+}
 
 export const addMealsToPlan = async ({
-    meals,
+    meals: mealsToAdd,
+    weekday,
 }: {
-    meals: ReadonlyArray<Omit<Meal, 'name' | 'category' | 'ingredients'>>
-}) =>
-    Promise.all(
-        meals.map(({ id, day }) =>
-            httpRequests.post(`?day=${day}`, {
-                data: { meal_id: id },
+    meals: ReadonlyArray<{ recipeId: string }>
+    weekday: WeekDay
+}) => {
+    await Promise.all(
+        mealsToAdd.map(({ recipeId }) =>
+            httpRequests.post('?_expand=recipes', {
+                data: { recipesId: recipeId, weekday },
             })
         )
     )
 
+    return await getMealPlan({ weekday })
+}
+
 export const removeMealsFromPlan = async ({
-    meals,
+    meals: mealsToRemove,
 }: {
-    meals: ReadonlyArray<
-        Omit<Meal, 'day' | 'name' | 'category' | 'ingredients'>
-    >
+    meals: ReadonlyArray<{ id: string }>
 }) =>
     Promise.all(
-        meals.map(({ id }) => {
+        mealsToRemove.map(({ id }) => {
             return httpRequests.delete(`/${id}`)
         })
     )

@@ -1,13 +1,19 @@
-import React, { ReactElement, ReactNode, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { Container, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { createPortal } from 'react-dom'
 import { theme } from '@ui-components/themes/main'
 
 interface Props {
-    items: ReadonlyArray<{ value: string; label: string }>
-    onSelect: (value: string | ReactNode | number) => void
-    selected: { value: string | ReactNode | number; label: string }
+    items: ReadonlyArray<{ value: string | number; label: string }>
+    onSelect: ({
+        label,
+        value,
+    }: {
+        value: string | number
+        label: string
+    }) => void
+    selected: { value: string | number; label: string }
 }
 
 const useStyles = makeStyles(() =>
@@ -77,7 +83,7 @@ export default function FullScreenListSelect({
                                       }`,
                                   }}
                                   onClick={() => {
-                                      onSelect(value)
+                                      onSelect({ label, value })
                                       setFullScreenListVisible(false)
                                   }}
                                   key={label}

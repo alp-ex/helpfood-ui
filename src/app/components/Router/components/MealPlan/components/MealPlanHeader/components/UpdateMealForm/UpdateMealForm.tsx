@@ -11,7 +11,7 @@ interface Props {
 export default function UpdateMealForm({ onClose }: Props) {
     const { dispatch: mealPlanDispatch } = useMealPlan()
     const {
-        state: { selectedDay },
+        state: { selectedWeekDay },
     } = useCalendar()
     const {
         dispatch: dishDispatch,
@@ -26,7 +26,7 @@ export default function UpdateMealForm({ onClose }: Props) {
             value: string
         }>
     >(
-        meals.map(({ id, name }) => ({
+        meals.map(({ id, recipe: { name } }) => ({
             label: name,
             value: id,
         }))
@@ -38,7 +38,7 @@ export default function UpdateMealForm({ onClose }: Props) {
 
     return (
         <MultiplesSelectionForm
-            title={selectedDay}
+            title={selectedWeekDay.label}
             options={{
                 labels: ['name', 'category', 'ingredients'],
                 values: recipes
@@ -85,9 +85,9 @@ export default function UpdateMealForm({ onClose }: Props) {
                 updateMealPlan({
                     dispatch: mealPlanDispatch,
                     mealsToAdd: selectedOptions.map(({ value }) => ({
-                        id: value,
-                        day: selectedDay,
+                        recipeId: value,
                     })),
+                    weekday: selectedWeekDay.value,
                     mealsToDelete: meals.filter(
                         ({ id }) =>
                             selectedOptions.findIndex(
