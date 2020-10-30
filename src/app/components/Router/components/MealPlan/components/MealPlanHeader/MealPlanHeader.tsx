@@ -5,7 +5,7 @@ import {
 } from '@ui-components/atoms'
 import { FullScreenListSelect } from '@ui-components/molecules'
 import { setCurrentDay, useCalendar } from 'api/providers/Calendar'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react';
 import { createPortal } from 'react-dom'
 import { MdModeEdit as EditIcon } from 'react-icons/md'
 import { AddMealForm } from './components'

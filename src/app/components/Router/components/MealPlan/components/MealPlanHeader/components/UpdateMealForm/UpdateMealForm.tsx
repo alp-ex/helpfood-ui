@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { updateMealPlan, useMealPlan } from 'api/providers/MealPlan'
 import { useCalendar } from 'api/providers/Calendar'
 import { MultiplesSelectionForm } from '@ui-components/organismes'

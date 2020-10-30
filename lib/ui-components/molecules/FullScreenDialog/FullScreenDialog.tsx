@@ -1,9 +1,4 @@
-import React, {
-    ReactElement,
-    ReactNode,
-    ElementType,
-    CSSProperties,
-} from 'react'
+import { ReactElement, ReactNode, ElementType, CSSProperties } from 'react';
 
 interface Props {
     component?: ElementType

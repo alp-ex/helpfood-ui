@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react';
 import { Toolbar } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 

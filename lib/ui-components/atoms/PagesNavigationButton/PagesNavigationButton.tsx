@@ -1,4 +1,4 @@
-import React, { ElementType, ReactElement, ReactNode } from 'react'
+import { ElementType, ReactElement, ReactNode } from 'react';
 import { Button as ReactButton, Link as ReactLink } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 

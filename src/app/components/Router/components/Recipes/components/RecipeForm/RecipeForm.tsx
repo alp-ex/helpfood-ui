@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react';
 import useForm from '@utils/useForm'
 import {
     searchCategories as searchCategoriesAPI,

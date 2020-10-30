@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react';
 import { IconContext } from 'react-icons'
 import { theme } from '@ui-components/themes/main'
 

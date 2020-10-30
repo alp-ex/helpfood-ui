@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react';
 import { Box } from '@material-ui/core'
 import { theme } from '@ui-components/themes/main'
 

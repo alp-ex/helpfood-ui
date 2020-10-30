@@ -1,6 +1,6 @@
 import { Route, Switch, Redirect } from 'react-router-dom'
 
-import React, { lazy, Suspense } from 'react'
+import { lazy, Suspense } from 'react';
 
 const MealPlan = lazy(() => import('./components/MealPlan/MealPlan'))
 const Recipes = lazy(() => import('./components/Recipes/Recipes'))

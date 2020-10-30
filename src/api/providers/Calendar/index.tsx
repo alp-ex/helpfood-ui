@@ -1,4 +1,4 @@
-import React, { useContext, createContext, ReactNode, useReducer } from 'react'
+import { useContext, createContext, ReactNode, useReducer } from 'react';
 import { getLocalesWeekDays } from '@utils/dates'
 
 type WeekDay = {

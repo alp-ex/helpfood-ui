@@ -1,4 +1,4 @@
-import React, { ReactElement, Fragment } from 'react'
+import { ReactElement, Fragment } from 'react';
 import { Label } from '@ui-components/atoms'
 
 interface Props {

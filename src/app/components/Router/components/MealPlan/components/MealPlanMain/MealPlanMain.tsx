@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect } from 'react';
 import { useCalendar } from 'api/providers/Calendar'
 import { useMealPlan, getMealPlan } from 'api/providers/MealPlan'
 import { useDish, getCategories } from 'api/providers/Dishes'

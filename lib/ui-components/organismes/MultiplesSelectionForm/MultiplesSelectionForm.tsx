@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom'
 import { Container, Button, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
