@@ -1,6 +1,7 @@
 const { merge } = require('webpack-merge')
 const baseConfig = require('./webpack.config.base.js')
-const path = require('path')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+    .BundleAnalyzerPlugin
 
 module.exports = merge(baseConfig, {
     mode: 'development',
@@ -8,4 +9,5 @@ module.exports = merge(baseConfig, {
     performance: {
         hints: false,
     },
+    plugins: [new BundleAnalyzerPlugin()],
 })
