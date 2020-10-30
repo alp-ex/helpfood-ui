@@ -13,24 +13,53 @@ const httpRequests = new HTTPCommon({
 
 export const getCategories = () => httpRequests.get(`/categories`)
 
-export const getRecipes = () => httpRequests.get(`/recipes`)
+export const getRecipes = async () => {
+    const recipes = await httpRequests.get(`/recipes`)
 
-export const getRecipe = ({ id }: Recipe) =>
-    httpRequests.get(`/recipes?id=${id}`)
+    return recipes
+        ? recipes.map(
+              (recipe: {
+                  id: string
+                  name: string
+                  categories: string
+                  ingredients: ReadonlyArray<string>
+              }) => ({
+                  id: recipe.id || '',
+                  name: recipe.name || '',
+                  category: recipe.categories || '',
+                  ingredients: recipe.ingredients || [],
+              })
+          )
+        : []
+}
 
-export const searchRecipes = ({
+export const searchRecipes = async ({
     q,
     category,
 }: {
     q: string
     category: string
-}) => httpRequests.get(`/recipes?q=${q}&category=${category}`)
+}) => {
+    const recipes = await httpRequests.get(
+        `/recipes?q=${q}&category=${category}`
+    )
 
-export const searchCategories = ({ q }: { q: string }) =>
-    httpRequests.get(`/categories?q=${q}`)
-
-export const searchIngredients = ({ q }: { q: string }) =>
-    httpRequests.get(`/ingredients?q=${q}`)
+    return recipes
+        ? recipes.map(
+              (recipe: {
+                  id: string
+                  name: string
+                  categories: string
+                  ingredients: ReadonlyArray<string>
+              }) => ({
+                  id: recipe.id || '',
+                  name: recipe.name || '',
+                  category: recipe.categories || '',
+                  ingredients: recipe.ingredients || [],
+              })
+          )
+        : []
+}
 
 export const editRecipe = ({ name, ingredients, category }: Recipe) =>
     httpRequests.put(`/recipes?name=${name}`, {

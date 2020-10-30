@@ -110,7 +110,7 @@ export async function getMealPlan({
 }) {
     try {
         const meals = await getMealPlanAPI({ weekday })
-
+        console.log('provider', meals)
         dispatch({
             type: GETTING_MEAL_PLAN_SUCCEED,
             payload: { meals },

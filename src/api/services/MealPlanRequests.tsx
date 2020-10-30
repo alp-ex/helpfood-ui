@@ -4,7 +4,7 @@ type WeekDay = number
 type Meal = {
     id: string
     weekday: WeekDay
-    recipes: {
+    recipe: {
         id: string
         name: string
         category: string
@@ -13,22 +13,41 @@ type Meal = {
 }
 
 const httpRequests = new HTTPCommon({
-    baseUrl: `http://localhost:3000/mealPlan`,
+    baseUrl: `http://localhost:3000/meal-plan`,
 })
 
 export const getMealPlan = async ({ weekday }: { weekday: WeekDay }) => {
-    const meals = await httpRequests.get(`?_expand=recipes&weekday=${weekday}`)
+    const meals = await httpRequests.get(`/${weekday}`)
 
-    return meals.map((meal: Meal) => ({
-        id: meal.id,
-        weekday: meal.weekday,
-        recipe: {
-            id: meal.recipes.id,
-            name: meal.recipes.name,
-            category: meal.recipes.category,
-            ingredients: meal.recipes.ingredients,
-        },
-    }))
+    return meals
+        ? meals.map(
+              (meal: {
+                  id: string
+                  weekday: number
+                  recipes: {
+                      id: string
+                      name: string
+                      categories: string
+                      ingredients: ReadonlyArray<string>
+                  }
+              }) =>
+                  meal
+                      ? {
+                            id: meal.id || '',
+                            weekday: meal.weekday || 0,
+                            recipe: meal.recipes
+                                ? {
+                                      id: meal.recipes.id || '',
+                                      name: meal.recipes.name || '',
+                                      category: meal.recipes.categories || '',
+                                      ingredients:
+                                          meal.recipes.ingredients || [],
+                                  }
+                                : {},
+                        }
+                      : {}
+          )
+        : []
 }
 
 export const addMealsToPlan = async ({
@@ -40,8 +59,8 @@ export const addMealsToPlan = async ({
 }) => {
     await Promise.all(
         mealsToAdd.map(({ recipeId }) =>
-            httpRequests.post('?_expand=recipes', {
-                data: { recipesId: recipeId, weekday },
+            httpRequests.post('', {
+                data: { recipeId: recipeId, weekday },
             })
         )
     )

@@ -41,9 +41,9 @@ export default function MealPlanMain({}: Props): ReactElement {
                                   ({ recipe }) =>
                                       recipe && categoryName === recipe.category
                               )
-                              .map(({ recipe: { ingredients, name } }) => (
+                              .map(({ recipe: { id, ingredients, name } }) => (
                                   <LabelledInlineList
-                                      key={`${name}${categoryName}`}
+                                      key={id}
                                       label={name}
                                       items={ingredients}
                                   />
