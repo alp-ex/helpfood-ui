@@ -1,4 +1,4 @@
-import { MouseEvent, ReactElement } from 'react';
+import { MouseEvent, ReactElement } from 'react'
 import { createPortal } from 'react-dom'
 import { Container, Button } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'

@@ -1,9 +1,9 @@
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
-import { lazy, Suspense } from 'react';
+import { lazy, ReactElement, Suspense } from 'react'
 
 const MealPlan = lazy(() => import('./components/MealPlan/MealPlan'))
-const Recipes = lazy(() => import('./components/Recipes/Recipes'))
+// const Recipes = lazy(() => import('./components/Recipes/Recipes'))
 
 export const Routes = Object.freeze({
     HOMEPAGE: '/',
@@ -12,12 +12,16 @@ export const Routes = Object.freeze({
     RECIPES: '/recipes',
 })
 
-const Router = () => {
+const Router = (): ReactElement => {
     return (
         <Suspense fallback={<div></div>}>
             <Switch>
                 <Route path={Routes.MEAL_PLAN} render={() => <MealPlan />} />
-                <Route path={Routes.RECIPES} render={() => <Recipes />} />
+                <Route
+                    path={Routes.RECIPES}
+                    render={() => <span>recipes</span>}
+                />
+                {/* <Route path={Routes.RECIPES} render={() => <Recipes />} /> */}
             </Switch>
         </Suspense>
     )

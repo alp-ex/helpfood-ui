@@ -1,13 +1,11 @@
-import { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect } from 'react'
 import { useCalendar } from 'api/providers/Calendar'
 import { useMealPlan, getMealPlan } from 'api/providers/MealPlan'
 import { useDish, getCategories } from 'api/providers/Dishes'
 import { LabelledInlineList } from '@ui-components/molecules'
 import { Group, StrokedTitle } from '@ui-components/atoms'
 
-interface Props {}
-
-export default function MealPlanMain({}: Props): ReactElement {
+export default function MealPlanMain(): ReactElement {
     const {
         state: { selectedWeekDay },
     } = useCalendar()

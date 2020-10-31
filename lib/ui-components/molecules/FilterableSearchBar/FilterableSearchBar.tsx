@@ -1,8 +1,7 @@
-import { ChangeEvent, ReactElement } from 'react';
+import { ChangeEvent, ReactElement } from 'react'
 import {
     FormControl,
     MenuItem,
-    Input,
     Select,
     makeStyles,
     InputBase,

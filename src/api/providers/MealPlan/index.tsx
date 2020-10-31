@@ -1,4 +1,10 @@
-import { createContext, useReducer, useContext, ReactNode } from 'react';
+import {
+    createContext,
+    useReducer,
+    useContext,
+    ReactNode,
+    ReactElement,
+} from 'react'
 import {
     addMealsToPlan as addMealsToPlanAPI,
     removeMealsFromPlan as removeMealsFromPlanAPI,
@@ -61,7 +67,9 @@ function mealPlanReducer(prevState: State, { type, payload }: Action): State {
     }
 }
 
-export function MealPlanProvider({ children }: MealPlanProviderProps) {
+export function MealPlanProvider({
+    children,
+}: MealPlanProviderProps): ReactElement {
     const [state, dispatch] = useReducer(mealPlanReducer, {
         meals: [],
     })
@@ -97,7 +105,7 @@ function useMealPlanDispatch() {
     return context
 }
 
-export function useMealPlan() {
+export function useMealPlan(): { state: State; dispatch: Dispatch } {
     return { state: useMealPlanState(), dispatch: useMealPlanDispatch() }
 }
 
@@ -107,10 +115,10 @@ export async function getMealPlan({
 }: {
     dispatch: Dispatch
     weekday: WeekDay
-}) {
+}): Promise<void> {
     try {
         const meals = await getMealPlanAPI({ weekday })
-        console.log('provider', meals)
+
         dispatch({
             type: GETTING_MEAL_PLAN_SUCCEED,
             payload: { meals },
@@ -130,7 +138,7 @@ export async function updateMealPlan({
     mealsToDelete: ReadonlyArray<{ id: string }>
     mealsToAdd: ReadonlyArray<{ recipeId: string }>
     weekday: WeekDay
-}) {
+}): Promise<void> {
     try {
         const addedMeals = await addMealsToPlanAPI({
             meals: mealsToAdd,

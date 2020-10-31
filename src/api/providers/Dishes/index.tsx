@@ -1,4 +1,10 @@
-import { createContext, useReducer, useContext, ReactNode } from 'react';
+import {
+    createContext,
+    useReducer,
+    useContext,
+    ReactNode,
+    ReactElement,
+} from 'react'
 import {
     getRecipes as getRecipesAPI,
     getCategories as getCategoriesAPI,
@@ -64,7 +70,9 @@ function dishesReducer(prevState: State, { type, payload }: Action): State {
     }
 }
 
-export function DishesProvider({ children }: DishesProviderProps) {
+export function DishesProvider({
+    children,
+}: DishesProviderProps): ReactElement {
     const [state, dispatch] = useReducer(dishesReducer, {
         recipes: [],
         categories: [],
@@ -101,11 +109,15 @@ function useDishesDispatch() {
     return context
 }
 
-export function useDish() {
+export function useDish(): { state: State; dispatch: Dispatch } {
     return { state: useDishesState(), dispatch: useDishesDispatch() }
 }
 
-export async function getRecipes({ dispatch }: { dispatch: Dispatch }) {
+export async function getRecipes({
+    dispatch,
+}: {
+    dispatch: Dispatch
+}): Promise<void> {
     try {
         const response = await getRecipesAPI()
 
@@ -127,7 +139,11 @@ export async function getRecipes({ dispatch }: { dispatch: Dispatch }) {
     }
 }
 
-export async function getCategories({ dispatch }: { dispatch: Dispatch }) {
+export async function getCategories({
+    dispatch,
+}: {
+    dispatch: Dispatch
+}): Promise<void> {
     try {
         const response = await getCategoriesAPI()
 
@@ -148,7 +164,7 @@ export async function searchRecipes({
 }: {
     params: { q: string; category: string }
     dispatch: Dispatch
-}) {
+}): Promise<void> {
     try {
         const response = await searchRecipesAPI({ q, category })
 

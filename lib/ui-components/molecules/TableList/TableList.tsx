@@ -8,7 +8,7 @@ import {
     TableRow,
 } from '@material-ui/core'
 import { theme } from '@ui-components/themes/main'
-import { ReactElement } from 'react';
+import { ReactElement } from 'react'
 
 type Row = {
     labels: { [key: string]: string }

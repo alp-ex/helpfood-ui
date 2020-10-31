@@ -1,23 +1,41 @@
 {
     "compilerOptions": {
-        "lib": ["es6", "dom"],
+        "lib": [
+            "es6",
+            "dom"
+        ],
         "noImplicitAny": true,
         "noImplicitThis": true,
         "strictNullChecks": true,
-        "jsx": "react",
+        "jsx": "react-jsxdev",
         "allowJs": true,
         "skipLibCheck": true,
         "allowSyntheticDefaultImports": true,
         "isolatedModules": true,
+        "sourceMap": true,
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "downlevelIteration": true,
         "baseUrl": "./src",
         "paths": {
-            "@ui-components/*": ["../lib/ui-components/*"],
-            "@providers/*": ["providers/*"],
-            "@utils/*": ["../lib/utils/*"]
+            "@ui-components/*": [
+                "../lib/ui-components/*"
+            ],
+            "@providers/*": [
+                "providers/*"
+            ],
+            "@utils/*": [
+                "../lib/utils/*"
+            ]
         },
-        "exclude": ["node_modules", "dist", "**/*.d.ts"]
-    }
+    },
+    "include": [
+        "**/*.ts",
+        "**/*.tsx"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "**/*.d.ts"
+    ]
 }

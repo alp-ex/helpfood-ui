@@ -1,4 +1,10 @@
-import { useContext, createContext, ReactNode, useReducer } from 'react';
+import {
+    useContext,
+    createContext,
+    ReactNode,
+    useReducer,
+    ReactElement,
+} from 'react'
 import { getLocalesWeekDays } from '@utils/dates'
 
 type WeekDay = {
@@ -45,7 +51,9 @@ const calendarReducer = (
     }
 }
 
-export function CalendarProvider({ children }: CalendarProviderProps) {
+export function CalendarProvider({
+    children,
+}: CalendarProviderProps): ReactElement {
     const weekDays = getLocalesWeekDays()
     const [state, dispatch] = useReducer(calendarReducer, {
         weekDays: Object.values(weekDays).map((value, index) => ({
@@ -88,7 +96,7 @@ function useCalendarDispatch() {
     return context
 }
 
-export function useCalendar() {
+export function useCalendar(): { state: State; dispatch: Dispatch } {
     return { state: useCalendarState(), dispatch: useCalendarDispatch() }
 }
 
@@ -98,7 +106,7 @@ export function setCurrentDay({
 }: {
     dispatch: Dispatch
     weekday: WeekDay
-}) {
+}): void {
     dispatch({
         type: SET_SELECTED_WEEKDAY,
         payload: { selectedWeekDay: weekday },

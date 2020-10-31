@@ -1,9 +1,11 @@
-const path = require('path')
-const TSConfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
+import path from 'path'
+import TSConfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import { Configuration, WatchIgnorePlugin } from 'webpack'
 
-module.exports = {
+const config: Configuration = {
     entry: {
         app: './src/index.tsx',
     },
@@ -13,23 +15,12 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js'],
         plugins: [new TSConfigPathsPlugin()],
     },
     module: {
         rules: [
             {
-                test: /\.m?js/,
-                resolve: {
-                    fullySpecified: false,
-                },
-            },
-            {
-                test: /\.css$/i,
-                use: ['style-loader', 'css-loader'],
-            },
-            {
-                test: /\.tsx$/,
+                test: /\.tsx?$/,
                 include: [
                     path.resolve(__dirname, 'src'),
                     path.resolve(__dirname, 'lib'),
@@ -63,6 +54,12 @@ module.exports = {
         },
     },
     plugins: [
+        new ForkTsCheckerWebpackPlugin({
+            eslint: {
+                files: './src/**/*.{ts,tsx,js,jsx}',
+            },
+        }),
+        new WatchIgnorePlugin({ paths: [/\.js$/, /\.d\.ts$/] }),
         new HtmlWebpackPlugin({
             title: 'Planning | helpfood',
             filename: 'index.html',
@@ -72,3 +69,5 @@ module.exports = {
         }),
     ],
 }
+
+export default config

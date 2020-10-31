@@ -13,10 +13,14 @@ type Meal = {
 }
 
 const httpRequests = new HTTPCommon({
-    baseUrl: `http://localhost:3000/meal-plan`,
+    baseUrl: 'http://localhost:3000/meal-plan',
 })
 
-export const getMealPlan = async ({ weekday }: { weekday: WeekDay }) => {
+export const getMealPlan = async ({
+    weekday,
+}: {
+    weekday: WeekDay
+}): Promise<ReadonlyArray<Meal>> => {
     const meals = await httpRequests.get(`/${weekday}`)
 
     return meals
@@ -56,11 +60,11 @@ export const addMealsToPlan = async ({
 }: {
     meals: ReadonlyArray<{ recipeId: string }>
     weekday: WeekDay
-}) => {
+}): Promise<ReadonlyArray<Meal>> => {
     await Promise.all(
         mealsToAdd.map(({ recipeId }) =>
             httpRequests.post('', {
-                data: { recipeId: recipeId, weekday },
+                data: JSON.stringify({ recipeId: recipeId, weekday }),
             })
         )
     )
@@ -72,7 +76,7 @@ export const removeMealsFromPlan = async ({
     meals: mealsToRemove,
 }: {
     meals: ReadonlyArray<{ id: string }>
-}) =>
+}): Promise<ReadonlyArray<Meal>> =>
     Promise.all(
         mealsToRemove.map(({ id }) => {
             return httpRequests.delete(`/${id}`)

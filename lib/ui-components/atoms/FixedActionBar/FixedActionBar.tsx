@@ -1,6 +1,6 @@
 import { Button, Container, createStyles, makeStyles } from '@material-ui/core'
 import { theme } from '@ui-components/themes/main'
-import { ReactElement } from 'react';
+import { ReactElement } from 'react'
 
 type Location = 'bottom' | 'top'
 type PrimaryColors = 'light' | 'main'

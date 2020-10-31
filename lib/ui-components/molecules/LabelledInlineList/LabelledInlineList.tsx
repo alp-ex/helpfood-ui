@@ -1,5 +1,6 @@
 import { ListItemText } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
+import { ReactElement } from 'react'
 
 interface Props {
     label: string
@@ -14,7 +15,10 @@ const useStyles = makeStyles(() =>
     })
 )
 
-export default function LabelledInlineList({ label, items }: Props) {
+export default function LabelledInlineList({
+    label,
+    items,
+}: Props): ReactElement {
     const classes = useStyles()
 
     return (

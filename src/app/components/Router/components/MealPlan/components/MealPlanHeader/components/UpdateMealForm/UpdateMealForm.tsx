@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react'
 import { updateMealPlan, useMealPlan } from 'api/providers/MealPlan'
 import { useCalendar } from 'api/providers/Calendar'
 import { MultiplesSelectionForm } from '@ui-components/organismes'
@@ -8,7 +8,7 @@ interface Props {
     onClose: () => void
 }
 
-export default function UpdateMealForm({ onClose }: Props) {
+export default function UpdateMealForm({ onClose }: Props): ReactElement {
     const { dispatch: mealPlanDispatch } = useMealPlan()
     const {
         state: { selectedWeekDay },

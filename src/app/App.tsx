@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { NavBar, Router } from 'app/components'
 import { Routes } from 'app/components/Router/Router'
@@ -16,22 +16,30 @@ export default function App(): ReactElement {
                     {
                         route: Routes.HOMEPAGE,
                         label: 'home',
-                        renderIcon: () => <HomeIcon />,
+                        renderIcon: function RenderHomeIcon() {
+                            return <HomeIcon />
+                        },
                     },
                     {
                         route: Routes.MEAL_PLAN,
                         label: 'menu',
-                        renderIcon: () => <MenuIcon />,
+                        renderIcon: function RenderMenuIcon() {
+                            return <MenuIcon />
+                        },
                     },
                     {
                         route: Routes.RECIPES,
                         label: 'recipes',
-                        renderIcon: () => <RecipesIcon />,
+                        renderIcon: function RenderRecipesIcon() {
+                            return <RecipesIcon />
+                        },
                     },
                     {
                         route: Routes.SHOPLIST,
                         label: 'shoplist',
-                        renderIcon: () => <ShopListIcon />,
+                        renderIcon: function RenderShopListIcon() {
+                            return <ShopListIcon />
+                        },
                     },
                 ]}
             />

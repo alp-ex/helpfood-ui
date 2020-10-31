@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement } from 'react'
 
 import { CalendarProvider } from 'api/providers/Calendar'
 import { MealPlanProvider } from 'api/providers/MealPlan'

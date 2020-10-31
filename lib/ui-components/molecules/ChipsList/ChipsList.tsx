@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement } from 'react'
 import { Chip, createStyles, makeStyles } from '@material-ui/core'
 import { Group } from '@ui-components/atoms'
 import { theme } from '@ui-components/themes/main'
