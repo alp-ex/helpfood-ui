@@ -1,7 +1,7 @@
 import { ReactElement, ReactNode } from 'react'
 import { Paper } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { theme } from '@ui-components/themes/main'
+import { theme } from 'ui-components/themes/main'
 
 interface Props {
     children: ReactNode

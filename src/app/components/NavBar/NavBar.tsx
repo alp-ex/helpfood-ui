@@ -5,7 +5,7 @@ import {
     RoundedBackground,
     RightLabel,
     FixedBar,
-} from '@ui-components/atoms'
+} from 'ui-components/atoms'
 import { Link as ReactRouterLink, useLocation } from 'react-router-dom'
 
 interface Props {

@@ -1,9 +1,9 @@
 import { ReactElement, useEffect } from 'react'
-import { useCalendar } from 'api/providers/Calendar'
-import { useMealPlan, getMealPlan } from 'api/providers/MealPlan'
-import { useDish, getCategories } from 'api/providers/Dishes'
-import { LabelledInlineList } from '@ui-components/molecules'
-import { Group, StrokedTitle } from '@ui-components/atoms'
+import { useCalendar } from 'providers/Calendar'
+import { useMealPlan, getMealPlan } from 'providers/MealPlan'
+import { useDish, getCategories } from 'providers/Dishes'
+import { LabelledInlineList } from 'ui-components/molecules'
+import { Group, StrokedTitle } from 'ui-components/atoms'
 
 export default function MealPlanMain(): ReactElement {
     const {

@@ -5,7 +5,7 @@ import {
     useReducer,
     ReactElement,
 } from 'react'
-import { getLocalesWeekDays } from '@utils/dates'
+import { getLocalesWeekDays } from 'utils/dates'
 
 type WeekDay = {
     label: string

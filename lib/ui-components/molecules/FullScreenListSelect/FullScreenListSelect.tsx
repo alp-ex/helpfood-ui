@@ -2,18 +2,12 @@ import { ReactElement, useState } from 'react'
 import { Container, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { createPortal } from 'react-dom'
-import { theme } from '@ui-components/themes/main'
+import { theme } from 'ui-components/themes/main'
 
-interface Props {
-    items: ReadonlyArray<{ value: string | number; label: string }>
-    onSelect: ({
-        label,
-        value,
-    }: {
-        value: string | number
-        label: string
-    }) => void
-    selected: { value: string | number; label: string }
+interface Props<T> {
+    items: ReadonlyArray<{ value: T; label: string }>
+    onSelect: ({ label, value }: { value: T; label: string }) => void
+    selected: { value: T; label: string }
 }
 
 const useStyles = makeStyles(() =>
@@ -51,11 +45,11 @@ const useStyles = makeStyles(() =>
     })
 )
 
-export default function FullScreenListSelect({
+export default function FullScreenListSelect<T>({
     items,
     onSelect,
     selected,
-}: Props): ReactElement {
+}: Props<T>): ReactElement {
     const classes = useStyles()
     const [fullScreenVisible, setFullScreenListVisible] = useState(false)
 

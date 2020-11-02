@@ -9,7 +9,7 @@ import {
     addMealsToPlan as addMealsToPlanAPI,
     removeMealsFromPlan as removeMealsFromPlanAPI,
     getMealPlan as getMealPlanAPI,
-} from 'api/services/MealPlanRequests'
+} from 'services/MealPlanRequests'
 
 type WeekDay = number
 type Meal = {

@@ -7,57 +7,64 @@ export class HTTPCommon implements HTTPCommonPropreties {
     baseUrl: string
     contentType: string
 
-    constructor({ baseUrl }: { baseUrl: string }) {
+    constructor({
+        baseUrl,
+        contentType = 'application/json',
+    }: {
+        baseUrl: string
+        contentType?: string
+    }) {
         this.baseUrl = baseUrl
+        this.contentType = contentType
     }
 
-    httpFetch(
+    async httpFetch<T>(
         path: string,
         {
             method = 'GET',
-            headers = { 'Content-Type': 'application/json' },
+            headers = { 'Content-Type': this.contentType },
             body = null,
         }: {
             method?: string
             headers?: RequestInit['headers']
             body?: RequestInit['body']
         } = {}
-    ): Promise<Response> {
-        return fetch(`${this.baseUrl}${path}`, {
+    ): Promise<T> {
+        const response = await fetch(`${this.baseUrl}${path}`, {
             method,
             headers,
             body,
-        }).then((response) => response.json())
+        })
+        const responseBody = response.json()
+
+        return responseBody
     }
 
-    get(path: string): Promise<Response> {
+    get<T>(path: string): Promise<T> {
         return this.httpFetch(path)
     }
 
-    delete(
+    delete<T>(
         path: string,
         { data = null }: { data?: RequestInit['body'] } = {}
-    ): Promise<Response> {
+    ): Promise<T> {
         return this.httpFetch(path, {
             method: 'DELETE',
             body: data === null ? null : JSON.stringify(data),
         })
     }
 
-    put(
-        path: string,
-        { data }: { data?: RequestInit['body'] }
-    ): Promise<Response> {
+    put<T>(path: string, { data }: { data?: RequestInit['body'] }): Promise<T> {
         return this.httpFetch(path, {
             method: 'PUT',
             body: JSON.stringify(data),
         })
     }
 
-    post(
+    post<T>(
         path: string,
         { data }: { data?: RequestInit['body'] }
-    ): Promise<Response> {
+    ): Promise<T> {
         return this.httpFetch(path, {
             method: 'POST',
             body: JSON.stringify(data),

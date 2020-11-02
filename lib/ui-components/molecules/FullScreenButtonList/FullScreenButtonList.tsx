@@ -2,7 +2,7 @@ import { MouseEvent, ReactElement } from 'react'
 import { createPortal } from 'react-dom'
 import { Container, Button } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { theme } from '@ui-components/themes/main'
+import { theme } from 'ui-components/themes/main'
 import { MdClose as CloseIcon } from 'react-icons/md'
 
 interface Props {

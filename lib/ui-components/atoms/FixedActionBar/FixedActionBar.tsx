@@ -1,5 +1,5 @@
 import { Button, Container, createStyles, makeStyles } from '@material-ui/core'
-import { theme } from '@ui-components/themes/main'
+import { theme } from 'ui-components/themes/main'
 import { ReactElement } from 'react'
 
 type Location = 'bottom' | 'top'

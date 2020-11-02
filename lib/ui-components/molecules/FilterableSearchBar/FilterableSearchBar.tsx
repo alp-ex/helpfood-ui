@@ -8,8 +8,8 @@ import {
     createStyles,
     TextField,
 } from '@material-ui/core'
-import { theme } from '@ui-components/themes/main'
-import { ButtonIcon, IconWrapper } from '@ui-components/atoms'
+import { theme } from 'ui-components/themes/main'
+import { ButtonIcon, IconWrapper } from 'ui-components/atoms'
 import { MdSearch as SearchIcon } from 'react-icons/md'
 import { MdClose as CloseIcon } from 'react-icons/md'
 

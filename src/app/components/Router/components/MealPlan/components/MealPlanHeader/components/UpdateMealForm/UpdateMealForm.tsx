@@ -1,8 +1,8 @@
 import { ReactElement, useEffect, useState } from 'react'
-import { updateMealPlan, useMealPlan } from 'api/providers/MealPlan'
-import { useCalendar } from 'api/providers/Calendar'
-import { MultiplesSelectionForm } from '@ui-components/organismes'
-import { searchRecipes, getCategories, useDish } from 'api/providers/Dishes'
+import { updateMealPlan, useMealPlan } from 'providers/MealPlan'
+import { useCalendar } from 'providers/Calendar'
+import { MultiplesSelectionForm } from 'ui-components/organismes'
+import { searchRecipes, getCategories, useDish } from 'providers/Dishes'
 
 interface Props {
     onClose: () => void

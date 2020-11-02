@@ -1,6 +1,6 @@
 import { ReactElement, ReactNode } from 'react'
 import { IconContext } from 'react-icons'
-import { theme } from '@ui-components/themes/main'
+import { theme } from 'ui-components/themes/main'
 
 interface Props {
     children: ReactNode

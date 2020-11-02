@@ -9,7 +9,7 @@ import {
     getRecipes as getRecipesAPI,
     getCategories as getCategoriesAPI,
     searchRecipes as searchRecipesAPI,
-} from 'api/services/DishRequests'
+} from 'services/DishRequests'
 
 type Recipe = {
     id: string

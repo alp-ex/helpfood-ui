@@ -2,14 +2,14 @@ import { ReactElement, useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Container, Button, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { theme } from '@ui-components/themes/main'
+import { theme } from 'ui-components/themes/main'
 import { MdClose as CloseIcon } from 'react-icons/md'
 import {
     ChipsList,
     FilterableSearchBar,
     TableList,
-} from '@ui-components/molecules'
-import { AngularBackground, FixedActionBar } from '@ui-components/atoms'
+} from 'ui-components/molecules'
+import { AngularBackground, FixedActionBar } from 'ui-components/atoms'
 
 type OptionValue = { label: string; value: string }
 

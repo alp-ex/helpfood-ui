@@ -7,7 +7,7 @@ import { Configuration, WatchIgnorePlugin } from 'webpack'
 
 const config: Configuration = {
     entry: {
-        app: './src/index.tsx',
+        app: path.resolve(__dirname, 'src/index.tsx'),
     },
     output: {
         filename: '[name].[contenthash].bundle.js',
@@ -15,16 +15,14 @@ const config: Configuration = {
         path: path.resolve(__dirname, 'dist'),
     },
     resolve: {
+        extensions: ['.tsx', '.ts', '.js', '.json'],
         plugins: [new TSConfigPathsPlugin()],
     },
     module: {
         rules: [
             {
                 test: /\.tsx?$/,
-                include: [
-                    path.resolve(__dirname, 'src'),
-                    path.resolve(__dirname, 'lib'),
-                ],
+                exclude: /node_modules/,
                 use: [
                     {
                         loader: 'ts-loader',
@@ -61,7 +59,7 @@ const config: Configuration = {
         }),
         new WatchIgnorePlugin({ paths: [/\.js$/, /\.d\.ts$/] }),
         new HtmlWebpackPlugin({
-            title: 'Planning | helpfood',
+            title: 'Helpfood | planning',
             filename: 'index.html',
             inject: 'body',
             minify: true,

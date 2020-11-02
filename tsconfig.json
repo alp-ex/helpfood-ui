@@ -1,41 +1,26 @@
 {
     "compilerOptions": {
-        "lib": [
-            "es6",
-            "dom"
-        ],
+        "outDir": "./dist/",
+        "jsx": "react-jsxdev",
+        "module": "commonjs",
+        "target": "es5",
+        "esModuleInterop": true,
         "noImplicitAny": true,
         "noImplicitThis": true,
         "strictNullChecks": true,
-        "jsx": "react-jsxdev",
-        "allowJs": true,
-        "skipLibCheck": true,
-        "allowSyntheticDefaultImports": true,
-        "isolatedModules": true,
         "sourceMap": true,
         "resolveJsonModule": true,
-        "esModuleInterop": true,
         "downlevelIteration": true,
-        "baseUrl": "./src",
+        "strict": true,
+        "baseUrl": "./",
         "paths": {
-            "@ui-components/*": [
-                "../lib/ui-components/*"
-            ],
-            "@providers/*": [
-                "providers/*"
-            ],
-            "@utils/*": [
-                "../lib/utils/*"
-            ]
-        },
+            "ui-components/*": ["lib/ui-components/*"],
+            "utils/*": ["lib/utils/*"],
+            "app/*": ["src/app/*"],
+            "providers/*": ["src/api/providers/*"],
+            "services/*": ["src/api/services/*"]
+        }
     },
-    "include": [
-        "**/*.ts",
-        "**/*.tsx"
-    ],
-    "exclude": [
-        "node_modules",
-        "dist",
-        "**/*.d.ts"
-    ]
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
 }

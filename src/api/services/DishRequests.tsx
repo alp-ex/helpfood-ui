@@ -1,9 +1,16 @@
-import { HTTPCommon } from '@utils/http-common'
+import { HTTPCommon } from 'utils/http-common'
 
 type Recipe = {
     id: string
     name: string
     category: string
+    ingredients: ReadonlyArray<string>
+}
+
+type RecipeResponse = {
+    id: string
+    name: string
+    categories: string
     ingredients: ReadonlyArray<string>
 }
 
@@ -16,22 +23,17 @@ export const getCategories = (): Promise<
 > => httpRequests.get('/categories')
 
 export const getRecipes = async (): Promise<ReadonlyArray<Recipe>> => {
-    const recipes = await httpRequests.get('/recipes')
+    const recipes = await httpRequests.get<ReadonlyArray<RecipeResponse>>(
+        '/recipes'
+    )
 
     return recipes
-        ? recipes.map(
-              (recipe: {
-                  id: string
-                  name: string
-                  categories: string
-                  ingredients: ReadonlyArray<string>
-              }) => ({
-                  id: recipe.id || '',
-                  name: recipe.name || '',
-                  category: recipe.categories || '',
-                  ingredients: recipe.ingredients || [],
-              })
-          )
+        ? recipes.map((recipe: RecipeResponse) => ({
+              id: recipe.id || '',
+              name: recipe.name || '',
+              category: recipe.categories || '',
+              ingredients: recipe.ingredients || [],
+          }))
         : []
 }
 
@@ -42,44 +44,66 @@ export const searchRecipes = async ({
     q: string
     category: string
 }): Promise<ReadonlyArray<Recipe>> => {
-    const recipes = await httpRequests.get(
+    const recipes = await httpRequests.get<ReadonlyArray<RecipeResponse>>(
         `/recipes?q=${q}&category=${category}`
     )
 
     return recipes
-        ? recipes.map(
-              (recipe: {
-                  id: string
-                  name: string
-                  categories: string
-                  ingredients: ReadonlyArray<string>
-              }) => ({
-                  id: recipe.id || '',
-                  name: recipe.name || '',
-                  category: recipe.categories || '',
-                  ingredients: recipe.ingredients || [],
-              })
-          )
+        ? recipes.map((recipe: RecipeResponse) => ({
+              id: recipe.id || '',
+              name: recipe.name || '',
+              category: recipe.categories || '',
+              ingredients: recipe.ingredients || [],
+          }))
         : []
 }
 
-export const editRecipe = ({
+export const editRecipe = async ({
     name,
     ingredients,
     category,
-}: Recipe): Promise<Recipe> =>
-    httpRequests.put(`/recipes?name=${name}`, {
-        data: JSON.stringify({ name, ingredients, category }),
-    })
+}: Recipe): Promise<Recipe> => {
+    const recipe = await httpRequests.put<RecipeResponse>(
+        `/recipes?name=${name}`,
+        {
+            data: JSON.stringify({ name, ingredients, category }),
+        }
+    )
 
-export const addRecipe = ({
+    return {
+        id: recipe.id || '',
+        name: recipe.name || '',
+        category: recipe.categories || '',
+        ingredients: recipe.ingredients || [],
+    }
+}
+
+export const addRecipe = async ({
     name,
     ingredients,
     category,
-}: Recipe): Promise<Recipe> =>
-    httpRequests.post('/recipes', {
+}: Recipe): Promise<Recipe> => {
+    const recipe = await httpRequests.post<RecipeResponse>('/recipes', {
         data: JSON.stringify({ name, ingredients, category }),
     })
 
-export const removeRecipe = ({ name }: Recipe): Promise<Recipe> =>
-    httpRequests.delete(`/recipes?name=${name}`)
+    return {
+        id: recipe.id || '',
+        name: recipe.name || '',
+        category: recipe.categories || '',
+        ingredients: recipe.ingredients || [],
+    }
+}
+
+export const removeRecipe = async ({ name }: Recipe): Promise<Recipe> => {
+    const recipe = await httpRequests.delete<RecipeResponse>(
+        `/recipes?name=${name}`
+    )
+
+    return {
+        id: recipe.id || '',
+        name: recipe.name || '',
+        category: recipe.categories || '',
+        ingredients: recipe.ingredients || [],
+    }
+}

@@ -1,13 +1,24 @@
-import { HTTPCommon } from '@utils/http-common'
+import { HTTPCommon } from 'utils/http-common'
 
 type WeekDay = number
-type Meal = {
+interface Meal {
     id: string
     weekday: WeekDay
     recipe: {
         id: string
         name: string
         category: string
+        ingredients: ReadonlyArray<string>
+    }
+}
+
+interface MealResponse {
+    id: string
+    weekday: number
+    recipes: {
+        id: string
+        name: string
+        categories: string
         ingredients: ReadonlyArray<string>
     }
 }
@@ -21,37 +32,23 @@ export const getMealPlan = async ({
 }: {
     weekday: WeekDay
 }): Promise<ReadonlyArray<Meal>> => {
-    const meals = await httpRequests.get(`/${weekday}`)
+    const meals = await httpRequests.get<
+        ReadonlyArray<MealResponse> | undefined
+    >(`/${weekday}`)
 
-    return meals
-        ? meals.map(
-              (meal: {
-                  id: string
-                  weekday: number
-                  recipes: {
-                      id: string
-                      name: string
-                      categories: string
-                      ingredients: ReadonlyArray<string>
-                  }
-              }) =>
-                  meal
-                      ? {
-                            id: meal.id || '',
-                            weekday: meal.weekday || 0,
-                            recipe: meal.recipes
-                                ? {
-                                      id: meal.recipes.id || '',
-                                      name: meal.recipes.name || '',
-                                      category: meal.recipes.categories || '',
-                                      ingredients:
-                                          meal.recipes.ingredients || [],
-                                  }
-                                : {},
-                        }
-                      : {}
-          )
-        : []
+    // take a look at this https://github.com/pelotom/runtypes
+    return (
+        meals?.map((meal: MealResponse) => ({
+            id: meal.id || '',
+            weekday: meal.weekday || 0,
+            recipe: {
+                id: meal.recipes.id || '',
+                name: meal.recipes.name || '',
+                category: meal.recipes.categories || '',
+                ingredients: meal.recipes.ingredients || [],
+            },
+        })) || []
+    )
 }
 
 export const addMealsToPlan = async ({
@@ -61,24 +58,50 @@ export const addMealsToPlan = async ({
     meals: ReadonlyArray<{ recipeId: string }>
     weekday: WeekDay
 }): Promise<ReadonlyArray<Meal>> => {
-    await Promise.all(
-        mealsToAdd.map(({ recipeId }) =>
-            httpRequests.post('', {
-                data: JSON.stringify({ recipeId: recipeId, weekday }),
-            })
+    const meals = await Promise.all(
+        mealsToAdd.map(
+            async ({ recipeId }) =>
+                await httpRequests.post<MealResponse | undefined>('', {
+                    data: JSON.stringify({ recipeId: recipeId, weekday }),
+                })
         )
     )
 
-    return await getMealPlan({ weekday })
+    return (
+        meals?.map((meal: MealResponse | undefined) => ({
+            id: meal?.id || '',
+            weekday: meal?.weekday || 0,
+            recipe: {
+                id: meal?.recipes.id || '',
+                name: meal?.recipes.name || '',
+                category: meal?.recipes.categories || '',
+                ingredients: meal?.recipes.ingredients || [],
+            },
+        })) || []
+    )
 }
 
 export const removeMealsFromPlan = async ({
     meals: mealsToRemove,
 }: {
     meals: ReadonlyArray<{ id: string }>
-}): Promise<ReadonlyArray<Meal>> =>
-    Promise.all(
-        mealsToRemove.map(({ id }) => {
-            return httpRequests.delete(`/${id}`)
+}): Promise<ReadonlyArray<Meal>> => {
+    const meals = await Promise.all(
+        mealsToRemove.map(async ({ id }) => {
+            return await httpRequests.delete<MealResponse | undefined>(`/${id}`)
         })
     )
+
+    return (
+        meals?.map((meal: MealResponse | undefined) => ({
+            id: meal?.id || '',
+            weekday: meal?.weekday || 0,
+            recipe: {
+                id: meal?.recipes.id || '',
+                name: meal?.recipes.name || '',
+                category: meal?.recipes.categories || '',
+                ingredients: meal?.recipes.ingredients || [],
+            },
+        })) || []
+    )
+}

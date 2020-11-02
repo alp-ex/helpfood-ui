@@ -1,6 +1,6 @@
 import { ReactElement, ReactNode } from 'react'
 import { Box } from '@material-ui/core'
-import { theme } from '@ui-components/themes/main'
+import { theme } from 'ui-components/themes/main'
 
 interface Props {
     bgcolorOption: 'light' | 'main'
