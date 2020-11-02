@@ -6,7 +6,6 @@ import {
     ReactElement,
 } from 'react'
 import {
-    getRecipes as getRecipesAPI,
     getCategories as getCategoriesAPI,
     searchRecipes as searchRecipesAPI,
 } from 'services/DishRequests'
@@ -34,24 +33,13 @@ type DishesProviderProps = { children: ReactNode }
 const DishesStateContext = createContext<State | undefined>(undefined)
 const DishesDispatchContext = createContext<Dispatch | undefined>(undefined)
 
-const {
-    SEARCH_RECIPES_SUCCEED,
-    GET_RECIPES_SUCCEED,
-    GET_CATEGORIES_SUCCEED,
-} = {
+const { SEARCH_RECIPES_SUCCEED, GET_CATEGORIES_SUCCEED } = {
     GET_CATEGORIES_SUCCEED: 'getting all categories succeed',
-    GET_RECIPES_SUCCEED: 'getting all recipes succeed',
     SEARCH_RECIPES_SUCCEED: 'searching recipes succeed',
 }
 
 function dishesReducer(prevState: State, { type, payload }: Action): State {
     switch (type) {
-        case GET_RECIPES_SUCCEED: {
-            return {
-                ...prevState,
-                recipes: payload?.recipes || prevState.recipes,
-            }
-        }
         case GET_CATEGORIES_SUCCEED: {
             return {
                 ...prevState,
@@ -111,32 +99,6 @@ function useDishesDispatch() {
 
 export function useDish(): { state: State; dispatch: Dispatch } {
     return { state: useDishesState(), dispatch: useDishesDispatch() }
-}
-
-export async function getRecipes({
-    dispatch,
-}: {
-    dispatch: Dispatch
-}): Promise<void> {
-    try {
-        const response = await getRecipesAPI()
-
-        dispatch({
-            type: GET_RECIPES_SUCCEED,
-            payload: {
-                recipes: response.map(
-                    ({ id, name, category, ingredients }: Recipe) => ({
-                        id,
-                        name,
-                        category,
-                        ingredients,
-                    })
-                ),
-            },
-        })
-    } catch (error) {
-        console.error(error)
-    }
 }
 
 export async function getCategories({

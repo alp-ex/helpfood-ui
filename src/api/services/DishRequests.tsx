@@ -22,21 +22,6 @@ export const getCategories = (): Promise<
     ReadonlyArray<{ id: number; name: string }>
 > => httpRequests.get('/categories')
 
-export const getRecipes = async (): Promise<ReadonlyArray<Recipe>> => {
-    const recipes = await httpRequests.get<ReadonlyArray<RecipeResponse>>(
-        '/recipes'
-    )
-
-    return recipes
-        ? recipes.map((recipe: RecipeResponse) => ({
-              id: recipe.id || '',
-              name: recipe.name || '',
-              category: recipe.categories || '',
-              ingredients: recipe.ingredients || [],
-          }))
-        : []
-}
-
 export const searchRecipes = async ({
     q,
     category,
@@ -45,7 +30,7 @@ export const searchRecipes = async ({
     category: string
 }): Promise<ReadonlyArray<Recipe>> => {
     const recipes = await httpRequests.get<ReadonlyArray<RecipeResponse>>(
-        `/recipes?q=${q}&category=${category}`
+        `/recipes?q=${q}&categories=${category}&_limit=100`
     )
 
     return recipes
