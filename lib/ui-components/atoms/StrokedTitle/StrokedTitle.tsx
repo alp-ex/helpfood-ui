@@ -13,10 +13,10 @@ const useStyles = makeStyles(() =>
             '-webkit-text-fill-color': theme.palette.primary.light,
             '-webkit-text-stroke-width': '1.2px',
             '-webkit-text-stroke-color': theme.palette.primary.main,
-            fontSize: '1.4em',
-            textTransform: 'uppercase',
+            fontSize: '1.8em',
+            textTransform: 'lowercase',
             fontWeight: 'bolder',
-            letterSpacing: '0.07em',
+            letterSpacing: '0.06em',
         },
     })
 )

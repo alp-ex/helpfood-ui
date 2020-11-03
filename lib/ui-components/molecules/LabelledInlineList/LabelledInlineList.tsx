@@ -1,8 +1,7 @@
-import { ListItemText } from '@material-ui/core'
+import { ListItemText, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { ReactElement } from 'react'
 import { theme } from 'ui-components/themes/main'
-import { ChipsList } from 'ui-components/molecules'
 
 interface Props {
     label: string
@@ -15,10 +14,14 @@ const useStyles = makeStyles(() =>
             paddingLeft: '2%',
         },
         primary: {
+            textTransform: 'uppercase',
+            color: theme.palette.primary.main,
+            fontWeight: 600,
+        },
+        secondary: {
             textTransform: 'capitalize',
             color: theme.palette.primary.main,
         },
-        secondary: {},
     })
 )
 
@@ -36,11 +39,15 @@ export default function LabelledInlineList({
                 secondary: classes.secondary,
             }}
             primary={label}
-            secondary={
-                <ChipsList
-                    items={items.map((item) => ({ label: item, value: item }))}
-                />
-            }
+            secondary={items.map((item, index) => (
+                <Typography
+                    component="span"
+                    key={item}
+                    className={classes.secondary}
+                >
+                    {`${item}${index !== items.length - 1 ? ', ' : null}`}
+                </Typography>
+            ))}
         />
     )
 }
