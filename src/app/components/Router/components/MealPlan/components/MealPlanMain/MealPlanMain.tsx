@@ -3,7 +3,7 @@ import { useCalendar } from 'providers/Calendar'
 import { useMealPlan, getMealPlan } from 'providers/MealPlan'
 import { useDish, getCategories } from 'providers/Dishes'
 import { LabelledInlineList } from 'ui-components/molecules'
-import { Group, StrokedTitle } from 'ui-components/atoms'
+import { Group, GutteredSection, StrokedTitle } from 'ui-components/atoms'
 
 export default function MealPlanMain(): ReactElement {
     const {
@@ -27,7 +27,7 @@ export default function MealPlanMain(): ReactElement {
     }, [selectedWeekDay])
 
     return (
-        <>
+        <GutteredSection bottomGutter={6}>
             {Math.min(meals.length, categories.length) === 0
                 ? null
                 : categories.map((categoryName) => (
@@ -48,6 +48,6 @@ export default function MealPlanMain(): ReactElement {
                               ))}
                       </Group>
                   ))}
-        </>
+        </GutteredSection>
     )
 }

@@ -1,9 +1,11 @@
 import {
     createStyles,
     makeStyles,
+    Paper,
     Table,
     TableBody,
     TableCell,
+    TableContainer,
     TableHead,
     TableRow,
 } from '@material-ui/core'
@@ -25,6 +27,7 @@ const useStyles = makeStyles(() =>
     createStyles({
         root: {
             margin: '5% 0 20% 0',
+            minHeight: '400px',
         },
         body: {},
         header: {
@@ -60,41 +63,45 @@ export default function TableList({
     const classes = useStyles()
 
     return (
-        <Table stickyHeader classes={{ root: classes.root }}>
-            <TableHead classes={{ root: classes.header }}>
-                <TableRow>
-                    {headers.map((label) => (
-                        <TableCell
-                            classes={{
-                                root: classes.headerCells,
-                            }}
-                            key={label}
-                            variant="head"
-                        >
-                            <span>{label}</span>
-                        </TableCell>
-                    ))}
-                </TableRow>
-            </TableHead>
-
-            <TableBody classes={{ root: classes.body }}>
-                {rows.map(({ labels, values }) => (
-                    <TableRow
-                        onClick={() => onItemClick(values)}
-                        key={JSON.stringify(labels)}
-                    >
-                        {Object.values(labels).map((value) => (
+        <TableContainer classes={{ root: classes.root }} component={Paper}>
+            <Table stickyHeader aria-label="table-list">
+                <TableHead classes={{ root: classes.header }}>
+                    <TableRow>
+                        {headers.map((label, index) => (
                             <TableCell
-                                classes={{ root: classes.bodyCells }}
-                                variant="body"
-                                key={value}
+                                classes={{
+                                    root: classes.headerCells,
+                                }}
+                                key={label}
+                                variant="head"
+                                align={index !== 0 ? 'right' : 'left'}
                             >
-                                {value}
+                                <span>{label}</span>
                             </TableCell>
                         ))}
                     </TableRow>
-                ))}
-            </TableBody>
-        </Table>
+                </TableHead>
+
+                <TableBody classes={{ root: classes.body }}>
+                    {rows.map(({ labels, values }) => (
+                        <TableRow
+                            onClick={() => onItemClick(values)}
+                            key={JSON.stringify(labels)}
+                        >
+                            {Object.values(labels).map((value, index) => (
+                                <TableCell
+                                    classes={{ root: classes.bodyCells }}
+                                    variant="body"
+                                    key={value}
+                                    align={index !== 0 ? 'right' : 'left'}
+                                >
+                                    {value}
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
     )
 }

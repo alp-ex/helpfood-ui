@@ -1,7 +1,7 @@
 import { AngularBackground, IconWrapper, ButtonIcon } from 'ui-components/atoms'
 import { FullScreenListSelect } from 'ui-components/molecules'
 import { setCurrentDay, useCalendar } from 'providers/Calendar'
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { MdModeEdit as EditIcon } from 'react-icons/md'
 import { AddMealForm } from './components'
@@ -13,6 +13,15 @@ export default function MealPlanHeader(): ReactElement {
     } = useCalendar()
     const [isAddMealFormVisible, setIsAddMealFormVisible] = useState(false)
 
+    useEffect(() => {
+        if (isAddMealFormVisible) {
+            document.body.style.position = 'fixed'
+        }
+
+        return () => {
+            document.body.style.position = 'inherit'
+        }
+    }, [isAddMealFormVisible])
     return (
         <>
             <AngularBackground bgcolorOption="light">

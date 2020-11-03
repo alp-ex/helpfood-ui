@@ -9,8 +9,10 @@ import ButtonIcon from './ButtonIcon/ButtonIcon'
 import ContentBackground from './ContentBackground/ContentBackground'
 import StrokedTitle from './StrokedTitle/StrokedTitle'
 import FixedActionBar from './FixedActionBar/FixedActionBar'
+import GutteredSection from './GutteredSection/GutteredSection'
 
 export {
+    GutteredSection,
     PagesNavigationButton,
     AngularBackground,
     RoundedBackground,

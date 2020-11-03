@@ -140,7 +140,7 @@ export async function updateMealPlan({
     weekday: WeekDay
 }): Promise<void> {
     try {
-        const addedMeals = await addMealsToPlanAPI({
+        await addMealsToPlanAPI({
             meals: mealsToAdd,
             weekday,
         })
@@ -149,9 +149,11 @@ export async function updateMealPlan({
             meals: mealsToDelete,
         })
 
+        const meals = await getMealPlanAPI({ weekday })
+        console.log(meals)
         dispatch({
             type: MEAL_PLAN_SUCCESSFULLY_UPDATED,
-            payload: { meals: addedMeals },
+            payload: { meals },
         })
     } catch (error) {
         console.error(error)

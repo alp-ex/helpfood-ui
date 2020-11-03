@@ -84,9 +84,17 @@ export default function UpdateMealForm({ onClose }: Props): ReactElement {
             onSubmit={() => {
                 updateMealPlan({
                     dispatch: mealPlanDispatch,
-                    mealsToAdd: selectedOptions.map(({ value }) => ({
-                        recipeId: value,
-                    })),
+                    mealsToAdd: selectedOptions
+                        .filter(
+                            ({ value }) =>
+                                meals.findIndex(
+                                    ({ id: prevMealValue }) =>
+                                        prevMealValue === value
+                                ) === -1
+                        )
+                        .map(({ value }) => ({
+                            recipeId: value,
+                        })),
                     weekday: selectedWeekDay.value,
                     mealsToDelete: meals.filter(
                         ({ id }) =>

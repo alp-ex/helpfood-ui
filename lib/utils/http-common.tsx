@@ -50,14 +50,14 @@ export class HTTPCommon implements HTTPCommonPropreties {
     ): Promise<T> {
         return this.httpFetch(path, {
             method: 'DELETE',
-            body: data === null ? null : JSON.stringify(data),
+            body: data === null ? null : data,
         })
     }
 
     put<T>(path: string, { data }: { data?: RequestInit['body'] }): Promise<T> {
         return this.httpFetch(path, {
             method: 'PUT',
-            body: JSON.stringify(data),
+            body: data,
         })
     }
 
@@ -67,7 +67,7 @@ export class HTTPCommon implements HTTPCommonPropreties {
     ): Promise<T> {
         return this.httpFetch(path, {
             method: 'POST',
-            body: JSON.stringify(data),
+            body: data,
         })
     }
 }
