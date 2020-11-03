@@ -46,6 +46,7 @@ const useStyles = makeStyles(() =>
             background: theme.palette.primary.main,
         },
         bodyCells: {
+            fontSize: '0.8em',
             borderBottomWidth: '1px',
             borderBottomStyle: 'solid',
             borderBottomColor: theme.palette.primary.main,

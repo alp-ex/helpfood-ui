@@ -26,7 +26,7 @@ const useStyles = makeStyles(() =>
             color: theme.palette.primary.main,
         },
         clickableLabel: {
-            textTransform: 'capitalize',
+            textTransform: 'uppercase',
             color: theme.palette.primary.main,
             cursor: 'pointer',
             fontSize: '1em',

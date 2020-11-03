@@ -7,7 +7,7 @@ import { MdClose as CloseIcon } from 'react-icons/md'
 type Item = { label: string; value: string }
 
 interface Props {
-    onClose: (item: Item) => void
+    onClose?: (item: Item) => void
     items: ReadonlyArray<Item>
 }
 
@@ -47,7 +47,9 @@ export default function ChipsList({ onClose, items }: Props): ReactElement {
                         deletable: classes.MUIDeletableChipOverride,
                     }}
                     label={label}
-                    onDelete={() => onClose({ label, value })}
+                    onDelete={
+                        onClose ? () => onClose({ label, value }) : undefined
+                    }
                     key={label}
                 />
             ))}

@@ -11,9 +11,9 @@ const useStyles = makeStyles(() =>
     createStyles({
         root: {
             '-webkit-text-fill-color': theme.palette.primary.light,
-            '-webkit-text-stroke-width': '1.7px',
-            '-webkit-text-stroke-color': theme.palette.primary.dark,
-            fontSize: '2em',
+            '-webkit-text-stroke-width': '1.2px',
+            '-webkit-text-stroke-color': theme.palette.primary.main,
+            fontSize: '1.4em',
             textTransform: 'uppercase',
             fontWeight: 'bolder',
             letterSpacing: '0.07em',
