@@ -25,6 +25,7 @@ interface MealResponse {
 
 const httpRequests = new HTTPCommon({
     baseUrl: 'http://localhost:3000/meal-plan',
+    contentType: 'application/json',
 })
 
 export const getMealPlan = async ({

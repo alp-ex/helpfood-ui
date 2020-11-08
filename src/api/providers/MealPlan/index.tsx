@@ -9,7 +9,7 @@ import {
     addMealsToPlan as addMealsToPlanAPI,
     removeMealsFromPlan as removeMealsFromPlanAPI,
     getMealPlan as getMealPlanAPI,
-} from 'services/MealPlanRequests'
+} from 'services/FoodPlanningAPI'
 
 type WeekDay = number
 type Meal = {
@@ -150,7 +150,7 @@ export async function updateMealPlan({
         })
 
         const meals = await getMealPlanAPI({ weekday })
-        console.log(meals)
+
         dispatch({
             type: MEAL_PLAN_SUCCESSFULLY_UPDATED,
             payload: { meals },

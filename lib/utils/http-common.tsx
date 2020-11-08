@@ -1,47 +1,78 @@
 interface HTTPCommonPropreties {
     baseUrl: string
     contentType: string
+    authorization?: string
 }
 
 export class HTTPCommon implements HTTPCommonPropreties {
     baseUrl: string
     contentType: string
+    authorization?: string
 
     constructor({
         baseUrl,
-        contentType = 'application/json',
+        contentType = '',
+        authorization = '',
     }: {
         baseUrl: string
         contentType?: string
+        authorization?: string
     }) {
         this.baseUrl = baseUrl
         this.contentType = contentType
+        this.authorization = authorization
     }
 
     async httpFetch<T>(
         path: string,
-        {
-            method = 'GET',
-            headers = { 'Content-Type': this.contentType },
-            body = null,
-        }: {
-            method?: string
-            headers?: RequestInit['headers']
-            body?: RequestInit['body']
-        } = {}
+        { method = 'GET', body = null }: RequestInit = {}
     ): Promise<T> {
         const response = await fetch(`${this.baseUrl}${path}`, {
             method,
-            headers,
+            headers: {
+                ...(this.contentType
+                    ? { 'Content-type': this.contentType }
+                    : {}),
+                ...(this.authorization
+                    ? { Authorization: this.authorization }
+                    : {}),
+            },
             body,
         })
-        const responseBody = response.json()
+
+        const responseBody = await response.json()
 
         return responseBody
     }
 
+    async httpFetchRSS(
+        path: string,
+        { method = 'GET', body = null }: RequestInit = {}
+    ): Promise<string> {
+        const response = await fetch(`${this.baseUrl}${path}`, {
+            method,
+            headers: {
+                ...(this.contentType
+                    ? { 'Content-type': this.contentType }
+                    : {}),
+                ...(this.authorization
+                    ? { Authorization: this.authorization }
+                    : {}),
+            },
+            body,
+        })
+
+        const text = await response.text()
+
+        return text
+    }
+
     get<T>(path: string): Promise<T> {
         return this.httpFetch(path)
+    }
+
+    getDocument(path: string): Promise<string> {
+        return this.httpFetchRSS(path)
     }
 
     delete<T>(

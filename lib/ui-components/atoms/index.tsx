@@ -10,6 +10,7 @@ import ContentBackground from './ContentBackground/ContentBackground'
 import StrokedTitle from './StrokedTitle/StrokedTitle'
 import FixedActionBar from './FixedActionBar/FixedActionBar'
 import GutteredSection from './GutteredSection/GutteredSection'
+import AppLogo from './AppLogo/AppLogo'
 
 export {
     GutteredSection,
@@ -24,4 +25,5 @@ export {
     ContentBackground,
     StrokedTitle,
     FixedActionBar,
+    AppLogo,
 }

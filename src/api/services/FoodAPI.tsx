@@ -16,6 +16,7 @@ type RecipeResponse = {
 
 const httpRequests = new HTTPCommon({
     baseUrl: 'http://localhost:3000',
+    contentType: 'application/json',
 })
 
 export const getCategories = (): Promise<

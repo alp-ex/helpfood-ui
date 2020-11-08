@@ -1,3 +1,4 @@
 import MultiplesSelectionForm from './MultiplesSelectionForm/MultiplesSelectionForm'
+import NewsItemCard from './NewsItemCard/NewsItemCard'
 
-export { MultiplesSelectionForm }
+export { MultiplesSelectionForm, NewsItemCard }

@@ -8,7 +8,7 @@ import {
 import {
     getCategories as getCategoriesAPI,
     searchRecipes as searchRecipesAPI,
-} from 'services/DishRequests'
+} from 'services/FoodAPI'
 
 type Recipe = {
     id: string
