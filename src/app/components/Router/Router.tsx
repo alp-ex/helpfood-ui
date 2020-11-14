@@ -11,6 +11,7 @@ export const Routes = Object.freeze({
     SHOPLIST: '/shoplist',
     MEAL_PLAN: '/meal-plan',
     RECIPES: '/recipes',
+    LOGIN: '/login',
 })
 
 const Router = (): ReactElement => {
@@ -23,6 +24,7 @@ const Router = (): ReactElement => {
                     render={() => <HomePage />}
                 />
                 <Route path={Routes.MEAL_PLAN} render={() => <MealPlan />} />
+                <Route path={Routes.LOGIN} render={() => <span>login</span>} />
                 <Route
                     path={Routes.RECIPES}
                     render={() => <span>recipes</span>}
