@@ -1,5 +1,4 @@
-import { Routes } from 'app/components/Router/Router'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import {
     AngularBackground,
     AppLogo,
@@ -7,15 +6,16 @@ import {
     IconWrapper,
 } from 'ui-components/atoms'
 import { FaUserAlt as UserIcon } from 'react-icons/fa'
-import { useHistory } from 'react-router-dom'
-import { EditUserForm } from './components'
+import { EditUserForm, LoginForm } from './components'
+import { useAuthentication } from 'providers/Authentication'
 
 export default function HomePageHeader(): ReactElement {
     const [isEditUserFormVisible, setIsEditUserFormVisible] = useState(false)
-    const history = useHistory()
+    const [isLoginFormVisible, setIsLoginFormVisible] = useState(false)
+
     const {
         state: { isUserAuthenticated },
-    } = useUser()
+    } = useAuthentication()
 
     return (
         <AngularBackground bgcolorOption="light">
@@ -26,7 +26,7 @@ export default function HomePageHeader(): ReactElement {
                     if (isUserAuthenticated) {
                         setIsEditUserFormVisible(true)
                     } else {
-                        history.replace(Routes.LOGIN)
+                        setIsLoginFormVisible(true)
                     }
                 }}
             >
@@ -39,6 +39,14 @@ export default function HomePageHeader(): ReactElement {
                 <EditUserForm
                     onClose={() => {
                         setIsEditUserFormVisible(false)
+                    }}
+                />
+            ) : null}
+
+            {isLoginFormVisible ? (
+                <LoginForm
+                    onClose={() => {
+                        setIsLoginFormVisible(false)
                     }}
                 />
             ) : null}

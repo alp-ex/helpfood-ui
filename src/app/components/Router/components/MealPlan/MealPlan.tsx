@@ -1,8 +1,8 @@
 import { ReactElement } from 'react'
 
-import { CalendarProvider } from 'providers/Calendar'
-import { MealPlanProvider } from 'providers/MealPlan'
-import { DishesProvider } from 'providers/Dishes'
+import { CalendarProvider } from 'providers/WeekDays'
+import { MealPlanProvider } from 'providers/FoodPlanning'
+import { DishesProvider } from 'providers/Food'
 import { MealPlanHeader, MealPlanMain } from './components'
 import { ContentBackground } from 'ui-components/atoms'
 

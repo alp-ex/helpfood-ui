@@ -1,7 +1,7 @@
 import { ReactElement, useEffect } from 'react'
-import { useCalendar } from 'providers/Calendar'
-import { useMealPlan, getMealPlan } from 'providers/MealPlan'
-import { useDish, getCategories } from 'providers/Dishes'
+import { useCalendar } from 'providers/WeekDays'
+import { useMealPlan, getMealPlan } from 'providers/FoodPlanning'
+import { useDish, getCategories } from 'providers/Food'
 import { LabelledInlineList } from 'ui-components/molecules'
 import { Group, GutteredSection, StrokedTitle } from 'ui-components/atoms'
 

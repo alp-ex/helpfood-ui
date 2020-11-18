@@ -1,4 +1,5 @@
 import { ReactElement, ReactNode, ElementType, CSSProperties } from 'react'
+import { createPortal } from 'react-dom'
 
 interface Props {
     component?: ElementType
@@ -11,7 +12,7 @@ export default function FullScreenDialog({
     children,
     style: { root: customRootStyle } = {},
 }: Props): ReactElement {
-    return (
+    return createPortal(
         <Component
             style={{
                 overflow: 'auto',
@@ -30,6 +31,7 @@ export default function FullScreenDialog({
             }}
         >
             {children}
-        </Component>
+        </Component>,
+        document.body
     )
 }

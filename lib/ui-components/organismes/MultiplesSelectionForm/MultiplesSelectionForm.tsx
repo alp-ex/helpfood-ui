@@ -1,15 +1,15 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Container, Button, Typography } from '@material-ui/core'
+import { Container } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { theme } from 'ui-components/themes/main'
-import { MdClose as CloseIcon } from 'react-icons/md'
 import {
     ChipsList,
+    DialogHeader,
     FilterableSearchBar,
     TableList,
 } from 'ui-components/molecules'
-import { AngularBackground, FixedActionBar } from 'ui-components/atoms'
+import { FixedActionBar } from 'ui-components/atoms'
 
 type OptionValue = { label: string; value: string }
 
@@ -48,14 +48,6 @@ const useStyles = makeStyles(() =>
             background: theme.palette.primary.light,
             overflow: 'auto',
         },
-        title: {
-            fontSize: '1em',
-            textTransform: 'capitalize',
-        },
-        rootCloseButton: {
-            fontSize: '1em',
-            color: theme.palette.primary.main,
-        },
         rootValidationButton: {
             fontSize: '1em',
             textTransform: 'capitalize',
@@ -86,18 +78,7 @@ export default function MultiplesSelectionForm({
 
     return createPortal(
         <Container classes={{ root: classes.root }}>
-            <AngularBackground bgcolorOption="light">
-                <Typography classes={{ root: classes.title }} variant="h3">
-                    {title}
-                </Typography>
-
-                <Button
-                    classes={{ root: classes.rootCloseButton }}
-                    onClick={onClose}
-                >
-                    <CloseIcon />
-                </Button>
-            </AngularBackground>
+            <DialogHeader title={title} onClose={onClose} />
 
             <ChipsList onClose={onUnSelectOption} items={selectedOptions} />
 
