@@ -14,11 +14,9 @@
         "strict": true,
         "baseUrl": "./",
         "paths": {
-            "ui-components/*": ["lib/ui-components/*"],
-            "utils/*": ["lib/utils/*"],
-            "app/*": ["src/app/*"],
-            "providers/*": ["src/api/providers/*"],
-            "services/*": ["src/api/services/*"]
+            "~/*": [
+                "./*"
+            ]
         }
     },
     "noUnusedLocals": true,
