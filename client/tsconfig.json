@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "outDir": "client/dist",
+        "jsx": "react-jsxdev",
+        "module": "commonjs",
+        "target": "es5",
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "downlevelIteration": true,
+        "strict": true,
+        "baseUrl": "./",
+        "paths": {
+            "~/*": [
+                "./*"
+            ]
+        }
+    },
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+}
