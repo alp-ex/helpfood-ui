@@ -1,6 +1,6 @@
 import { AngularBackground, IconWrapper, ButtonIcon } from '~/ui-components/atoms'
 import { FullScreenListSelect } from '~/ui-components/molecules'
-import { setCurrentDay, useCalendar } from '~/services/providers/WeekDays'
+import { setCurrentDay, useCalendar } from '~/services/WeekDays'
 import { ReactElement, useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { MdModeEdit as EditIcon } from 'react-icons/md'

@@ -44,7 +44,7 @@ const { LOGIN_SUCCEED, DISCONNECT_USER } = Object.seal({
 })
 
 const initialState = {
-    isUserAuthenticated: true,
+    isUserAuthenticated: false,
     user: {
         id: '',
         email: '',

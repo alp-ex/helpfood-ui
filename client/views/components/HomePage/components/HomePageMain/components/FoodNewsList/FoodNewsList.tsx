@@ -1,4 +1,4 @@
-import { getFoodNews, useFoodNews } from '~/services/providers/FoodNews'
+import { getFoodNews, useFoodNews } from '~/services/FoodNews'
 import React, { ReactElement, useEffect } from 'react'
 import { Group } from '~/ui-components/atoms'
 import { NewsItemCard } from '~/ui-components/organismes'
